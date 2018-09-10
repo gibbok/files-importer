@@ -1,8 +1,12 @@
 {
   "defaultSeverity": "error",
   "extends": [
-    "tslint:latest",
-    "tslint-config-prettier"
+    "tslint:recommended",
+    "tslint-config-standard",
+    "tslint-eslint-rules",
+    "tslint-immutable",
+    "tslint-config-prettier",
+    "tslint-plugin-prettier"
   ],
   "rules": {
     "prettier": true,
@@ -37,5 +41,5 @@
       }
     ],
     "no-if-statement": true
-  },
+  }
 }
