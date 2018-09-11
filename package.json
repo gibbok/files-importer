@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node ./dist",
+    "start": "tsc && node ./dist",
     "test": "jest --config ./jest-config.json",
-    "tsc": "tsc --noEmit -p ./tsconfig.json",
+    "tsc": "tsc",
     "tsc:watch": "npm run tsc -- --watch --pretty",
     "lint": "tslint -t codeFrame -p ./tsconfig.json -c ./tslint.json",
     "lint:fix": "npm run lint -- --fix"

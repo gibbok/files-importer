@@ -14,10 +14,16 @@
     "interface-over-type-literal": false,
     "member-access": false,
     "object-literal-sort-keys": false,
-    "array-type": [true, "array"],
+    "array-type": [
+      true,
+      "array"
+    ],
     "no-var-keyword": true,
     "no-parameter-reassignment": true,
-    "typedef": [true, "call-signature"],
+    "typedef": [
+      true,
+      "call-signature"
+    ],
     "readonly-array": true,
     "no-let": true,
     "no-object-mutation": true,
