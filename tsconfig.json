@@ -9,6 +9,10 @@
         "noImplicitReturns": true,
         "noFallthroughCasesInSwitch": true,
         "moduleResolution": "node",
-        "baseUrl": "."
-    }
+        "baseUrl": ".",
+        "outDir": "./dist"
+    },
+    "include": [
+        "src/**/*.ts"
+      ],
 }
