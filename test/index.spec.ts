@@ -4,7 +4,7 @@ describe("fileExist", () => {
   const errorPath = "path is invalid";
 
   it("should be valid for valid path", () => {
-    const fe = fileExist("test", errorPath).run();
+    const fe = fileExist("test", "test").run();
     expect(fe.value).toEqual(true);
   });
 

@@ -1,24 +1,25 @@
 {
-    "compilerOptions":{
-       "target":"es2017",
-       "module":"commonjs",
-       "sourceMap":true,
-       "strict":true,
-       "noUnusedLocals":true,
-       "noUnusedParameters":true,
-       "noImplicitReturns":true,
-       "noFallthroughCasesInSwitch":true,
-       "moduleResolution":"node",
-       "baseUrl":".",
-       "outDir":"dist",
-       "paths":{
-          "*":[
-             "node_modules/*",
-             "src/types/*"
-          ]
-       }
+    "compilerOptions": {
+        "target": "es2017",
+        "module": "commonjs",
+        "sourceMap": true,
+        "strict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "moduleResolution": "node",
+        "baseUrl": ".",
+        "outDir": "dist",
+        "paths": {
+            "*": [
+                "node_modules/*",
+                "src/types/*"
+            ]
+        }
     },
-    "include":[
-       "src/**/*.ts"
+    "include": [
+        "src/**/*.ts",
+        "typings/**/*.d.ts"
     ]
- }
+}
