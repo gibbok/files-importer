@@ -11,9 +11,9 @@ const log = <T>(obj: T): IO<void> =>
   // tslint:disable-next-line:no-console
   new IO(() => console.log(JSON.stringify(obj)));
 
-const fileExist = curry(
-  (path: string, message: string): IO<Either<string, boolean>> =>
-    new IO(() => (!existsSync(path) ? left(message) : right(true)))
+export const fileExist = curry(
+  (path: string, errMessage: string): IO<Either<string, boolean>> =>
+    new IO(() => (!existsSync(path) ? left(errMessage) : right(true)))
 );
 
 const program = () => fileExist("test", m.errPath).chain(log);
