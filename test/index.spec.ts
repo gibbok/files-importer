@@ -1,23 +1,33 @@
 import { create } from "domain";
-import * as fs from "fs-extra";
+import { outputFileSync, removeSync} from "fs-extra";
 import { fileExist } from "../src";
 
-const createFile = (path:string) => fs.outputFileSync(path, "hello!");
+const TEMP_DIR = './tmp/'
+
+const createFile = (path:string) => outputFileSync(path, "hello!");
+const removeFile= (path:string) => removeSync(path)
 
 describe("fileExist", () => {
+  const msmErrPath = "path is invalid";
+  const goodPath = `${TEMP_DIR}file.txt`
+  const badPath = './invalid-path'
+
   beforeAll(() => {
-    return createFile('./tmp/file.txt');
+    return createFile(goodPath);
   });
 
-  const errorPath = "path is invalid";
+  afterAll(() => {
+    return removeFile(TEMP_DIR);
+  });
 
-  it("should be valid for valid path", () => {
-    const fe = fileExist("test", "test").run();
+
+  it("should be valid for good path", () => {
+    const fe = fileExist(goodPath, msmErrPath).run();
     expect(fe.value).toEqual(true);
   });
 
-  it("should be invalid for invalid path", () => {
-    const fe = fileExist("invalid-path", errorPath).run();
-    expect(fe.value).toEqual("path is invalid");
+  it("should be invalid for bad path", () => {
+    const fe = fileExist(badPath, msmErrPath).run();
+    expect(fe.value).toEqual(msmErrPath);
   });
 });

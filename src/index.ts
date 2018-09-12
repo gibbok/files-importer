@@ -1,7 +1,7 @@
 import { Either, left, right } from "fp-ts/lib/Either";
 import { IO } from "fp-ts/lib/IO";
-import { existsSync } from "fs";
 import { curry } from "ramda";
+import { pathExistsSync} from 'fs-extra'
 
 const m = {
   errPath: "path is invalid"
@@ -13,7 +13,7 @@ const log = <T>(obj: T): IO<void> =>
 
 export const fileExist = curry(
   (path: string, errMessage: string): IO<Either<string, boolean>> =>
-    new IO(() => (!existsSync(path) ? left(errMessage) : right(true)))
+    new IO(() => (!pathExistsSync(path) ? left(errMessage) : right(true)))
 );
 
 const program = () => fileExist("invalid-path", m.errPath).chain(log);
