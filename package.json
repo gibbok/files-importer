@@ -6,6 +6,7 @@
   "scripts": {
     "start": "tsc && node ./dist",
     "test": "jest --config ./jest-config.json",
+    "test:watch": "jest --config ./jest-config.json --watch --coverage false",
     "tsc": "tsc",
     "tsc:watch": "npm run tsc -- --watch --pretty",
     "lint": "tslint -t codeFrame -p ./tsconfig.json -c ./tslint.json",

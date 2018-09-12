@@ -16,7 +16,7 @@ export const fileExist = curry(
     new IO(() => (!existsSync(path) ? left(errMessage) : right(true)))
 );
 
-const program = () => fileExist("test", m.errPath).chain(log);
+const program = () => fileExist("invalid-path", m.errPath).chain(log);
 
 // tslint:disable-next-line:no-expression-statement
 program().run();
