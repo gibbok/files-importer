@@ -31,9 +31,11 @@
     "typescript": "^3.0.3"
   },
   "devDependencies": {
+    "@types/fs-extra": "^5.0.4",
     "@types/jest": "^23.3.2",
     "@types/node": "^10.9.4",
     "@types/ramda": "^0.25.37",
+    "fs-extra": "^7.0.0",
     "jest": "^23.5.0",
     "prettier": "^1.14.2",
     "ts-jest": "^23.1.4",

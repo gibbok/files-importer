@@ -42,7 +42,9 @@
           "expect",
           "describe",
           "afterAll",
-          "beforeAll"
+          "afterEach",
+          "beforeAll",
+          "beforeEach",
         ]
       }
     ],
