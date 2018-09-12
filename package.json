@@ -32,9 +32,11 @@
   },
   "devDependencies": {
     "@types/jest": "^23.3.2",
+    "@types/mock-fs": "^3.6.30",
     "@types/node": "^10.9.4",
     "@types/ramda": "^0.25.37",
     "jest": "^23.5.0",
+    "mock-fs": "^4.7.0",
     "prettier": "^1.14.2",
     "ts-jest": "^23.1.4",
     "ts-loader": "^5.1.0",
