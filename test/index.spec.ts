@@ -2,15 +2,11 @@ import { create } from "domain";
 import * as fs from "fs-extra";
 import { fileExist } from "../src";
 
-const createFile = () => {
-  const file = "./tmp/file.txt";
-  // tslint:disable-next-line:no-expression-statement
-  fs.outputFileSync(file, "hello!");
-};
+const createFile = (path:string) => fs.outputFileSync(path, "hello!");
 
 describe("fileExist", () => {
-  beforeEach(() => {
-    return createFile();
+  beforeAll(() => {
+    return createFile('./tmp/file.txt');
   });
 
   const errorPath = "path is invalid";
