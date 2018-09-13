@@ -20,7 +20,6 @@ describe("fileExist", () => {
     return removeFile(TEMP_DIR);
   });
 
-
   it("should be valid for good path", () => {
     const fe = fileExist(goodPath, msmErrPath).run();
     expect(fe.value).toEqual(true);
