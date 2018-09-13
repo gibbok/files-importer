@@ -1,3 +1,4 @@
+import * as assert from "assert";
 import { statSync } from "fs";
 import { outputFileSync, removeSync } from "fs-extra";
 import { tmpdir } from "os";
@@ -11,7 +12,6 @@ const removeFile = (path: string) => removeSync(path);
 const badPath = "./invalid-path";
 
 describe("fileExist", () => {
-  const msmErrPath = "path is invalid";
   const goodPath = `${TEST_DIR}/file.txt`;
 
   beforeAll(() => createFile(goodPath));
@@ -19,18 +19,17 @@ describe("fileExist", () => {
   afterAll(() => removeFile(TEST_DIR));
 
   it("should be valid for good path", () => {
-    const fe = fileExist(msmErrPath, goodPath).run();
+    const fe = fileExist(goodPath).run();
     expect(fe.value).toEqual(true);
   });
 
-  it("should be invalid for bad path", () => {
-    const fe = fileExist(msmErrPath, badPath).run();
-    expect(fe.value).toEqual(msmErrPath);
+  it("should throw an error for an invalid path", () => {
+    const fe = fileExist(badPath).run();
+    assert.strictEqual(fe.value instanceof Error, true);
   });
 });
 
 describe("walkSynch", () => {
-  const errWalk = "err walk";
   const fileNames: ReadonlyArray<string> = [
     `${TEST_DIR}/file1.txt`,
     `${TEST_DIR}/file2.txt`,
@@ -49,13 +48,12 @@ describe("walkSynch", () => {
       path,
       stats: statSync(path)
     }));
-    const ws = walkSync(errWalk, TEST_DIR).run();
-    expect(ws.value.length).toEqual(result.length);
-    expect(ws.value).toEqual(result);
+    const ws = walkSync(TEST_DIR).run();
+    assert.deepStrictEqual(ws.value, result);
   });
 
-  it("should return an error message if it does not walk", () => {
-    const ws = walkSync(errWalk, badPath).run();
-    expect(ws.value).toBe(errWalk);
+  it("should throw an error if it does not walk", () => {
+    const ws = walkSync(badPath).run();
+    assert.strictEqual(ws.value instanceof Error, true);
   });
 });
