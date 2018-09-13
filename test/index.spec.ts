@@ -1,4 +1,3 @@
-import { create } from "domain";
 import { outputFileSync, removeSync } from "fs-extra";
 import { fileExist, walkSync } from "../src";
 import { join} from 'path'
@@ -47,9 +46,9 @@ describe("walkSynch", () => {
 
   afterAll(() => removeFile(TEST_DIR))
 
-  // it('should create list of path', ()=> {
-  //   const ws = walkSync(TEST_DIR)
-  //   expect(ws).toEqual('hey')
-  // })
+  it('should create list of path', ()=> {
+    const ws = walkSync(TEST_DIR)
+    expect(ws).toEqual('hey')
+  })
 
 })

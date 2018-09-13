@@ -2,9 +2,9 @@ import { Either, left, right } from "fp-ts/lib/Either";
 import { IO } from "fp-ts/lib/IO";
 import { curry } from "ramda";
 import { pathExistsSync} from 'fs-extra'
-import * as klawSync from 'klaw-sync'
-
+import klawSync from "klaw-sync"
 const m = {
+
   errPath: "path is invalid"
 };
 
@@ -15,7 +15,7 @@ export const fileExist = curry(
     new IO(() => (!pathExistsSync(path) ? left(errMessage) : right(true)))
 );
 
-export const walkSync = (path:string):ReadonlyArray<klawSync.Item> => klawSync(path)
+export const walkSync = (path:string) => klawSync(path)
 
 const program = () => fileExist("test", m.errPath).chain(log);
 
