@@ -11,14 +11,14 @@ const m = {
 const log = <T>(obj: T): IO<void> => new IO(() => console.log(obj));
 
 export const fileExist = curry(
-  (path: string, errMessage: string): IO<Either<string, boolean>> =>
+  (errMessage: string, path: string): IO<Either<string, boolean>> =>
     new IO(() => (!pathExistsSync(path) ? left(errMessage) : right(true)))
 );
 
 export const walkSync = curry(
   (
-    path: string,
-    errMessage: string
+    errMessage: string,
+    path: string
   ): IO<Either<string, ReadonlyArray<klawSync.Item>>> => {
     return new IO(() => {
       try {
@@ -30,15 +30,7 @@ export const walkSync = curry(
   }
 );
 
-// export const walkSync = (path: string): ReadonlyArray<klawSync.Item> => {
-//   try {
-//     return klawSync(path, { nodir: true });
-//   } catch (err) {
-//     return err;
-//   }
-// };
-
-const program = () => fileExist("test", m.errPath).chain(log);
+const program = () => fileExist(m.errPath, "test").chain(log);
 
 // tslint:disable-next-line:no-expression-statement
 program().run();

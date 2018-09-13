@@ -19,12 +19,12 @@ describe("fileExist", () => {
   afterAll(() => removeFile(TEST_DIR));
 
   it("should be valid for good path", () => {
-    const fe = fileExist(goodPath, msmErrPath).run();
+    const fe = fileExist(msmErrPath, goodPath).run();
     expect(fe.value).toEqual(true);
   });
 
   it("should be invalid for bad path", () => {
-    const fe = fileExist(badPath, msmErrPath).run();
+    const fe = fileExist(msmErrPath, badPath).run();
     expect(fe.value).toEqual(msmErrPath);
   });
 });
@@ -49,13 +49,13 @@ describe("walkSynch", () => {
       path,
       stats: statSync(path)
     }));
-    const ws = walkSync(TEST_DIR, errWalk).run();
+    const ws = walkSync(errWalk, TEST_DIR).run();
     expect(ws.value.length).toEqual(result.length);
     expect(ws.value).toEqual(result);
   });
 
-  it("should return an error message if a problem with walk", () => {
-    const ws = walkSync(badPath, errWalk).run();
+  it("should return an error message if it does not walk", () => {
+    const ws = walkSync(errWalk, badPath).run();
     expect(ws.value).toBe(errWalk);
   });
 });
