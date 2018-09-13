@@ -26,7 +26,6 @@
   },
   "homepage": "https://github.com/gibbok/files-importer#readme",
   "dependencies": {
-    "@types/klaw-sync": "^2.0.0",
     "fp-ts": "^1.8.0",
     "klaw-sync": "^5.0.0",
     "ramda": "^0.25.0",
@@ -35,6 +34,7 @@
   "devDependencies": {
     "@types/fs-extra": "^5.0.4",
     "@types/jest": "^23.3.2",
+    "@types/klaw-sync": "^2.0.0",
     "@types/node": "^10.9.4",
     "@types/ramda": "^0.25.37",
     "fs-extra": "^7.0.0",
