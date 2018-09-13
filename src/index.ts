@@ -1,7 +1,7 @@
 import { Either, left, right } from "fp-ts/lib/Either";
 import { IO } from "fp-ts/lib/IO";
 import { curry } from "ramda";
-import { pathExistsSync} from 'fs-extra'
+import { pathExistsSync } from 'fs-extra'
 import klawSync from "klaw-sync"
 const m = {
 
@@ -15,7 +15,7 @@ export const fileExist = curry(
     new IO(() => (!pathExistsSync(path) ? left(errMessage) : right(true)))
 );
 
-export const walkSync = (path:string) => klawSync(path)
+export const walkSync = (path: string) => klawSync(path, { nodir: true })
 
 const program = () => fileExist("test", m.errPath).chain(log);
 

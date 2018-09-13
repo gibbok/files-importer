@@ -1,7 +1,8 @@
 import { outputFileSync, removeSync } from "fs-extra";
 import { fileExist, walkSync } from "../src";
-import { join} from 'path'
-import { tmpdir} from 'os'
+import { join } from 'path'
+import { tmpdir } from 'os'
+import { statSync } from 'fs'
 
 const TEST_DIR = join(tmpdir(), 'files-importer')
 
@@ -33,22 +34,24 @@ describe("fileExist", () => {
 
 
 describe("walkSynch", () => {
-  const files = [
-    `${TEST_DIR}file1.txt`,
-    `${TEST_DIR}file2.txt`,
+  const fileNames = [
+    `${TEST_DIR}/file1.txt`,
+    `${TEST_DIR}/file2.txt`,
     `${TEST_DIR}/sub/file3.txt`,
     `${TEST_DIR}/sub/file4.txt`,
     `${TEST_DIR}/sub/sub/file5.txt`,
     `${TEST_DIR}/sub/sub/file6.txt`,
   ]
 
-  beforeAll(() => files.map(createFile))
+  beforeAll(() => fileNames.map(createFile))
 
   afterAll(() => removeFile(TEST_DIR))
 
-  it('should create list of path', ()=> {
+  it('should create path list', () => {
+    const result = fileNames.map((path: string) => { return { path: path, stats: statSync(path) } })
     const ws = walkSync(TEST_DIR)
-    expect(ws).toEqual('hey')
+    expect(ws.length).toEqual(result.length)
+    expect(ws).toEqual(result)
   })
 
 })
