@@ -12,7 +12,7 @@ const badPath = "./invalid-path";
 
 describe("fileExist", () => {
   const msmErrPath = "path is invalid";
-  const goodPath = `${TEST_DIR}file.txt`;
+  const goodPath = `${TEST_DIR}/file.txt`;
 
   beforeAll(() => createFile(goodPath));
 
