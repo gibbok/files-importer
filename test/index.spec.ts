@@ -30,6 +30,7 @@ describe("fileExist", () => {
 });
 
 describe("walkSynch", () => {
+  const errWalk = "err walk";
   const fileNames: ReadonlyArray<string> = [
     `${TEST_DIR}/file1.txt`,
     `${TEST_DIR}/file2.txt`,
@@ -48,14 +49,13 @@ describe("walkSynch", () => {
       path,
       stats: statSync(path)
     }));
-    const ws = walkSync(TEST_DIR);
-    expect(ws.length).toEqual(result.length);
-    expect(ws).toEqual(result);
+    const ws = walkSync(TEST_DIR, errWalk).run();
+    expect(ws.value.length).toEqual(result.length);
+    expect(ws.value).toEqual(result);
   });
 
-  it("should return an error if path does not exist", () => {
-    const ws = walkSync(badPath);
-    expect(ws.length).toEqual(result.length);
-    expect(ws).toEqual(result);
+  it("should return an error message if a problem with walk", () => {
+    const ws = walkSync(badPath, errWalk).run();
+    expect(ws.value).toBe(errWalk);
   });
 });

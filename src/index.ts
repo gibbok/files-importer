@@ -4,7 +4,8 @@ import { pathExistsSync } from "fs-extra";
 import klawSync from "klaw-sync";
 import { curry } from "ramda";
 const m = {
-  errPath: "path is invalid"
+  errPath: "path is invalid",
+  errWalk: "err walk"
 };
 
 const log = <T>(obj: T): IO<void> => new IO(() => console.log(obj));
