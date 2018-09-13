@@ -6,10 +6,10 @@ import * as pathN from "path";
 import { fileExist, walkSync } from "../src";
 
 const TEST_DIR = pathN.join(tmpdir(), "files-importer");
+const BAD_PATH = "./invalid-path";
 
 const createFile = (path: string) => outputFileSync(path, "hello!");
 const removeFile = (path: string) => removeSync(path);
-const badPath = "./invalid-path";
 
 describe("fileExist", () => {
   const goodPath = `${TEST_DIR}/file.txt`;
@@ -24,12 +24,16 @@ describe("fileExist", () => {
   });
 
   it("should throw an error for an invalid path", () => {
-    const fe = fileExist(badPath).run();
+    const fe = fileExist(BAD_PATH).run();
     assert.strictEqual(fe.value instanceof Error, true);
   });
 });
 
 describe("walkSynch", () => {
+  beforeAll(() => fileNames.map(createFile));
+
+  afterAll(() => removeFile(TEST_DIR));
+
   const fileNames: ReadonlyArray<string> = [
     `${TEST_DIR}/file1.txt`,
     `${TEST_DIR}/file2.txt`,
@@ -38,10 +42,6 @@ describe("walkSynch", () => {
     `${TEST_DIR}/sub/sub/file5.txt`,
     `${TEST_DIR}/sub/sub/file6.txt`
   ];
-
-  beforeAll(() => fileNames.map(createFile));
-
-  afterAll(() => removeFile(TEST_DIR));
 
   it("should create path list", () => {
     const result = fileNames.map((path: string) => ({
@@ -53,7 +53,7 @@ describe("walkSynch", () => {
   });
 
   it("should throw an error if it does not walk", () => {
-    const ws = walkSync(badPath).run();
+    const ws = walkSync(BAD_PATH).run();
     assert.strictEqual(ws.value instanceof Error, true);
   });
 });
