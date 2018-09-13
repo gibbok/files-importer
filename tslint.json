@@ -26,7 +26,7 @@
     ],
     "readonly-array": true,
     "no-let": true,
-    "no-console":false,
+    "no-console": false,
     "no-object-mutation": true,
     "no-delete": true,
     "no-method-signature": true,
@@ -45,7 +45,7 @@
           "afterAll",
           "afterEach",
           "beforeAll",
-          "beforeEach",
+          "beforeEach"
         ]
       }
     ],

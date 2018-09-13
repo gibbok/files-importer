@@ -10,7 +10,8 @@
     "tsc": "tsc",
     "tsc:watch": "npm run tsc -- --watch --pretty",
     "lint": "tslint -t codeFrame -p ./tsconfig.json -c ./tslint.json",
-    "lint:fix": "npm run lint -- --fix"
+    "lint:fix": "npm run lint -- --fix",
+    "tslint-check": "tslint-config-prettier-check ./tslint.json"
   },
   "engines": {
     "node": ">=10.3.0"
