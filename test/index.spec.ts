@@ -8,11 +8,11 @@ const TEST_DIR = pathN.join(tmpdir(), "files-importer");
 
 const createFile = (path: string) => outputFileSync(path, "hello!");
 const removeFile = (path: string) => removeSync(path);
+const badPath = "./invalid-path";
 
 describe("fileExist", () => {
   const msmErrPath = "path is invalid";
   const goodPath = `${TEST_DIR}file.txt`;
-  const badPath = "./invalid-path";
 
   beforeAll(() => createFile(goodPath));
 
@@ -49,6 +49,12 @@ describe("walkSynch", () => {
       stats: statSync(path)
     }));
     const ws = walkSync(TEST_DIR);
+    expect(ws.length).toEqual(result.length);
+    expect(ws).toEqual(result);
+  });
+
+  it("should return an error if path does not exist", () => {
+    const ws = walkSync(badPath);
     expect(ws.length).toEqual(result.length);
     expect(ws).toEqual(result);
   });
