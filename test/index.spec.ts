@@ -30,7 +30,7 @@ describe("fileExist", () => {
 });
 
 describe("walkSynch", () => {
-  const fileNames: ReadonlyArray<any> = [
+  const fileNames: ReadonlyArray<string> = [
     `${TEST_DIR}/file1.txt`,
     `${TEST_DIR}/file2.txt`,
     `${TEST_DIR}/sub/file3.txt`,
