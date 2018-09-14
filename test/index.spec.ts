@@ -20,7 +20,7 @@ describe("fileExist", () => {
 
   it("should be valid for good path", () => {
     const fe = fileExist(goodPath).run();
-    expect(fe.value).toEqual(true);
+    assert.strictEqual(fe.value, true);
   });
 
   it("should throw an error for an invalid path", () => {
