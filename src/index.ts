@@ -1,5 +1,6 @@
-import { Either, left, right } from "fp-ts/lib/Either";
+import { Either, left, Left, right, Right } from "fp-ts/lib/Either";
 import { error } from "fp-ts/lib/Exception";
+import { Curried2, curry } from "fp-ts/lib/function";
 import { IO } from "fp-ts/lib/IO";
 import { pathExistsSync } from "fs-extra";
 import klawSync from "klaw-sync";
@@ -23,6 +24,15 @@ export const walkSync = (
     }
   });
 };
+
+export const isTargetDifferentFromSource: Curried2<
+  string,
+  string,
+  Left<Error, {}> | Right<Error, {}> | Left<{}, boolean> | Right<{}, boolean>
+> = curry(
+  (targetPath: string, destinationPath: string) =>
+    targetPath === destinationPath ? left(error("error")) : right(true)
+);
 
 const program = () => fileExist("test").chain(log);
 
