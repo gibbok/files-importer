@@ -3,7 +3,7 @@ import { statSync } from "fs";
 import { outputFileSync, removeSync } from "fs-extra";
 import { tmpdir } from "os";
 import * as pathN from "path";
-import { fileExist, walkSync } from "../src";
+import { fileExist, isTargetDifferentFromSourcePath, walkSync } from "../src";
 
 const TEST_DIR = pathN.join(tmpdir(), "files-importer");
 const BAD_PATH = "./invalid-path";
@@ -18,14 +18,14 @@ describe("fileExist", () => {
 
   afterAll(() => removeFile(TEST_DIR));
 
-  it("should be valid for good path", () => {
-    const fe = fileExist(goodPath).run();
-    assert.strictEqual(fe.value, true);
-  });
-
   it("should throw an error for an invalid path", () => {
     const fe = fileExist(BAD_PATH).run();
     assert.strictEqual(fe.value instanceof Error, true);
+  });
+
+  it("should be valid for good path", () => {
+    const fe = fileExist(goodPath).run();
+    assert.strictEqual(fe.value, true);
   });
 });
 
@@ -43,6 +43,11 @@ describe("walkSynch", () => {
     `${TEST_DIR}/sub/sub/file6.txt`
   ];
 
+  it("should throw an error if it does not walk", () => {
+    const ws = walkSync(BAD_PATH).run();
+    assert.strictEqual(ws.value instanceof Error, true);
+  });
+
   it("should create path list", () => {
     const result = fileNames.map((path: string) => ({
       path,
@@ -52,8 +57,15 @@ describe("walkSynch", () => {
     assert.deepStrictEqual(ws.value, result);
   });
 
-  it("should throw an error if it does not walk", () => {
-    const ws = walkSync(BAD_PATH).run();
-    assert.strictEqual(ws.value instanceof Error, true);
+  describe("isTargetDifferentFromSourcePath", () => {
+    it("should throw an error if target and source paths are identical", () => {
+      const ts = isTargetDifferentFromSourcePath(TEST_DIR)(TEST_DIR);
+      assert.strictEqual(ts.value instanceof Error, true);
+    });
+
+    it("should return true if target and source paths are different", () => {
+      const ts = isTargetDifferentFromSourcePath(TEST_DIR)("valid-path");
+      assert.strictEqual(ts.value, true);
+    });
   });
 });

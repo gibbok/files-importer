@@ -25,7 +25,7 @@ export const walkSync = (
   });
 };
 
-export const isTargetDifferentFromSource: Curried2<
+export const isTargetDifferentFromSourcePath: Curried2<
   string,
   string,
   Left<Error, {}> | Right<Error, {}> | Left<{}, boolean> | Right<{}, boolean>
