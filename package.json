@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && node ./dist",
+    "start": "tsc && node ./dist/src",
     "test": "jest --config ./jest-config.json",
     "test:watch": "jest --config ./jest-config.json --watch --coverage false",
     "tsc": "tsc",

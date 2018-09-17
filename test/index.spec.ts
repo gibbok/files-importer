@@ -3,7 +3,7 @@ import { statSync } from "fs";
 import { outputFileSync, removeSync } from "fs-extra";
 import { tmpdir } from "os";
 import * as pathN from "path";
-import { fileExist, isTargetDifferentFromSourcePath, walkSync } from "../src";
+import { isTargetDifferentFromSourcePath, pathExist, walkSync } from "../src";
 
 const TEST_DIR = pathN.join(tmpdir(), "files-importer");
 const BAD_PATH = "./invalid-path";
@@ -19,12 +19,12 @@ describe("fileExist", () => {
   afterAll(() => removeFile(TEST_DIR));
 
   it("should throw an error for an invalid path", () => {
-    const fe = fileExist(BAD_PATH).run();
+    const fe = pathExist(BAD_PATH).run();
     assert.strictEqual(fe.value instanceof Error, true);
   });
 
   it("should be valid for good path", () => {
-    const fe = fileExist(goodPath).run();
+    const fe = pathExist(goodPath).run();
     assert.strictEqual(fe.value, true);
   });
 });
