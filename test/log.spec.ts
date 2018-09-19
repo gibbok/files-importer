@@ -13,8 +13,8 @@ describe("loggger", () => {
 
 describe("withPrefix", () => {
   it("should add prefix", () => {
-    const wp = withPrefix("message");
-    assert.equal(wp, "\n message");
+    const str = withPrefix("m");
+    assert.equal(str, `\n m`);
   });
 });
 
