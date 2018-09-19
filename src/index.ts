@@ -1,6 +1,6 @@
-import { Either, left, Left, right, Right } from "fp-ts/lib/Either";
+import { Either, left, right } from "fp-ts/lib/Either";
 import { error } from "fp-ts/lib/Exception";
-import { Curried2, curry } from "fp-ts/lib/function";
+import { curry } from "fp-ts/lib/function";
 import { IO } from "fp-ts/lib/IO";
 import { pathExistsSync } from "fs-extra";
 import klawSync from "klaw-sync";
@@ -31,17 +31,15 @@ export const isTargetDifferentFromSourcePath = curry(
     targetPath === destinationPath ? left(error("error")) : right(true)
 );
 
-export const comparePaths = curry((targetPath: string, sourcePath: string) => {
-  const result = isTargetDifferentFromSourcePath(targetPath)(sourcePath)
-    .chain(() => pathExist(targetPath))
-    .chain(() => pathExist(sourcePath));
-  return result;
-});
+// export const comparePaths = curry((targetPath: string, sourcePath: string) => {
+//   const result = isTargetDifferentFromSourcePath(targetPath)(sourcePath)
+//     .chain(() => pathExist(targetPath))
+//     .chain(() => pathExist(sourcePath));
+//   return result;
+// });
 
-const args = process.argv;
-console.log(args);
-console.log("runs!");
-const program = () => comparePaths(args[3])(args[4]);
+// const args = process.argv;
+// const program = () => comparePaths(args[3])(args[4]);
 
 // tslint:disable-next-line:no-expression-statement
-program();
+// program();
