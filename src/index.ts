@@ -1,8 +1,7 @@
-import { Either, left, right } from "fp-ts/lib/Either";
+import { left, right } from "fp-ts/lib/Either";
 import { error } from "fp-ts/lib/Exception";
 import { curry } from "fp-ts/lib/function";
-import { IO } from "fp-ts/lib/IO";
-import { fromEither, IOEither } from "fp-ts/lib/IOEither";
+import { fromEither, IOEither, tryCatch } from "fp-ts/lib/IOEither";
 import { pathExistsSync } from "fs-extra";
 import klawSync from "klaw-sync";
 
@@ -13,15 +12,20 @@ export const pathExist = (path: string): IOEither<Error, string> =>
 
 export const walkSync = (
   path: string
-): IO<Either<Error, ReadonlyArray<klawSync.Item>>> => {
-  return new IO(() => {
-    try {
-      return right(klawSync(path, { nodir: true }));
-    } catch {
-      return left(error("error cannot walk"));
-    }
-  });
-};
+): IOEither<Error, ReadonlyArray<klawSync.Item>> =>
+  tryCatch(() => klawSync(path, { nodir: true }));
+
+// export const walkSync = (
+//   path: string
+// ): IO<Either<Error, ReadonlyArray<klawSync.Item>>> => {
+//   return new IO(() => {
+//     try {
+//       return right(klawSync(path, { nodir: true }));
+//     } catch {
+//       return left(error("error cannot walk"));
+//     }
+//   });
+// };
 
 export const isTargetDifferentFromSourcePath = curry(
   (targetPath: string, destinationPath: string) =>
