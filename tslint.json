@@ -38,7 +38,6 @@
       true,
       {
         "ignore-prefix": [
-          "console.",
           "it",
           "expect",
           "describe",
