@@ -11,7 +11,7 @@ const BAD_PATH = "./invalid-path";
 const createFile = (path: string) => outputFileSync(path, "hello!");
 const removeFile = (path: string) => removeSync(path);
 
-describe("fileExist", () => {
+describe("pathExist", () => {
   const goodPath = `${TEST_DIR}/file.txt`;
 
   beforeAll(() => createFile(goodPath));
@@ -25,7 +25,7 @@ describe("fileExist", () => {
 
   it("should be valid for good path", () => {
     const fe = pathExist(goodPath).run();
-    assert.strictEqual(fe.value, true);
+    assert.strictEqual(fe.value, goodPath);
   });
 });
 

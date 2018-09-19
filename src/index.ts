@@ -2,16 +2,13 @@ import { Either, left, right } from "fp-ts/lib/Either";
 import { error } from "fp-ts/lib/Exception";
 import { curry } from "fp-ts/lib/function";
 import { IO } from "fp-ts/lib/IO";
+import { fromEither, IOEither } from "fp-ts/lib/IOEither";
 import { pathExistsSync } from "fs-extra";
 import klawSync from "klaw-sync";
 
-// @ts-ignore
-const log = <T>(obj: T): IO<void> => new IO(() => console.log(obj));
-
-export const pathExist = (path: string): IO<Either<Error, boolean>> =>
-  new IO(
-    () =>
-      !pathExistsSync(path) ? left(error("error path invalid")) : right(true)
+export const pathExist = (path: string): IOEither<Error, string> =>
+  fromEither(
+    pathExistsSync(path) ? right(path) : left(error("path is invalid"))
   );
 
 export const walkSync = (

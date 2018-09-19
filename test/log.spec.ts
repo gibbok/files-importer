@@ -2,7 +2,7 @@
 import * as assert from "assert";
 import { error, logger, success, withPrefix } from "../src/log";
 
-describe("loggger", () => {
+describe("logger", () => {
   it("should log a string", () => {
     const spy = jest.spyOn(console, "log");
     logger("message").run();
