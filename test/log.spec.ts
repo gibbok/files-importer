@@ -3,7 +3,7 @@ import * as assert from "assert";
 import { error, logger, success, withPrefix } from "../src/log";
 
 describe("loggger", () => {
-  it("should log", () => {
+  it("should log a string", () => {
     const spy = jest.spyOn(console, "log");
     logger("message").run();
     expect(console.log).toHaveBeenCalled();
@@ -12,25 +12,25 @@ describe("loggger", () => {
 });
 
 describe("withPrefix", () => {
-  it("should add prefix", () => {
+  it("should add a prefix to a string", () => {
     const str = withPrefix("m");
     assert.equal(str, `\n m`);
   });
 });
 
 describe("success", () => {
-  it("should prefix success message", () => {
+  it("should add a prefix to a success string", () => {
     const str = success("m");
     assert.equal(str.includes(`\n`), true);
   });
 });
 
 describe("error", () => {
-  it("should prefix error message", () => {
+  it("should add a prefix to an error string", () => {
     const str = error("m");
     assert.equal(str.includes(`\n`), true);
   });
 });
 
-logger(success("iam a success")).run();
-logger(error("im an error")).run();
+logger(success("i am a success")).run();
+logger(error("i m an error")).run();
