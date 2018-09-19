@@ -27,6 +27,8 @@
   },
   "homepage": "https://github.com/gibbok/files-importer#readme",
   "dependencies": {
+    "@types/chalk": "^2.2.0",
+    "chalk": "^2.4.1",
     "fp-ts": "^1.8.0",
     "klaw-sync": "^5.0.0",
     "ramda": "^0.25.0",
