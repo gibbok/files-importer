@@ -11,3 +11,8 @@ export const success = compose<string, string, string>(
   chalk.bold.greenBright,
   withPrefix
 );
+
+export const error = compose<string, string, string>(
+  chalk.bold.red,
+  withPrefix
+);

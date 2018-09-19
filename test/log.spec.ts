@@ -1,6 +1,6 @@
 // tslint:disable: no-expression-statement
 import * as assert from "assert";
-import { logger, success, withPrefix } from "../src/log";
+import { error, logger, success, withPrefix } from "../src/log";
 
 describe("loggger", () => {
   it("should log", () => {
@@ -24,3 +24,13 @@ describe("success", () => {
     assert.equal(str.includes(`\n`), true);
   });
 });
+
+describe("error", () => {
+  it("should prefix error message", () => {
+    const str = error("m");
+    assert.equal(str.includes(`\n`), true);
+  });
+});
+
+logger(success("iam a success")).run();
+logger(error("im an error")).run();
