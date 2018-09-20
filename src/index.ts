@@ -1,4 +1,4 @@
-import { left, right } from "fp-ts/lib/Either";
+import { Either, left, right } from "fp-ts/lib/Either";
 import { error } from "fp-ts/lib/Exception";
 import { curry } from "fp-ts/lib/function";
 import { fromEither, IOEither, tryCatch } from "fp-ts/lib/IOEither";
@@ -10,16 +10,23 @@ export const pathExist = (path: string): IOEither<Error, string> =>
     pathExistsSync(path) ? right(path) : left(error("path is invalid"))
   );
 
+export const checkArgs = (
+  args: ReadonlyArray<string>
+): Either<Error, ReadonlyArray<string>> =>
+  args.length <= 2
+    ? left(error("source and destination must be specified"))
+    : right(args);
+
 export const walkSync = (
   path: string
 ): IOEither<Error, ReadonlyArray<klawSync.Item>> =>
   tryCatch(() => klawSync(path, { nodir: true }));
 
-export const isTargetDifferentFromSourcePath = curry(
-  (target: string, source: string) =>
-    target !== source
-      ? right(target)
-      : left(error("target and source paths must be different"))
+export const isDestinationDifferentFromSourcePath = curry(
+  (destination: string, source: string) =>
+    destination !== source
+      ? right(destination)
+      : left(error("destination and source paths must be different"))
 );
 
 // export const comparePaths = curry((targetPath: string, sourcePath: string) => {

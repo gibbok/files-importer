@@ -31,6 +31,3 @@ describe("error", () => {
     assert.equal(str.includes(`\n`), true);
   });
 });
-
-logger(success("i am a success")).run();
-logger(error("i m an error")).run();

@@ -3,7 +3,12 @@ import { statSync } from "fs";
 import { outputFileSync, removeSync } from "fs-extra";
 import { tmpdir } from "os";
 import * as pathN from "path";
-import { isTargetDifferentFromSourcePath, pathExist, walkSync } from "../src";
+import {
+  checkArgs,
+  isDestinationDifferentFromSourcePath,
+  pathExist,
+  walkSync
+} from "../src";
 
 const TEST_DIR = pathN.join(tmpdir(), "files-importer");
 const BAD_PATH = "./invalid-path";
@@ -56,16 +61,29 @@ describe("walkSynch", () => {
     const ws = walkSync(TEST_DIR).run();
     assert.deepStrictEqual(ws.value, result);
   });
+});
 
-  describe("isTargetDifferentFromSourcePath", () => {
-    it("should throw an error if target and source paths are identical", () => {
-      const ts = isTargetDifferentFromSourcePath(TEST_DIR)(TEST_DIR);
-      assert.strictEqual(ts.value instanceof Error, true);
-    });
+describe("isDestinationDifferentFromSourcePath", () => {
+  it("should throw an error if target and source paths are identical", () => {
+    const ts = isDestinationDifferentFromSourcePath(TEST_DIR)(TEST_DIR);
+    assert.strictEqual(ts.value instanceof Error, true);
+  });
 
-    it("should return true if target and source paths are different", () => {
-      const ts = isTargetDifferentFromSourcePath(TEST_DIR)("source");
-      assert.strictEqual(ts.value, TEST_DIR);
-    });
+  it("should return true if target and source paths are different", () => {
+    const ts = isDestinationDifferentFromSourcePath(TEST_DIR)("source");
+    assert.strictEqual(ts.value, TEST_DIR);
+  });
+});
+
+describe("checkArgs", () => {
+  it("should throw an error if source and target are not present", () => {
+    const ca = checkArgs([]);
+    assert.strictEqual(ca.value instanceof Error, true);
+  });
+
+  it("should return args", () => {
+    const args: ReadonlyArray<string> = ["a", "b", "c", "d"];
+    const ca = checkArgs(args);
+    assert.deepStrictEqual(ca.value, args);
   });
 });
