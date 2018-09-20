@@ -64,8 +64,8 @@ describe("walkSynch", () => {
     });
 
     it("should return true if target and source paths are different", () => {
-      const ts = isTargetDifferentFromSourcePath(TEST_DIR)("valid-path");
-      assert.strictEqual(ts.value, true);
+      const ts = isTargetDifferentFromSourcePath(TEST_DIR)("source");
+      assert.strictEqual(ts.value, TEST_DIR);
     });
   });
 });

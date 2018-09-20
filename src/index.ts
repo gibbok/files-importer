@@ -15,21 +15,11 @@ export const walkSync = (
 ): IOEither<Error, ReadonlyArray<klawSync.Item>> =>
   tryCatch(() => klawSync(path, { nodir: true }));
 
-// export const walkSync = (
-//   path: string
-// ): IO<Either<Error, ReadonlyArray<klawSync.Item>>> => {
-//   return new IO(() => {
-//     try {
-//       return right(klawSync(path, { nodir: true }));
-//     } catch {
-//       return left(error("error cannot walk"));
-//     }
-//   });
-// };
-
 export const isTargetDifferentFromSourcePath = curry(
-  (targetPath: string, destinationPath: string) =>
-    targetPath === destinationPath ? left(error("error")) : right(true)
+  (target: string, source: string) =>
+    target !== source
+      ? right(target)
+      : left(error("target and source paths must be different"))
 );
 
 // export const comparePaths = curry((targetPath: string, sourcePath: string) => {
