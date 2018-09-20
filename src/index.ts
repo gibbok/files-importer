@@ -1,7 +1,6 @@
 import { log } from "fp-ts/lib/Console";
 import { Either, left, right } from "fp-ts/lib/Either";
 import { error } from "fp-ts/lib/Exception";
-import { curry } from "fp-ts/lib/function";
 import { fromEither, IOEither, tryCatch } from "fp-ts/lib/IOEither";
 import { pathExistsSync } from "fs-extra";
 import klawSync from "klaw-sync";
@@ -18,12 +17,12 @@ export const checkArgs = (
     ? left(error("source and destination must be specified"))
     : right(args);
 
-export const isDestinationDifferentFromSourcePath = curry(
-  (destination: string, source: string) =>
-    destination !== source
-      ? right(destination)
-      : left(error("destination and source paths must be different"))
-);
+export const isDestinationDifferentFromSourcePath = (
+  args: ReadonlyArray<string>
+): Either<Error, ReadonlyArray<string>> =>
+  args[4] !== args[3]
+    ? right(args)
+    : left(error("destination and source paths must be different"));
 
 export const walkSync = (
   path: string
@@ -31,7 +30,10 @@ export const walkSync = (
   tryCatch(() => klawSync(path, { nodir: true }));
 
 const program = (args: ReadonlyArray<string>) =>
-  checkArgs(args).chain(isDestinationDifferentFromSourcePath(args[3])(args[4]));
+  checkArgs(args)
+    .chain(isDestinationDifferentFromSourcePath)
+    .map(x => log(x).run());
+
 // tslint:disable-next-line:no-expression-statement
 program(process.argv);
 /*
