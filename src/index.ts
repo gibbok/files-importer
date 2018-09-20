@@ -19,11 +19,11 @@ export const checkArgs = (
 
 export const isDestinationDifferentFromSourcePath = (
   args: ReadonlyArray<string>
-): Either<Error, ReadonlyArray<string>> =>
-  args[4] !== args[3]
+): Either<Error, any> => {
+  return args[2] !== args[3]
     ? right(args)
     : left(error("destination and source paths must be different"));
-
+};
 export const walkSync = (
   path: string
 ): IOEither<Error, ReadonlyArray<klawSync.Item>> =>
@@ -32,7 +32,7 @@ export const walkSync = (
 const program = (args: ReadonlyArray<string>) =>
   checkArgs(args)
     .chain(isDestinationDifferentFromSourcePath)
-    .map(x => log(x).run());
+    .map(x => log(`${JSON.stringify(x, undefined, 4)} \n >>>>>>>> ok`).run());
 
 // tslint:disable-next-line:no-expression-statement
 program(process.argv);
@@ -42,7 +42,10 @@ program(process.argv);
   - if right passes check each single arg to pathExist
   - if right walkSynch
   - if right checkSum
-*/
+
+  `npm start a a` => left
+  `npm start a b` => right
+  */
 
 // export const comparePaths = curry((targetPath: string, sourcePath: string) => {
 //   const result = isTargetDifferentFromSourcePath(targetPath)(sourcePath)

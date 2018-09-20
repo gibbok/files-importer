@@ -65,13 +65,19 @@ describe("walkSynch", () => {
 
 describe("isDestinationDifferentFromSourcePath", () => {
   it("should throw an error if target and source paths are identical", () => {
-    const ts = isDestinationDifferentFromSourcePath(TEST_DIR)(TEST_DIR);
+    const ts = isDestinationDifferentFromSourcePath([
+      "npm",
+      "start",
+      TEST_DIR,
+      TEST_DIR
+    ]);
     assert.strictEqual(ts.value instanceof Error, true);
   });
 
   it("should return true if target and source paths are different", () => {
-    const ts = isDestinationDifferentFromSourcePath(TEST_DIR)("source");
-    assert.strictEqual(ts.value, TEST_DIR);
+    const args: ReadonlyArray<string> = ["npm", "start", TEST_DIR, "source"];
+    const ts = isDestinationDifferentFromSourcePath(args);
+    assert.deepStrictEqual(ts.value, args);
   });
 });
 
@@ -82,7 +88,12 @@ describe("checkArgs", () => {
   });
 
   it("should return args", () => {
-    const args: ReadonlyArray<string> = ["a", "b", "c", "d"];
+    const args: ReadonlyArray<string> = [
+      "npm",
+      "start",
+      "destination",
+      "source"
+    ];
     const ca = checkArgs(args);
     assert.deepStrictEqual(ca.value, args);
   });
