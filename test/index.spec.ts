@@ -3,7 +3,7 @@ import { statSync } from "fs";
 import { outputFileSync, removeSync } from "fs-extra";
 import { tmpdir } from "os";
 import * as pathN from "path";
-import { checkPaths, checkArgs, pathExist, walkSync } from "../src";
+import { checkArgs, checkPaths, pathExist, walkSync } from "../src";
 
 const TEST_DIR = pathN.join(tmpdir(), "files-importer");
 const BAD_PATH = "./invalid-path";
