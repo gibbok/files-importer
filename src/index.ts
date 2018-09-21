@@ -17,12 +17,11 @@ export const checkArgs = (
     ? left(error("source and destination must be specified"))
     : right(args);
 
-export const isDestinationDifferentFromSourcePath = (
-  args: ReadonlyArray<string>
-): Either<Error, any> => {
-  return args[2] !== args[3]
-    ? right(args)
-    : left(error("destination and source paths must be different"));
+export const checkPaths = (args: ReadonlyArray<string>): Either<Error, any> => {
+  const [, , source, destination] = args;
+  return source !== destination
+    ? right([source, destination])
+    : left(error("source and destination paths must be different"));
 };
 export const walkSync = (
   path: string
@@ -31,7 +30,7 @@ export const walkSync = (
 
 const program = (args: ReadonlyArray<string>) =>
   checkArgs(args)
-    .chain(isDestinationDifferentFromSourcePath)
+    .chain(checkPaths)
     .map(x => log(`${JSON.stringify(x, undefined, 4)} \n >>>>>>>> ok`).run());
 
 // tslint:disable-next-line:no-expression-statement

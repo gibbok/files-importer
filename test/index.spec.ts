@@ -3,12 +3,7 @@ import { statSync } from "fs";
 import { outputFileSync, removeSync } from "fs-extra";
 import { tmpdir } from "os";
 import * as pathN from "path";
-import {
-  checkArgs,
-  isDestinationDifferentFromSourcePath,
-  pathExist,
-  walkSync
-} from "../src";
+import { checkPaths, checkArgs, pathExist, walkSync } from "../src";
 
 const TEST_DIR = pathN.join(tmpdir(), "files-importer");
 const BAD_PATH = "./invalid-path";
@@ -65,18 +60,13 @@ describe("walkSynch", () => {
 
 describe("isDestinationDifferentFromSourcePath", () => {
   it("should throw an error if target and source paths are identical", () => {
-    const ts = isDestinationDifferentFromSourcePath([
-      "npm",
-      "start",
-      TEST_DIR,
-      TEST_DIR
-    ]);
+    const ts = checkPaths(["npm", "start", TEST_DIR, TEST_DIR]);
     assert.strictEqual(ts.value instanceof Error, true);
   });
 
   it("should return true if target and source paths are different", () => {
     const args: ReadonlyArray<string> = ["npm", "start", TEST_DIR, "source"];
-    const ts = isDestinationDifferentFromSourcePath(args);
+    const ts = checkPaths(args);
     assert.deepStrictEqual(ts.value, args);
   });
 });
