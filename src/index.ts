@@ -1,8 +1,8 @@
 import { log } from "fp-ts/lib/Console";
 import { Either, left, right } from "fp-ts/lib/Either";
-import { error } from "fp-ts/lib/Exception";
+import { not } from "fp-ts/lib/function";
 import { IO } from "fp-ts/lib/IO";
-import { fromEither, IOEither, tryCatch } from "fp-ts/lib/IOEither";
+import { IOEither, tryCatch } from "fp-ts/lib/IOEither";
 import { pathExistsSync } from "fs-extra";
 import klawSync from "klaw-sync";
 
@@ -25,10 +25,8 @@ export const checkPaths = (
     : right([source, destination]);
 };
 
-export const pathExist = (path: string): IOEither<Error, string> =>
-  fromEither(
-    pathExistsSync(path) ? right(path) : left(error("path is invalid"))
-  );
+export const pathExist = (path: string): Either<IO<void>, string> =>
+  not(pathExistsSync) ? left(log("path is invalid")) : right(path);
 
 export const walkSync = (
   path: string

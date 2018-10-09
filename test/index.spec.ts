@@ -72,13 +72,17 @@ describe("pathExist", () => {
 
   afterAll(() => removeFile(TEST_DIR));
 
-  it("should throw an error for an invalid path", () => {
-    const fe = pathExist(BAD_PATH).run();
-    assert.strictEqual(fe.value instanceof Error, true);
+  it("should return left if path is invalid", () => {
+    const fe = pathExist(BAD_PATH);
+    assert.strictEqual(fe.isLeft(), true);
+    assert.strictEqual(fe.isRight(), false);
   });
 
-  it("should be valid for good path", () => {
-    const fe = pathExist(goodPath).run();
+  it("should return right if path is valid", () => {
+    console.log("xxxxxxxx", goodPath);
+    const fe = pathExist(goodPath);
+    assert.strictEqual(fe.isLeft(), false);
+    assert.strictEqual(fe.isRight(), true);
     assert.strictEqual(fe.value, goodPath);
   });
 });
