@@ -72,12 +72,27 @@ describe("isDestinationDifferentFromSourcePath", () => {
 });
 
 describe("checkArgs", () => {
-  it("should throw an error if source and target are not present", () => {
-    const ca = checkArgs([]);
-    assert.strictEqual(ca.value instanceof Error, true);
+  it("should return left when not all arguments are passed", () => {
+    const args: ReadonlyArray<string> = ["npm", "start"];
+    const ca = checkArgs(args);
+    assert.strictEqual(ca.isLeft(), true);
+    assert.strictEqual(ca.isRight(), false);
   });
 
-  it("should return args", () => {
+  it("should return left when more arguments are passed", () => {
+    const args: ReadonlyArray<string> = [
+      "npm",
+      "start",
+      "destination",
+      "source",
+      "other"
+    ];
+    const ca = checkArgs(args);
+    assert.strictEqual(ca.isLeft(), true);
+    assert.strictEqual(ca.isRight(), false);
+  });
+
+  it("should return args when destination and source are passed", () => {
     const args: ReadonlyArray<string> = [
       "npm",
       "start",
@@ -86,5 +101,7 @@ describe("checkArgs", () => {
     ];
     const ca = checkArgs(args);
     assert.deepStrictEqual(ca.value, args);
+    assert.strictEqual(ca.isLeft(), false);
+    assert.strictEqual(ca.isRight(), true);
   });
 });
