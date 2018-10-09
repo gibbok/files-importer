@@ -1,6 +1,7 @@
 import { log } from "fp-ts/lib/Console";
 import { Either, left, right } from "fp-ts/lib/Either";
 import { error } from "fp-ts/lib/Exception";
+import { IO } from "fp-ts/lib/IO";
 import { fromEither, IOEither, tryCatch } from "fp-ts/lib/IOEither";
 import { pathExistsSync } from "fs-extra";
 import klawSync from "klaw-sync";
@@ -12,12 +13,15 @@ export const pathExist = (path: string): IOEither<Error, string> =>
 
 export const checkArgs = (
   args: ReadonlyArray<string>
-): Either<Error, ReadonlyArray<string>> =>
-  args.length <= 2
-    ? left(error("source and destination must be specified"))
-    : right(args);
+): Either<IO<void>, ReadonlyArray<string>> => {
+  return args.length < 4
+    ? left(log("source and destination must be specified"))
+    : args.length > 4
+      ? left(log("other args will be ignore"))
+      : right(args);
+};
 
-export const checkPaths = (args: ReadonlyArray<string>): Either<Error, any> => {
+export const checkPaths = (args: ReadonlyArray<string>): Either<any, any> => {
   const [, , source, destination] = args;
   return source !== destination
     ? right([source, destination])
@@ -31,10 +35,17 @@ export const walkSync = (
 const program = (args: ReadonlyArray<string>) =>
   checkArgs(args)
     .chain(checkPaths)
-    .map(x => log(`${JSON.stringify(x, undefined, 4)} \n >>>>>>>> ok`).run());
+    .fold(
+      y => y.run(),
+      x =>
+        x.map((j: any) =>
+          log(`${JSON.stringify(j, undefined, 4)} \n >>>>>>>> ok`).run()
+        )
+    );
 
 // tslint:disable-next-line:no-expression-statement
 program(process.argv);
+console.log(process.argv);
 /*
   - pass args to checkArgs
   - if right passes check if destination is different from source
