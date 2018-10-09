@@ -21,11 +21,13 @@ export const checkArgs = (
       : right(args);
 };
 
-export const checkPaths = (args: ReadonlyArray<string>): Either<any, any> => {
+export const checkPaths = (
+  args: ReadonlyArray<string>
+): Either<IO<void>, ReadonlyArray<string>> => {
   const [, , source, destination] = args;
-  return source !== destination
-    ? right([source, destination])
-    : left(error("source and destination paths must be different"));
+  return source === destination
+    ? left(log("source and destination paths must be different"))
+    : right([source, destination]);
 };
 export const walkSync = (
   path: string
@@ -36,7 +38,7 @@ const program = (args: ReadonlyArray<string>) =>
   checkArgs(args)
     .chain(checkPaths)
     .fold(
-      y => y.run(),
+      y => y.run(), // run console.log
       x =>
         x.map((j: any) =>
           log(`${JSON.stringify(j, undefined, 4)} \n >>>>>>>> ok`).run()
