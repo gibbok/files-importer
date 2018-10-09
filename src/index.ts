@@ -17,7 +17,7 @@ export const checkArgs = (
   return args.length < 4
     ? left(log("source and destination must be specified"))
     : args.length > 4
-      ? left(log("other args will be ignore"))
+      ? left(log("other arguments are not supported"))
       : right(args);
 };
 
