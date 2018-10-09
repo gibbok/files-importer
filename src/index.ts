@@ -6,11 +6,6 @@ import { fromEither, IOEither, tryCatch } from "fp-ts/lib/IOEither";
 import { pathExistsSync } from "fs-extra";
 import klawSync from "klaw-sync";
 
-export const pathExist = (path: string): IOEither<Error, string> =>
-  fromEither(
-    pathExistsSync(path) ? right(path) : left(error("path is invalid"))
-  );
-
 export const checkArgs = (
   args: ReadonlyArray<string>
 ): Either<IO<void>, ReadonlyArray<string>> => {
@@ -29,6 +24,12 @@ export const checkPaths = (
     ? left(log("source and destination paths must be different"))
     : right([source, destination]);
 };
+
+export const pathExist = (path: string): IOEither<Error, string> =>
+  fromEither(
+    pathExistsSync(path) ? right(path) : left(error("path is invalid"))
+  );
+
 export const walkSync = (
   path: string
 ): IOEither<Error, ReadonlyArray<klawSync.Item>> =>

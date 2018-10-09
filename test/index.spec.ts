@@ -11,6 +11,60 @@ const BAD_PATH = "./invalid-path";
 const createFile = (path: string) => outputFileSync(path, "hello!");
 const removeFile = (path: string) => removeSync(path);
 
+describe("checkArgs", () => {
+  it("should return left when not all arguments are passed", () => {
+    const args: ReadonlyArray<string> = ["npm", "start"];
+    const ca = checkArgs(args);
+    assert.strictEqual(ca.isLeft(), true);
+    assert.strictEqual(ca.isRight(), false);
+  });
+
+  it("should return left when more arguments are passed", () => {
+    const args: ReadonlyArray<string> = [
+      "npm",
+      "start",
+      "destination",
+      "source",
+      "other"
+    ];
+    const ca = checkArgs(args);
+    assert.strictEqual(ca.isLeft(), true);
+    assert.strictEqual(ca.isRight(), false);
+  });
+
+  it("should return right with args when destination and source are passed", () => {
+    const args: ReadonlyArray<string> = [
+      "npm",
+      "start",
+      "destination",
+      "source"
+    ];
+    const ca = checkArgs(args);
+    assert.deepStrictEqual(ca.value, args);
+    assert.strictEqual(ca.isLeft(), false);
+    assert.strictEqual(ca.isRight(), true);
+  });
+});
+
+describe("checkPaths", () => {
+  it("should return left if source and destination paths are identical", () => {
+    const ts = checkPaths(["npm", "start", TEST_DIR, TEST_DIR]);
+    assert.strictEqual(ts.isLeft(), true);
+    assert.strictEqual(ts.isRight(), false);
+  });
+
+  it("should return right with an array if source and destination paths are different", () => {
+    const args: ReadonlyArray<string> = [
+      "npm",
+      "start",
+      TEST_DIR,
+      "destination"
+    ];
+    const ts = checkPaths(args);
+    assert.deepStrictEqual(ts.value, [TEST_DIR, "destination"]);
+  });
+});
+
 describe("pathExist", () => {
   const goodPath = `${TEST_DIR}/file.txt`;
 
@@ -55,54 +109,5 @@ describe("walkSynch", () => {
     }));
     const ws = walkSync(TEST_DIR).run();
     assert.deepStrictEqual(ws.value, result);
-  });
-});
-
-describe("checkPaths", () => {
-  it("should return left if destination and source paths are identical", () => {
-    const ts = checkPaths(["npm", "start", TEST_DIR, TEST_DIR]);
-    assert.strictEqual(ts.isLeft(), true);
-    assert.strictEqual(ts.isRight(), false);
-  });
-
-  it("should return true if target and source paths are different", () => {
-    const args: ReadonlyArray<any> = ["npm", "start", TEST_DIR, "source"];
-    const ts = checkPaths(args);
-    assert.deepStrictEqual(ts.value, [TEST_DIR, "source"]);
-  });
-});
-
-describe("checkArgs", () => {
-  it("should return left when not all arguments are passed", () => {
-    const args: ReadonlyArray<string> = ["npm", "start"];
-    const ca = checkArgs(args);
-    assert.strictEqual(ca.isLeft(), true);
-    assert.strictEqual(ca.isRight(), false);
-  });
-
-  it("should return left when more arguments are passed", () => {
-    const args: ReadonlyArray<string> = [
-      "npm",
-      "start",
-      "destination",
-      "source",
-      "other"
-    ];
-    const ca = checkArgs(args);
-    assert.strictEqual(ca.isLeft(), true);
-    assert.strictEqual(ca.isRight(), false);
-  });
-
-  it("should return args when destination and source are passed", () => {
-    const args: ReadonlyArray<string> = [
-      "npm",
-      "start",
-      "destination",
-      "source"
-    ];
-    const ca = checkArgs(args);
-    assert.deepStrictEqual(ca.value, args);
-    assert.strictEqual(ca.isLeft(), false);
-    assert.strictEqual(ca.isRight(), true);
   });
 });
