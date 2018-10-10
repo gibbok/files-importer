@@ -1,8 +1,12 @@
 {
   "defaultSeverity": "error",
   "extends": [
-    "tslint:latest",
-    "tslint-config-prettier"
+    "tslint:recommended",
+    "tslint-config-standard",
+    "tslint-eslint-rules",
+    "tslint-immutable",
+    "tslint-config-prettier",
+    "tslint-plugin-prettier"
   ],
   "rules": {
     "prettier": true,
@@ -10,12 +14,19 @@
     "interface-over-type-literal": false,
     "member-access": false,
     "object-literal-sort-keys": false,
-    "array-type": [true, "array"],
+    "array-type": [
+      true,
+      "array"
+    ],
     "no-var-keyword": true,
     "no-parameter-reassignment": true,
-    "typedef": [true, "call-signature"],
+    "typedef": [
+      true,
+      "call-signature"
+    ],
     "readonly-array": true,
     "no-let": true,
+    "no-console": false,
     "no-object-mutation": true,
     "no-delete": true,
     "no-method-signature": true,
@@ -27,15 +38,17 @@
       true,
       {
         "ignore-prefix": [
-          "console.",
           "it",
           "expect",
           "describe",
           "afterAll",
-          "beforeAll"
+          "afterEach",
+          "beforeAll",
+          "beforeEach",
+          "assert"
         ]
       }
     ],
     "no-if-statement": true
-  },
+  }
 }
