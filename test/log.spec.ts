@@ -1,15 +1,6 @@
 // tslint:disable: no-expression-statement
 import * as assert from "assert";
-import { logError, logger, logSuccess, withPrefix } from "../src/log";
-
-describe("logger", () => {
-  it("should log a string", () => {
-    const spy = jest.spyOn(console, "log");
-    logger("message").run();
-    expect(console.log).toHaveBeenCalled();
-    spy.mockRestore();
-  });
-});
+import { logError, logSuccess, withPrefix } from "../src/log";
 
 describe("withPrefix", () => {
   it("should add a prefix to a string", () => {

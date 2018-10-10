@@ -21,7 +21,6 @@ const program = (args: ReadonlyArray<string>) =>
 
 // tslint:disable-next-line:no-expression-statement
 program(process.argv);
-console.log(process.argv);
 /*
   - pass args to checkArgs
   - if right passes check if destination is different from source

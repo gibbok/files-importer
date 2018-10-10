@@ -6,13 +6,10 @@ import { logError } from "./log";
 
 export const checkArgs = (
   args: ReadonlyArray<string>
-): Either<IO<void>, ReadonlyArray<string>> => {
-  return args.length < 4
-    ? left(logError("source and target arguments must be specified"))
-    : args.length > 4
-      ? left(logError("additional arguments are not supported"))
-      : right(args);
-};
+): Either<IO<void>, ReadonlyArray<string>> =>
+  args.length !== 4
+    ? left(logError("ony source and target arguments are allowed"))
+    : right(args);
 
 export const checkPathsUnequal = (
   args: ReadonlyArray<string>
