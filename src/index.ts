@@ -25,9 +25,9 @@ export const checkPaths = (
     : right([source, destination]);
 };
 
-export const pathExist = (path: string): Either<IO<void>, string> =>
-  not(pathExistsSync) ? left(log("path is invalid")) : right(path);
-
+export const pathExist = (path: string): Either<IO<void>, string> => {
+  return not(pathExistsSync)(path) ? left(log("path is invalid")) : right(path);
+};
 export const walkSync = (
   path: string
 ): IOEither<Error, ReadonlyArray<klawSync.Item>> =>
