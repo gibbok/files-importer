@@ -23,7 +23,7 @@ describe("checkArgs", () => {
     assert.strictEqual(ca.isRight(), false);
   });
 
-  it("should return right with arguments when source and target are passed", () => {
+  it("should return array with source and destination when are passed as arguments", () => {
     const args: ReadonlyArray<string> = ["npm", "start", "target", "source"];
     const ca = checkArgs(args);
     assert.strictEqual(ca.isLeft(), false);
