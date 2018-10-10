@@ -1,18 +1,20 @@
 import chalk from "chalk";
 import { log } from "fp-ts/lib/Console";
 import { compose } from "fp-ts/lib/function";
-import { fromIO, TaskEither } from "fp-ts/lib/TaskEither";
+import { IO } from "fp-ts/lib/IO";
 
-export const logger = (x: string): TaskEither<Error, void> => fromIO(log(x));
+export const logger = (s: string): IO<void> => log(s);
 
-export const withPrefix = (x: string): string => `\n ${x}`;
+export const withPrefix = (s: string): string => `\n file-importer: ${s}`;
 
-export const success = compose<string, string, string>(
+export const logSuccess = compose(
+  logger,
   chalk.bold.greenBright,
   withPrefix
 );
 
-export const error = compose<string, string, string>(
+export const logError = compose(
+  logger,
   chalk.bold.red,
   withPrefix
 );
