@@ -3,7 +3,7 @@ import { statSync } from "fs";
 import { outputFileSync, removeSync } from "fs-extra";
 import { tmpdir } from "os";
 import * as pathN from "path";
-import { checkArgs, checkPaths, pathExist, walkSync } from "../src";
+import { checkArgs, checkPath, checkPathsUnequal, walkSync } from "../src";
 
 const TEST_DIR = pathN.join(tmpdir(), "files-importer");
 const BAD_PATH = "./invalid-path";
@@ -41,21 +41,21 @@ describe("checkArgs", () => {
   });
 });
 
-describe("checkPaths", () => {
+describe("checkPathsUnequal", () => {
   it("should return left if source and target paths are identical", () => {
-    const ts = checkPaths(["npm", "start", TEST_DIR, TEST_DIR]);
+    const ts = checkPathsUnequal(["npm", "start", TEST_DIR, TEST_DIR]);
     assert.strictEqual(ts.isLeft(), true);
     assert.strictEqual(ts.isRight(), false);
   });
 
   it("should return right with an array if source and target paths are different", () => {
     const args: ReadonlyArray<string> = ["npm", "start", TEST_DIR, "target"];
-    const ts = checkPaths(args);
+    const ts = checkPathsUnequal(args);
     assert.deepStrictEqual(ts.value, [TEST_DIR, "target"]);
   });
 });
 
-describe("pathExist", () => {
+describe("checkPath", () => {
   const goodPath = `${TEST_DIR}/file.txt`;
 
   beforeAll(() => createFile(goodPath));
@@ -63,14 +63,13 @@ describe("pathExist", () => {
   afterAll(() => removeFile(TEST_DIR));
 
   it("should return left if path is invalid", () => {
-    const fe = pathExist(BAD_PATH);
+    const fe = checkPath(BAD_PATH);
     assert.strictEqual(fe.isLeft(), true);
     assert.strictEqual(fe.isRight(), false);
   });
 
   it("should return right if path is valid", () => {
-    console.log("xxxxxxxx", goodPath);
-    const fe = pathExist(goodPath);
+    const fe = checkPath(goodPath);
     assert.strictEqual(fe.isLeft(), false);
     assert.strictEqual(fe.isRight(), true);
     assert.strictEqual(fe.value, goodPath);

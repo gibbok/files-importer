@@ -16,7 +16,7 @@ export const checkArgs = (
       : right(args);
 };
 
-export const checkPaths = (
+export const checkPathsUnequal = (
   args: ReadonlyArray<string>
 ): Either<IO<void>, ReadonlyArray<string>> => {
   const [, , source, target] = args;
@@ -25,7 +25,7 @@ export const checkPaths = (
     : right([source, target]);
 };
 
-export const pathExist = (path: string): Either<IO<void>, string> => {
+export const checkPath = (path: string): Either<IO<void>, string> => {
   return not(pathExistsSync)(path) ? left(log("path is invalid")) : right(path);
 };
 export const walkSync = (
@@ -35,7 +35,7 @@ export const walkSync = (
 
 const program = (args: ReadonlyArray<string>) =>
   checkArgs(args)
-    .chain(checkPaths)
+    .chain(checkPathsUnequal)
     .fold(
       y => y.run(), // run console.log
       x =>
