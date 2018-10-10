@@ -1,6 +1,8 @@
 // tslint:disable: no-expression-statement
 import * as assert from "assert";
+import { IO } from "fp-ts/lib/IO";
 import {
+  logError,
   logSuccess,
   withPrefix,
   withPrefixError,
@@ -28,14 +30,22 @@ describe("withPrefixSuccess", () => {
   });
 });
 
+const testConsoleLog = (fn: (a: string) => IO<void>, message: string) => {
+  const spy = jest.spyOn(global.console, "log").mockImplementation(() => ({}));
+  fn("message").run();
+  expect(spy).toHaveBeenCalled();
+  expect(spy.mock.calls[0][0]).toContain(message);
+  spy.mockReset();
+};
+
 describe("logSuccess", () => {
-  it("should print in console adding a prefix", () => {
-    const spy = jest
-      .spyOn(global.console, "log")
-      .mockImplementation(() => ({}));
-    logSuccess("success").run();
-    expect(spy).toHaveBeenCalled();
-    expect(spy.mock.calls[0][0]).toContain("file-importer: success");
-    spy.mockReset();
+  it("should log in console with prefix", () => {
+    testConsoleLog(logSuccess, "file-importer: success: message");
+  });
+});
+
+describe("logError", () => {
+  it("should log in console with prefix", () => {
+    testConsoleLog(logError, "file-importer: error: message");
   });
 });

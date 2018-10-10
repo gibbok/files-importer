@@ -1,9 +1,10 @@
 import chalk from "chalk";
 import { log } from "fp-ts/lib/Console";
-import { compose } from "fp-ts/lib/function";
+import { compose, curry } from "fp-ts/lib/function";
 
-export const withPrefix = (s: string) => (t: string) =>
-  `file-importer: ${s}: ${t}`;
+export const withPrefix = curry(
+  (x: string, y: string) => `file-importer: ${x}: ${y}`
+);
 
 export const withPrefixSuccess = withPrefix("success");
 
