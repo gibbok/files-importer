@@ -2,7 +2,7 @@ import chalk from "chalk";
 import { log } from "fp-ts/lib/Console";
 import { compose } from "fp-ts/lib/function";
 
-export const withPrefix = (s: string): string => `\n file-importer: ${s}`;
+export const withPrefix = (s: string): string => `file-importer: ${s}`;
 
 export const logSuccess = compose(
   log,
