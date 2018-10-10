@@ -10,7 +10,7 @@ export const checkArgs = (
   args: ReadonlyArray<string>
 ): Either<IO<void>, ReadonlyArray<string>> => {
   return args.length < 4
-    ? left(log("source and destination must be specified"))
+    ? left(log("source and target must be specified"))
     : args.length > 4
       ? left(log("other arguments are not supported"))
       : right(args);
@@ -19,10 +19,10 @@ export const checkArgs = (
 export const checkPaths = (
   args: ReadonlyArray<string>
 ): Either<IO<void>, ReadonlyArray<string>> => {
-  const [, , source, destination] = args;
-  return source === destination
-    ? left(log("source and destination paths must be different"))
-    : right([source, destination]);
+  const [, , source, target] = args;
+  return source === target
+    ? left(log("source and target paths must be different"))
+    : right([source, target]);
 };
 
 export const pathExist = (path: string): Either<IO<void>, string> => {

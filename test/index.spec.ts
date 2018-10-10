@@ -23,7 +23,7 @@ describe("checkArgs", () => {
     const args: ReadonlyArray<string> = [
       "npm",
       "start",
-      "destination",
+      "target",
       "source",
       "other"
     ];
@@ -32,13 +32,8 @@ describe("checkArgs", () => {
     assert.strictEqual(ca.isRight(), false);
   });
 
-  it("should return right with args when destination and source are passed", () => {
-    const args: ReadonlyArray<string> = [
-      "npm",
-      "start",
-      "destination",
-      "source"
-    ];
+  it("should return right with args when target and source are passed", () => {
+    const args: ReadonlyArray<string> = ["npm", "start", "target", "source"];
     const ca = checkArgs(args);
     assert.deepStrictEqual(ca.value, args);
     assert.strictEqual(ca.isLeft(), false);
@@ -47,21 +42,16 @@ describe("checkArgs", () => {
 });
 
 describe("checkPaths", () => {
-  it("should return left if source and destination paths are identical", () => {
+  it("should return left if source and target paths are identical", () => {
     const ts = checkPaths(["npm", "start", TEST_DIR, TEST_DIR]);
     assert.strictEqual(ts.isLeft(), true);
     assert.strictEqual(ts.isRight(), false);
   });
 
-  it("should return right with an array if source and destination paths are different", () => {
-    const args: ReadonlyArray<string> = [
-      "npm",
-      "start",
-      TEST_DIR,
-      "destination"
-    ];
+  it("should return right with an array if source and target paths are different", () => {
+    const args: ReadonlyArray<string> = ["npm", "start", TEST_DIR, "target"];
     const ts = checkPaths(args);
-    assert.deepStrictEqual(ts.value, [TEST_DIR, "destination"]);
+    assert.deepStrictEqual(ts.value, [TEST_DIR, "target"]);
   });
 });
 
