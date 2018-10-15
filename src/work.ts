@@ -11,7 +11,7 @@ export const walkSync = (
 // TODO return a fp-ts task
 export const md5 = (path: string) =>
   new Promise<string>((resolve, reject) => {
-    const hash = createHash("sha1");
+    const hash = createHash("md5");
     const rs = createReadStream(path);
     // tslint:disable-next-line:no-expression-statement
     rs.on("error", reject);

@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import { statSync } from "fs-extra";
 import { BAD_PATH, createFile, removeFile, TEST_DIR } from "../src/testCommon";
-import { walkSync } from "../src/work";
+import { md5, walkSync } from "../src/work";
 
 describe("walkSynch", () => {
   const fileNames: ReadonlyArray<string> = [
@@ -33,5 +33,20 @@ describe("walkSynch", () => {
     assert.strictEqual(ws.isLeft(), false);
     assert.strictEqual(ws.isRight(), true);
     assert.deepStrictEqual(ws.value, result);
+  });
+});
+
+describe("md5", () => {
+  const fileName = `${TEST_DIR}/file1.txt`;
+
+  beforeAll(() => createFile(fileName));
+
+  afterAll(() => removeFile(TEST_DIR));
+
+  it("should hash md5 a file", () => {
+    // tslint:disable-next-line:no-expression-statement
+    md5(fileName).then((hash: string) => {
+      assert.strictEqual(hash, "4738e449ab0ae7c25505aab6e88750da");
+    });
   });
 });
