@@ -1,7 +1,7 @@
 import * as assert from "assert";
 import { statSync } from "fs-extra";
-import { walkSync } from "../src/index";
 import { BAD_PATH, createFile, removeFile, TEST_DIR } from "../src/testCommon";
+import { walkSync } from "../src/work";
 
 describe("walkSynch", () => {
   const fileNames: ReadonlyArray<string> = [

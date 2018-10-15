@@ -1,12 +1,5 @@
-import { IOEither, tryCatch } from "fp-ts/lib/IOEither";
-import klawSync from "klaw-sync";
 import { checkArgs, checkPathsUnequal } from "./check";
 import { logSuccess } from "./log";
-
-export const walkSync = (
-  path: string
-): IOEither<Error, ReadonlyArray<klawSync.Item>> =>
-  tryCatch(() => klawSync(path, { nodir: true }));
 
 const program = (args: ReadonlyArray<string>) =>
   checkArgs(args)
