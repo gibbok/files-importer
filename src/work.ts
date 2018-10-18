@@ -1,5 +1,6 @@
 import { createHash } from "crypto";
 import { Either, left, right } from "fp-ts/lib/Either";
+import { TaskEither, tryCatch } from "fp-ts/lib/TaskEither";
 import { createReadStream } from "fs-extra";
 import klawSync from "klaw-sync";
 
@@ -14,14 +15,24 @@ export const walkSync = (
 };
 
 // TODO return a fp-ts task
-export const md5 = (path: string) =>
-  new Promise<string>((resolve, reject) => {
-    const hash = createHash("md5");
-    const rs = createReadStream(path);
-    // tslint:disable-next-line:no-expression-statement
-    rs.on("error", reject);
-    // tslint:disable-next-line:no-expression-statement
-    rs.on("data", chunk => hash.update(chunk));
-    // tslint:disable-next-line:no-expression-statement
-    rs.on("end", () => resolve(hash.digest("hex")));
-  });
+export const md5 = (path: string): TaskEither<string, string> => {
+  const mkHash = (p: string) =>
+    new Promise<string>((resolve, reject) => {
+      const hash = createHash("md5");
+      const rs = createReadStream(p);
+      // tslint:disable-next-line:no-expression-statement
+      rs.on("error", reject);
+      // tslint:disable-next-line:no-expression-statement
+      rs.on("data", chunk => hash.update(chunk));
+      // tslint:disable-next-line:no-expression-statement
+      rs.on("end", () => {
+        return resolve(hash.digest("hex"));
+      });
+    });
+  return tryCatch(() => mkHash(path).then(x => x), () => "error");
+};
+// new Task(() =>
+// mkHash(path)
+// .then(x => right(x))
+// .catch(y => left(y))
+// )))
