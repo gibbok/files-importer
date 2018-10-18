@@ -21,6 +21,7 @@ describe("walkSynch", () => {
     const ws = walkSync(BAD_PATH);
     assert.strictEqual(ws.isLeft(), true);
     assert.strictEqual(ws.isRight(), false);
+    assert.deepStrictEqual(typeof ws.value, "string");
   });
 
   it("should return right creating a path list", () => {

@@ -1,17 +1,15 @@
 import { createHash } from "crypto";
 import { Either, left, right } from "fp-ts/lib/Either";
-import { IO } from "fp-ts/lib/IO";
 import { createReadStream } from "fs-extra";
 import klawSync from "klaw-sync";
-import { logError } from "./log";
 
 export const walkSync = (
   path: string
-): Either<IO<void>, ReadonlyArray<klawSync.Item>> => {
+): Either<string, ReadonlyArray<klawSync.Item>> => {
   try {
     return right(klawSync(path, { nodir: true }));
   } catch (e) {
-    return left(logError(e.message));
+    return left(`cannot walk the file system ${e.message}`);
   }
 };
 
