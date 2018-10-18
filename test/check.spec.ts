@@ -8,6 +8,7 @@ describe("checkArgs", () => {
     const ca = checkArgs(args);
     assert.strictEqual(ca.isLeft(), true);
     assert.strictEqual(ca.isRight(), false);
+    assert.deepStrictEqual(typeof ca.value, "string");
   });
 
   it("should return left when more arguments than necessary are passed", () => {
