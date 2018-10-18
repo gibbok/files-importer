@@ -1,11 +1,11 @@
 import { createHash } from "crypto";
-import { IOEither, tryCatch } from "fp-ts/lib/IOEither";
+import { Either, tryCatch } from "fp-ts/lib/Either";
 import { createReadStream } from "fs-extra";
 import klawSync from "klaw-sync";
 
 export const walkSync = (
   path: string
-): IOEither<Error, ReadonlyArray<klawSync.Item>> =>
+): Either<Error, ReadonlyArray<klawSync.Item>> =>
   tryCatch(() => klawSync(path, { nodir: true }));
 
 // TODO return a fp-ts task

@@ -18,7 +18,7 @@ describe("walkSynch", () => {
   afterAll(() => removeFile(TEST_DIR));
 
   it("should return left and throw an error if it does not walk", () => {
-    const ws = walkSync(BAD_PATH).run();
+    const ws = walkSync(BAD_PATH);
     assert.strictEqual(ws.isLeft(), true);
     assert.strictEqual(ws.isRight(), false);
     assert.strictEqual(ws.value instanceof Error, true);
@@ -29,7 +29,7 @@ describe("walkSynch", () => {
       path,
       stats: statSync(path)
     }));
-    const ws = walkSync(TEST_DIR).run();
+    const ws = walkSync(TEST_DIR);
     assert.strictEqual(ws.isLeft(), false);
     assert.strictEqual(ws.isRight(), true);
     assert.deepStrictEqual(ws.value, result);
