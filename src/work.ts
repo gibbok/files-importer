@@ -14,14 +14,13 @@ export const walkSync = (
   }
 };
 
-// TODO return a fp-ts task
 export const md5 = (path: string): TaskEither<string, string> => {
   const mkHash = (p: string) =>
     new Promise<string>((resolve, reject) => {
       const hash = createHash("md5");
       const rs = createReadStream(p);
       // tslint:disable-next-line:no-expression-statement
-      rs.on("error", reject);
+      rs.on("error", (error: Error) => reject(error));
       // tslint:disable-next-line:no-expression-statement
       rs.on("data", chunk => hash.update(chunk));
       // tslint:disable-next-line:no-expression-statement
@@ -29,10 +28,8 @@ export const md5 = (path: string): TaskEither<string, string> => {
         return resolve(hash.digest("hex"));
       });
     });
-  return tryCatch(() => mkHash(path).then(x => x), () => "error");
+  return tryCatch<string, string>(
+    () => mkHash(path).then(x => x),
+    () => "cannot create md5 hash"
+  );
 };
-// new Task(() =>
-// mkHash(path)
-// .then(x => right(x))
-// .catch(y => left(y))
-// )))

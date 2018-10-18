@@ -36,14 +36,14 @@ describe("walkSynch", () => {
   });
 });
 
-describe.only("md5", () => {
+describe("md5", () => {
   const fileName = `${TEST_DIR}/file1.txt`;
 
   beforeAll(() => createFile(fileName));
 
   afterAll(() => removeFile(TEST_DIR));
 
-  it("should hash md5 a file", () => {
+  it("should return right and create md5 hash for a file", () => {
     // tslint:disable-next-line:no-expression-statement
     md5(fileName)
       .run()
@@ -54,17 +54,12 @@ describe.only("md5", () => {
       );
   });
 
-  it("should return an error", () => {
+  it("should return left return an error message", () => {
     // tslint:disable-next-line:no-expression-statement
     md5(BAD_PATH)
       .run()
       .then(e =>
-        e.fold(
-          error => expect(error).toBe(error),
-          (r: string) => {
-            expect(r).toBe("5a8dd3ad0756a93ded72b823b19dd877");
-          }
-        )
+        e.fold(error => expect(typeof error).toBe("string"), () => ({}))
       );
   });
 });

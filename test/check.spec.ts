@@ -22,7 +22,7 @@ describe("checkArgs", () => {
     const ca = checkArgs(args);
     assert.strictEqual(ca.isLeft(), true);
     assert.strictEqual(ca.isRight(), false);
-    assert.deepStrictEqual(typeof ca.value, "string");
+    assert.strictEqual(typeof ca.value, "string");
   });
 
   it("should return array with source and destination when are passed as arguments", () => {
@@ -30,7 +30,7 @@ describe("checkArgs", () => {
     const ca = checkArgs(args);
     assert.strictEqual(ca.isLeft(), false);
     assert.strictEqual(ca.isRight(), true);
-    assert.deepStrictEqual(ca.value, args);
+    assert.strictEqual(ca.value, args);
   });
 });
 
@@ -39,7 +39,7 @@ describe("checkPathsUnequal", () => {
     const ts = checkPathsUnequal(["npm", "start", TEST_DIR, TEST_DIR]);
     assert.strictEqual(ts.isLeft(), true);
     assert.strictEqual(ts.isRight(), false);
-    assert.deepStrictEqual(typeof ts.value, "string");
+    assert.strictEqual(typeof ts.value, "string");
   });
 
   it("should return right with an array if source and target paths are different", () => {
@@ -62,7 +62,7 @@ describe("checkPath", () => {
     const fe = checkPath(BAD_PATH);
     assert.strictEqual(fe.isLeft(), true);
     assert.strictEqual(fe.isRight(), false);
-    assert.deepStrictEqual(typeof fe.value, "string");
+    assert.strictEqual(typeof fe.value, "string");
   });
 
   it("should return right if path is valid", () => {
