@@ -17,11 +17,10 @@ describe("walkSynch", () => {
 
   afterAll(() => removeFile(TEST_DIR));
 
-  it("should return left and throw an error if it does not walk", () => {
+  it("should return left and return a message if it does not walk", () => {
     const ws = walkSync(BAD_PATH);
     assert.strictEqual(ws.isLeft(), true);
     assert.strictEqual(ws.isRight(), false);
-    assert.strictEqual(ws.value instanceof Error, true);
   });
 
   it("should return right creating a path list", () => {
