@@ -1,7 +1,6 @@
 import { createHash } from "crypto";
 import { Either, left, right } from "fp-ts/lib/Either";
-import { TaskEither, tryCatch } from "fp-ts/lib/TaskEither";
-import { createReadStream } from "fs-extra";
+import { closeSync, openSync, readSync } from "fs-extra";
 import klawSync from "klaw-sync";
 
 export const walkSync = (
@@ -14,22 +13,31 @@ export const walkSync = (
   }
 };
 
-export const md5 = (path: string): TaskEither<string, string> => {
-  const mkHash = (p: string) =>
-    new Promise<string>((resolve, reject) => {
-      const hash = createHash("md5");
-      const rs = createReadStream(p);
+export const md5 = (path: string): Either<string, string> => {
+  const BUFFER_SIZE = 8192;
+  // tslint:disable-next-line:no-let
+  let fd;
+  try {
+    // tslint:disable-next-line:no-expression-statement
+    fd = openSync(path, "r");
+    const buffer = Buffer.alloc(BUFFER_SIZE);
+    const hash = createHash("md5");
+    // tslint:disable-next-line:no-let
+    let bytesRead;
+    do {
       // tslint:disable-next-line:no-expression-statement
-      rs.on("error", (error: Error) => reject(error));
+      bytesRead = readSync(fd, buffer, 0, BUFFER_SIZE, 0);
       // tslint:disable-next-line:no-expression-statement
-      rs.on("data", chunk => hash.update(chunk));
+      hash.update(buffer.slice(0, bytesRead));
+    } while (bytesRead === BUFFER_SIZE);
+    return right(hash.digest("hex"));
+  } catch (error) {
+    return left(error.message);
+  } finally {
+    // tslint:disable-next-line:no-if-statement
+    if (fd !== undefined) {
       // tslint:disable-next-line:no-expression-statement
-      rs.on("end", () => {
-        return resolve(hash.digest("hex"));
-      });
-    });
-  return tryCatch<string, string>(
-    () => mkHash(path).then(x => x),
-    message => `cannot create md5 hash: ${message}`
-  );
+      closeSync(fd);
+    }
+  }
 };

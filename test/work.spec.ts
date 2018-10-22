@@ -45,21 +45,17 @@ describe("md5", () => {
 
   it("should return right and create md5 hash for a file", () => {
     // tslint:disable-next-line:no-expression-statement
-    md5(fileName)
-      .run()
-      .then(e =>
-        e.fold(console.log, r => {
-          expect(r).toBe("5a8dd3ad0756a93ded72b823b19dd877");
-        })
-      );
+    const mk = md5(fileName);
+    assert.strictEqual(mk.isLeft(), false);
+    assert.strictEqual(mk.isRight(), true);
+    assert.strictEqual(mk.value, "5a8dd3ad0756a93ded72b823b19dd877");
   });
 
   it("should return left return an error message", () => {
     // tslint:disable-next-line:no-expression-statement
-    md5(BAD_PATH)
-      .run()
-      .then(e =>
-        e.fold(error => expect(error).toContain("ENOENT"), () => ({}))
-      );
+    const mk = md5(BAD_PATH);
+    assert.strictEqual(mk.isLeft(), true);
+    assert.strictEqual(mk.isRight(), false);
+    assert.strictEqual(mk.value.includes("ENOENT"), true);
   });
 });
