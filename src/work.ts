@@ -30,6 +30,6 @@ export const md5 = (path: string): TaskEither<string, string> => {
     });
   return tryCatch<string, string>(
     () => mkHash(path).then(x => x),
-    () => "cannot create md5 hash"
+    message => `cannot create md5 hash: ${message}`
   );
 };

@@ -59,7 +59,7 @@ describe("md5", () => {
     md5(BAD_PATH)
       .run()
       .then(e =>
-        e.fold(error => expect(typeof error).toBe("string"), () => ({}))
+        e.fold(error => expect(error).toContain("ENOENT"), () => ({}))
       );
   });
 });
