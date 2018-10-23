@@ -32,6 +32,7 @@ describe("walkSynch", () => {
     const ws = walkSync(TEST_DIR);
     assert.strictEqual(ws.isLeft(), false);
     assert.strictEqual(ws.isRight(), true);
+    console.log(ws.value);
     assert.deepStrictEqual(ws.value, result);
   });
 });

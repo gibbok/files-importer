@@ -13,6 +13,12 @@ export const walkSync = (
   }
 };
 
+export const mkPathHash = (
+  walkSynch: ReadonlyArray<klawSync.Item>
+): Either<string, ReadonlyArray<{ path: string; hash: string }>> => {
+  return true === true ? right([]) : left("error");
+};
+
 export const md5 = (path: string): Either<string, string> => {
   const BUFFER_SIZE = 8192;
   // tslint:disable-next-line:no-let
