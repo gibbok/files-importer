@@ -1,7 +1,11 @@
 import { createHash } from "crypto";
-import { Either, left as eLeft, right as eRight } from "fp-ts/lib/Either";
-import { IO } from "fp-ts/lib/IO";
-import { IOEither, left, right } from "fp-ts/lib/IOEither";
+import {
+  Either,
+  left,
+  left as eLeft,
+  right,
+  right as eRight
+} from "fp-ts/lib/Either";
 import { closeSync, openSync, readSync } from "fs-extra";
 import klawSync from "klaw-sync";
 
@@ -15,7 +19,7 @@ export const walkSync = (
   }
 };
 
-export const md5 = (path: string): IOEither<string, string> => {
+export const md5 = (path: string): Either<string, string> => {
   const BUFFER_SIZE = 8192;
   // tslint:disable-next-line:no-let
   let fd;
@@ -32,9 +36,9 @@ export const md5 = (path: string): IOEither<string, string> => {
       // tslint:disable-next-line:no-expression-statement
       hash.update(buffer.slice(0, bytesRead));
     } while (bytesRead === BUFFER_SIZE);
-    return right(new IO(() => hash.digest("hex")));
+    return right(hash.digest("hex"));
   } catch (error) {
-    return left(new IO(() => error.message));
+    return left(error.message);
   } finally {
     // tslint:disable-next-line:no-if-statement
     if (fd !== undefined) {
@@ -44,7 +48,8 @@ export const md5 = (path: string): IOEither<string, string> => {
   }
 };
 
-// export const md5 = (path: string): Either<string, string> => {
+// TODO: think if IO should actually handled using IOEither
+// export const md5 = (path: string): IOEither<string, string> => {
 //   const BUFFER_SIZE = 8192;
 //   // tslint:disable-next-line:no-let
 //   let fd;
@@ -61,9 +66,9 @@ export const md5 = (path: string): IOEither<string, string> => {
 //       // tslint:disable-next-line:no-expression-statement
 //       hash.update(buffer.slice(0, bytesRead));
 //     } while (bytesRead === BUFFER_SIZE);
-//     return right(hash.digest("hex"));
+//     return right(new IO(() => hash.digest("hex")));
 //   } catch (error) {
-//     return left(error.message);
+//     return left(new IO(() => error.message));
 //   } finally {
 //     // tslint:disable-next-line:no-if-statement
 //     if (fd !== undefined) {
