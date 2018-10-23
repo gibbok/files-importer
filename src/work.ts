@@ -1,11 +1,5 @@
 import { createHash } from "crypto";
-import {
-  Either,
-  left,
-  left as eLeft,
-  right,
-  right as eRight
-} from "fp-ts/lib/Either";
+import { Either, left, right } from "fp-ts/lib/Either";
 import { closeSync, openSync, readSync } from "fs-extra";
 import klawSync from "klaw-sync";
 
@@ -13,9 +7,9 @@ export const walkSync = (
   path: string
 ): Either<string, ReadonlyArray<klawSync.Item>> => {
   try {
-    return eRight(klawSync(path, { nodir: true }));
+    return right(klawSync(path, { nodir: true }));
   } catch (e) {
-    return eLeft(`cannot walk the file system ${e.message}`);
+    return left(`cannot walk the file system ${e.message}`);
   }
 };
 
