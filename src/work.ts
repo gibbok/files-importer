@@ -16,9 +16,9 @@ export const walkSync = (
 export const mkPathHash = (
   walkSynch: ReadonlyArray<klawSync.Item>
 ): Either<string, ReadonlyArray<{ path: string; hash: string }>> => {
-  const result = walkSynch.map(x => ({
-    path: x.path,
-    hash: md5(x.path)
+  const result = walkSynch.map(({ path }) => ({
+    path,
+    hash: md5(path)
       .map(String)
       .getOrElse("")
   }));
