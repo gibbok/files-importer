@@ -16,7 +16,13 @@ export const walkSync = (
 export const mkPathHash = (
   walkSynch: ReadonlyArray<klawSync.Item>
 ): Either<string, ReadonlyArray<{ path: string; hash: string }>> => {
-  return true === true ? right([]) : left("error");
+  const result = walkSynch.map(x => ({
+    path: x.path,
+    hash: md5(x.path)
+      .map(String)
+      .getOrElse("")
+  }));
+  return result.some(x => x.hash.length === 0) ? left("error") : right(result);
 };
 
 export const md5 = (path: string): Either<string, string> => {
