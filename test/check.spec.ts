@@ -1,6 +1,6 @@
 import * as assert from "assert";
 import { checkArgs, checkPath, checkPathsUnequal } from "../src/check";
-import { BAD_PATH, createFile, removeFile, TEST_DIR } from "../src/testCommon";
+import { BAD_PATH, createFile, removeFile, TEST_DIR } from "../src/test-common";
 
 describe("checkArgs", () => {
   it("should return left when not all arguments are passed", () => {

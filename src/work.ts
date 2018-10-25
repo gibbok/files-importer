@@ -18,9 +18,7 @@ export const mkPathHash = (
 ): Either<string, ReadonlyArray<{ path: string; hash: string }>> => {
   const result = walkSynch.map(({ path }) => ({
     path,
-    hash: md5(path)
-      .map(String)
-      .getOrElse("")
+    hash: md5(path).fold(err => err, hash => hash)
   }));
   return result.some(x => x.hash.length === 0) ? left("error") : right(result);
 };

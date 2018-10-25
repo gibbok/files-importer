@@ -1,6 +1,6 @@
 import * as assert from "assert";
 import { statSync } from "fs-extra";
-import { BAD_PATH, createFile, removeFile, TEST_DIR } from "../src/testCommon";
+import { BAD_PATH, createFile, removeFile, TEST_DIR } from "../src/test-common";
 import { md5, mkPathHash, walkSync } from "../src/work";
 
 const fileNames: ReadonlyArray<string> = [
