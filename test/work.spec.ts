@@ -24,7 +24,7 @@ describe("wmkPathHash", () => {
   //   assert.deepStrictEqual(typeof ws.value, "string");
   // });
 
-  it("should return right xxx", () => {
+  it("should return right with a list of file path and their hash values", () => {
     const result = fileNames.map((path: string) => ({
       path,
       hash: md5(path).fold(() => "", (hash: string) => hash)
