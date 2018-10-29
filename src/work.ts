@@ -1,4 +1,5 @@
 import { createHash } from "crypto";
+import { zipWith } from "fp-ts/lib/Array";
 import { Either, left, right } from "fp-ts/lib/Either";
 import { closeSync, openSync, readSync } from "fs-extra";
 import klawSync from "klaw-sync";
@@ -14,13 +15,23 @@ export const walkSync = (
 };
 
 export const mkPathHash = (
-  walkSynch: ReadonlyArray<klawSync.Item>
+  walkedPaths: ReadonlyArray<klawSync.Item>
 ): Either<string, ReadonlyArray<{ path: string; hash: string }>> => {
-  const result = walkSynch.map(({ path }) => ({
-    path,
-    hash: md5(path).fold(err => err, hash => hash)
-  }));
-  return result.some(x => x.hash.length === 0) ? left("error") : right(result);
+  const paths = walkedPaths.map(({ path }) => path);
+  const hashes = paths.map(md5);
+  const hasError = hashes.some(x => x.isLeft());
+  return hasError
+    ? left("")
+    : right(
+        zipWith(
+          paths,
+          hashes,
+          (path: string, hash: Either<string, string>) => ({
+            path,
+            hash: hash.getOrElse("error")
+          })
+        )
+      );
 };
 
 export const md5 = (path: string): Either<string, string> => {

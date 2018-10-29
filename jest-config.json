@@ -13,6 +13,6 @@
     }
   },
   "testMatch": [
-    "**/test/*.+(ts|js)"
+    "**/test/*.+(ts)"
   ]
 }
