@@ -4,20 +4,18 @@ import { Either, left, right } from "fp-ts/lib/Either";
 import { closeSync, openSync, readSync } from "fs-extra";
 import klawSync from "klaw-sync";
 
-export const walkSync = (
-  path: string
-): Either<string, ReadonlyArray<klawSync.Item>> => {
+export const walkSync = (p: string): Either<string, ReadonlyArray<string>> => {
   try {
-    return right(klawSync(path, { nodir: true }));
+    return right(klawSync(p, { nodir: true }).map(({ path }) => path));
   } catch (e) {
     return left(`cannot walk the file system ${e.message}`);
   }
 };
 
 export const mkPathHash = (
-  walkedPaths: ReadonlyArray<klawSync.Item>
+  walkedPaths: ReadonlyArray<string>
 ): Either<string, ReadonlyArray<{ path: string; hash: string }>> => {
-  const paths = walkedPaths.map(({ path }) => path);
+  const paths = walkedPaths.map(String);
   const hashes = paths.map(md5);
   const hasError = hashes.some(x => x.isLeft());
   return hasError

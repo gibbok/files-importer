@@ -1,5 +1,4 @@
 import * as assert from "assert";
-import { statSync } from "fs-extra";
 import { BAD_PATH, createFile, removeFile, TEST_DIR } from "../src/test-common";
 import { md5, mkPathHash, walkSync } from "../src/work";
 
@@ -25,14 +24,10 @@ describe("walkSynch", () => {
   });
 
   it("should return right creating a path list", () => {
-    const result = fileNames.map((path: string) => ({
-      path,
-      stats: statSync(path)
-    }));
     const ws = walkSync(TEST_DIR);
     assert.strictEqual(ws.isLeft(), false);
     assert.strictEqual(ws.isRight(), true);
-    assert.deepStrictEqual(ws.value, result);
+    assert.deepStrictEqual(ws.value, fileNames);
   });
 });
 
@@ -40,6 +35,13 @@ describe("mkPathHash", () => {
   beforeAll(() => fileNames.map(createFile));
 
   afterAll(() => removeFile(TEST_DIR));
+
+  it("should return left", () => {
+    const r = mkPathHash([BAD_PATH]);
+    assert.strictEqual(r.isLeft(), true);
+    assert.strictEqual(r.isRight(), false);
+    assert.deepStrictEqual(typeof r.value, "string");
+  });
 
   it("should return right with a list of file path and their hash values", () => {
     const result = fileNames.map((path: string) => ({
@@ -62,7 +64,6 @@ describe("md5", () => {
   afterAll(() => removeFile(TEST_DIR));
 
   it("should return right and create md5 hash for a file", () => {
-    // tslint:disable-next-line:no-expression-statement
     const mk = md5(fileName);
     assert.strictEqual(mk.isLeft(), false);
     assert.strictEqual(mk.isRight(), true);
@@ -70,7 +71,6 @@ describe("md5", () => {
   });
 
   it("should return left return an error message", () => {
-    // tslint:disable-next-line:no-expression-statement
     const mk = md5(BAD_PATH);
     assert.strictEqual(mk.isLeft(), true);
     assert.strictEqual(mk.isRight(), false);
