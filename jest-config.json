@@ -14,5 +14,7 @@
   },
   "testMatch": [
     "**/test/*.+(ts)"
-  ]
+  ],
+  "collectCoverage": true,
+  "coverageReporters": ["json", "html"]
 }
