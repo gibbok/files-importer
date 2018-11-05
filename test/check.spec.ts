@@ -65,7 +65,7 @@ describe("checkPath", () => {
     assert.strictEqual(typeof fe.value, "string");
   });
 
-  it("should return right with a string as path if path is valid and exist", () => {
+  it("should return right with a string as path if path is valid and exists", () => {
     const fe = checkPath(goodPath);
     assert.strictEqual(fe.isLeft(), false);
     assert.strictEqual(fe.isRight(), true);
