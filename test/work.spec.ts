@@ -44,7 +44,7 @@ describe("mkPathHash", () => {
     assert.deepStrictEqual(typeof r.value, "string");
   });
 
-  it("should return right with a list of file path and their hash values", () => {
+  it("should return right with a list of file paths and their hash values", () => {
     const result = fileNames.map((path: string) => ({
       path,
       hash: md5(path).fold(() => "error", (hash: string) => hash)
