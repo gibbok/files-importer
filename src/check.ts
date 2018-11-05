@@ -6,7 +6,7 @@ export const checkArgs = (
   args: ReadonlyArray<string>
 ): Either<string, ReadonlyArray<string>> =>
   args.length !== 4
-    ? left("ony source and target arguments are allowed")
+    ? left("ony two arguments source and target are allowed")
     : right(args);
 
 export const checkPathsUnequal = (

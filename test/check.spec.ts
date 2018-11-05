@@ -3,7 +3,7 @@ import { checkArgs, checkPath, checkPathsUnequal } from "../src/check";
 import { BAD_PATH, createFile, removeFile, TEST_DIR } from "../src/test-common";
 
 describe("checkArgs", () => {
-  it("should return left when not all arguments are passed", () => {
+  it("should return left with an error message when not all arguments are passed", () => {
     const args: ReadonlyArray<string> = ["npm", "start"];
     const ca = checkArgs(args);
     assert.strictEqual(ca.isLeft(), true);
@@ -11,7 +11,7 @@ describe("checkArgs", () => {
     assert.deepStrictEqual(typeof ca.value, "string");
   });
 
-  it("should return left when more arguments than necessary are passed", () => {
+  it("should return left with an error message when more arguments than necessary are passed", () => {
     const args: ReadonlyArray<string> = [
       "npm",
       "start",
@@ -25,7 +25,7 @@ describe("checkArgs", () => {
     assert.strictEqual(typeof ca.value, "string");
   });
 
-  it("should return array with source and destination when are passed as arguments", () => {
+  it("should return right with an array with source and destination as passed via arguments", () => {
     const args: ReadonlyArray<string> = ["npm", "start", "target", "source"];
     const ca = checkArgs(args);
     assert.strictEqual(ca.isLeft(), false);
@@ -35,7 +35,7 @@ describe("checkArgs", () => {
 });
 
 describe("checkPathsUnequal", () => {
-  it("should return left if source and target paths are identical", () => {
+  it("should return left with an error message if source and target paths are identical", () => {
     const ts = checkPathsUnequal(["npm", "start", TEST_DIR, TEST_DIR]);
     assert.strictEqual(ts.isLeft(), true);
     assert.strictEqual(ts.isRight(), false);
@@ -58,14 +58,14 @@ describe("checkPath", () => {
 
   afterAll(() => removeFile(TEST_DIR));
 
-  it("should return left if path is invalid", () => {
+  it("should return left with an error message if path is invalid", () => {
     const fe = checkPath(BAD_PATH);
     assert.strictEqual(fe.isLeft(), true);
     assert.strictEqual(fe.isRight(), false);
     assert.strictEqual(typeof fe.value, "string");
   });
 
-  it("should return right if path is valid", () => {
+  it("should return right with a string as path if path is valid and exist", () => {
     const fe = checkPath(goodPath);
     assert.strictEqual(fe.isLeft(), false);
     assert.strictEqual(fe.isRight(), true);
