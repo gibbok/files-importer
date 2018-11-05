@@ -40,6 +40,7 @@ describe("mkPathHash", () => {
     const r = mkPathHash([BAD_PATH]);
     assert.strictEqual(r.isLeft(), true);
     assert.strictEqual(r.isRight(), false);
+    assert.strictEqual(r.isLeft() && r.value.includes("ENOENT"), true);
     assert.deepStrictEqual(typeof r.value, "string");
   });
 

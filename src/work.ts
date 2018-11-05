@@ -1,5 +1,5 @@
 import { createHash } from "crypto";
-import { zipWith } from "fp-ts/lib/Array";
+import { head, lefts, zipWith } from "fp-ts/lib/Array";
 import { Either, left, right } from "fp-ts/lib/Either";
 import { closeSync, openSync, readSync } from "fs-extra";
 import klawSync from "klaw-sync";
@@ -19,7 +19,7 @@ export const mkPathHash = (
   const hashes = paths.map(md5);
   const hasError = hashes.some(x => x.isLeft());
   return hasError
-    ? left("")
+    ? left(head(lefts(hashes)).getOrElse("error"))
     : right(
         zipWith(
           paths,
