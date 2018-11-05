@@ -1,6 +1,6 @@
 import * as assert from "assert";
 import { BAD_PATH, createFile, removeFile, TEST_DIR } from "../src/test-common";
-import { md5, mkPathHash, walkSync } from "../src/work";
+import { md5, mkPathHashList, walkSync } from "../src/work";
 
 const fileNames: ReadonlyArray<string> = [
   `${TEST_DIR}/file1.txt`,
@@ -31,13 +31,13 @@ describe("walkSynch", () => {
   });
 });
 
-describe("mkPathHash", () => {
+describe("mkPathHashList", () => {
   beforeAll(() => fileNames.map(createFile));
 
   afterAll(() => removeFile(TEST_DIR));
 
   it("should return left", () => {
-    const r = mkPathHash([BAD_PATH]);
+    const r = mkPathHashList([BAD_PATH]);
     assert.strictEqual(r.isLeft(), true);
     assert.strictEqual(r.isRight(), false);
     assert.strictEqual(r.isLeft() && r.value.includes("ENOENT"), true);
@@ -50,7 +50,7 @@ describe("mkPathHash", () => {
       hash: md5(path).fold(() => "error", (hash: string) => hash)
     }));
     const ws = walkSync(TEST_DIR);
-    const r = ws.chain(mkPathHash);
+    const r = ws.chain(mkPathHashList);
     assert.strictEqual(r.isLeft(), false);
     assert.strictEqual(r.isRight(), true);
     assert.deepStrictEqual(r.value, result);

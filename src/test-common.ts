@@ -7,4 +7,5 @@ export const BAD_PATH = "./invalid-path";
 
 // TODO add tests
 export const createFile = (path: string) => outputFileSync(path, "hello!");
+
 export const removeFile = (path: string) => removeSync(path);

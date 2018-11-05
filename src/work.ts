@@ -13,7 +13,7 @@ export const walkSync = (p: string): Either<string, ReadonlyArray<string>> => {
   }
 };
 
-export const mkPathHash = (
+export const mkPathHashList = (
   walkedPaths: ReadonlyArray<string>
 ): Either<string, ReadonlyArray<{ path: string; hash: string }>> => {
   const paths = walkedPaths.map(identity);
