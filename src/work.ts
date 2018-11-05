@@ -1,6 +1,7 @@
 import { createHash } from "crypto";
 import { head, lefts, zipWith } from "fp-ts/lib/Array";
 import { Either, left, right } from "fp-ts/lib/Either";
+import { identity } from "fp-ts/lib/function";
 import { closeSync, openSync, readSync } from "fs-extra";
 import klawSync from "klaw-sync";
 
@@ -15,7 +16,7 @@ export const walkSync = (p: string): Either<string, ReadonlyArray<string>> => {
 export const mkPathHash = (
   walkedPaths: ReadonlyArray<string>
 ): Either<string, ReadonlyArray<{ path: string; hash: string }>> => {
-  const paths = walkedPaths.map(String);
+  const paths = walkedPaths.map(identity);
   const hashes = paths.map(md5);
   const hasError = hashes.some(x => x.isLeft());
   return hasError
@@ -26,7 +27,7 @@ export const mkPathHash = (
           hashes,
           (path: string, hash: Either<string, string>) => ({
             path,
-            hash: hash.getOrElse("error")
+            hash: hash.fold(identity, identity)
           })
         )
       );
