@@ -13,6 +13,8 @@
     }
   },
   "testMatch": [
-    "**/test/*.+(ts|js)"
-  ]
+    "**/test/*.+(ts)"
+  ],
+  "collectCoverage": true,
+  "coverageReporters": ["json", "html"]
 }
