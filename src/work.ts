@@ -4,6 +4,7 @@ import { Either, left, right } from "fp-ts/lib/Either";
 import { identity } from "fp-ts/lib/function";
 import { closeSync, openSync, readSync } from "fs-extra";
 import klawSync from "klaw-sync";
+import { difference, intersection } from "ramda";
 
 export const walkSync = (p: string): Either<string, ReadonlyArray<string>> => {
   try {
@@ -13,9 +14,12 @@ export const walkSync = (p: string): Either<string, ReadonlyArray<string>> => {
   }
 };
 
+export type PathHash = { path: string; hash: string };
+export type PathHashList = ReadonlyArray<PathHash>;
+
 export const mkPathHashList = (
   walkedPaths: ReadonlyArray<string>
-): Either<string, ReadonlyArray<{ path: string; hash: string }>> => {
+): Either<string, PathHashList> => {
   const paths = walkedPaths.map(identity);
   const hashes = paths.map(md5);
   const hasError = hashes.some(x => x.isLeft());
@@ -61,6 +65,14 @@ export const md5 = (path: string): Either<string, string> => {
     }
   }
 };
+
+export const comparePathHashLists = (
+  pathHashListSource: PathHashList,
+  pathHashListTarget: PathHashList
+) => ({
+  include: difference(pathHashListSource, pathHashListTarget),
+  exclude: intersection(pathHashListSource, pathHashListTarget)
+});
 
 // TODO: think if IO should actually handled using IOEither
 // export const md5 = (path: string): IOEither<string, string> => {

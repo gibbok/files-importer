@@ -1,6 +1,12 @@
 import * as assert from "assert";
 import { BAD_PATH, createFile, removeFile, TEST_DIR } from "../src/test-common";
-import { md5, mkPathHashList, walkSync } from "../src/work";
+import {
+  comparePathHashLists,
+  md5,
+  mkPathHashList,
+  PathHashList,
+  walkSync
+} from "../src/work";
 
 const fileNames: ReadonlyArray<string> = [
   `${TEST_DIR}/file1.txt`,
@@ -76,5 +82,60 @@ describe("md5", () => {
     assert.strictEqual(mk.isLeft(), true);
     assert.strictEqual(mk.isRight(), false);
     assert.strictEqual(mk.value.includes("ENOENT"), true);
+  });
+});
+
+describe("comparePathHashLists", () => {
+  const pathHash1 = {
+    hash: "595f44fec1e92a71d3e9e77456ba80d1",
+    path: "file1.txt"
+  };
+  const pathHash2 = {
+    hash: "71f920fa275127a7b60fa4d4d41432a3",
+    path: "file2.txt"
+  };
+  const pathHash3 = {
+    hash: "43c191bf6d6c3f263a8cd0efd4a058ab",
+    path: "file3.txt"
+  };
+
+  it("should exclude file path", () => {
+    const source: PathHashList = [pathHash1];
+    const target: PathHashList = [pathHash1];
+    const { include, exclude } = comparePathHashLists(source, target);
+    assert.deepStrictEqual(include, []);
+    assert.deepStrictEqual(exclude, [pathHash1]);
+  });
+
+  it("should exclude file paths", () => {
+    const source: PathHashList = [pathHash1, pathHash2];
+    const target: PathHashList = [pathHash1, pathHash2];
+    const { include, exclude } = comparePathHashLists(source, target);
+    assert.deepStrictEqual(include, []);
+    assert.deepStrictEqual(exclude, [pathHash1, pathHash2]);
+  });
+
+  it("should include file path", () => {
+    const source: PathHashList = [pathHash1];
+    const target: PathHashList = [];
+    const { include, exclude } = comparePathHashLists(source, target);
+    assert.deepStrictEqual(include, [pathHash1]);
+    assert.deepStrictEqual(exclude, []);
+  });
+
+  it("should include file paths", () => {
+    const source: PathHashList = [pathHash1, pathHash2];
+    const target: PathHashList = [];
+    const { include, exclude } = comparePathHashLists(source, target);
+    assert.deepStrictEqual(include, [pathHash1, pathHash2]);
+    assert.deepStrictEqual(exclude, []);
+  });
+
+  it("should include and exclude file paths", () => {
+    const source: PathHashList = [pathHash1, pathHash2, pathHash3];
+    const target: PathHashList = [pathHash1, pathHash3];
+    const { include, exclude } = comparePathHashLists(source, target);
+    assert.deepStrictEqual(include, [pathHash2]);
+    assert.deepStrictEqual(exclude, [pathHash1, pathHash3]);
   });
 });
