@@ -1,7 +1,10 @@
+/* tslint:disable:no-expression-statement */
 import * as assert from "assert";
+import { pathExistsSync, readdirSync } from "fs-extra";
 import { BAD_PATH, createFile, removeFile, TEST_DIR } from "../src/test-common";
 import {
   comparePathHashLists,
+  copyFiles,
   md5,
   mkPathHashList,
   PathHashList,
@@ -137,5 +140,23 @@ describe("comparePathHashLists", () => {
     const { include, exclude } = comparePathHashLists(source, target);
     assert.deepStrictEqual(include, [pathHash2]);
     assert.deepStrictEqual(exclude, [pathHash1, pathHash3]);
+  });
+});
+
+describe("copyFiles", () => {
+  const fileName = `${TEST_DIR}/source/sub1/sub2/file1.txt`;
+  const pathHash1 = {
+    hash: "595f44fec1e92a71d3e9e77456ba80d1",
+    path: fileName
+  };
+  const output = `${TEST_DIR}/target`;
+
+  beforeAll(() => createFile(fileName));
+
+  afterAll(() => removeFile(TEST_DIR));
+
+  it("should copy files", () => {
+    copyFiles([pathHash1], output);
+    assert.equal(pathExistsSync(output), true);
   });
 });

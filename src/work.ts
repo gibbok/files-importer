@@ -2,7 +2,7 @@ import { createHash } from "crypto";
 import { head, lefts, zipWith } from "fp-ts/lib/Array";
 import { Either, left, right } from "fp-ts/lib/Either";
 import { identity } from "fp-ts/lib/function";
-import { closeSync, openSync, readSync } from "fs-extra";
+import { closeSync, copySync, openSync, readSync } from "fs-extra";
 import klawSync from "klaw-sync";
 import { difference, intersection } from "ramda";
 
@@ -73,6 +73,23 @@ export const comparePathHashLists = (
   include: difference(pathHashListSource, pathHashListTarget),
   exclude: intersection(pathHashListSource, pathHashListTarget)
 });
+
+export const copyFiles = (include: PathHashList, target: string) => {
+  // tslint:disable-next-line:no-expression-statement
+  include.forEach(({ path }) => {
+    try {
+      const output = `${target}${path}`;
+      // tslint:disable-next-line:no-expression-statement
+      copySync(path, output);
+      // tslint:disable-next-line:no-expression-statement
+      console.log(path);
+      console.log(output);
+    } catch (err) {
+      // tslint:disable-next-line:no-expression-statement
+      console.error(err);
+    }
+  });
+};
 
 // TODO: think if IO should actually handled using IOEither
 // export const md5 = (path: string): IOEither<string, string> => {
