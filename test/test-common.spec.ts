@@ -1,3 +1,4 @@
+/* tslint:disable:no-expression-statement */
 import assert = require("assert");
 import * as fs from "fs";
 import { tmpdir } from "os";
@@ -11,7 +12,6 @@ describe("createFile", () => {
 
   it("should create the file", () => {
     assert(!fs.existsSync(file));
-    // tslint:disable-next-line:no-expression-statement
     createFile(file);
     assert(fs.existsSync(file));
     assert.strictEqual(fs.readFileSync(file, "utf8"), "hello!");
@@ -22,10 +22,8 @@ describe("removeFile", () => {
   afterAll(() => removeFile(TEST_DIR));
 
   it("should remove the file", () => {
-    // tslint:disable-next-line:no-expression-statement
     createFile(file);
     assert(fs.existsSync(file));
-    // tslint:disable-next-line:no-expression-statement
     removeFile(file);
     assert(!fs.existsSync(file));
   });
