@@ -7,7 +7,13 @@ import { closeSync, copySync, openSync, readSync } from "fs-extra";
 import klawSync from "klaw-sync";
 import { difference, intersection } from "ramda";
 
-export const walkSync = (p: string): Either<string, ReadonlyArray<string>> => {
+export type PathHash = { path: string; hash: string };
+
+export type PathHashList = ReadonlyArray<PathHash>;
+
+export const walkSync = (
+  p: string
+): Either<Error["message"], ReadonlyArray<string>> => {
   try {
     return right(klawSync(p, { nodir: true }).map(({ path }) => path));
   } catch (e) {
@@ -15,12 +21,9 @@ export const walkSync = (p: string): Either<string, ReadonlyArray<string>> => {
   }
 };
 
-export type PathHash = { path: string; hash: string };
-export type PathHashList = ReadonlyArray<PathHash>;
-
 export const mkPathHashList = (
   walkedPaths: ReadonlyArray<string>
-): Either<string, PathHashList> => {
+): Either<Error["message"], PathHashList> => {
   const paths = walkedPaths.map(identity);
   const hashes = paths.map(md5);
   const hasError = hashes.some(x => x.isLeft());
@@ -38,7 +41,7 @@ export const mkPathHashList = (
       );
 };
 
-export const md5 = (path: string): Either<string, string> => {
+export const md5 = (path: string): Either<Error["message"], string> => {
   const BUFFER_SIZE = 8192;
   let fd;
   try {
@@ -71,7 +74,7 @@ export const comparePathHashLists = (
 export const copyFiles = (
   include: PathHashList,
   target: string
-): Either<ReadonlyArray<string>, ReadonlyArray<string>> => {
+): Either<ReadonlyArray<Error["message"]>, ReadonlyArray<string>> => {
   const processed = include.map(({ path }) => {
     let destination = "";
     for (let i = 0; i < path.length; i++) {
