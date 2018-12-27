@@ -12,12 +12,12 @@ export const withPrefixError = withPrefix("error");
 
 export const logSuccess = compose(
   log,
-  chalk.bold.greenBright,
+  x => chalk.bold.greenBright(x),
   withPrefixSuccess
 );
 
 export const logError = compose(
   log,
-  chalk.bold.red,
+  x => chalk.bold.red(x),
   withPrefixError
 );

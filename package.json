@@ -31,7 +31,7 @@
     "fp-ts": "^1.12.1",
     "klaw-sync": "^6.0.0",
     "ramda": "^0.26.1",
-    "typescript": "^3.0.3"
+    "typescript": "^3.2.2"
   },
   "devDependencies": {
     "@types/chalk": "^2.2.0",
