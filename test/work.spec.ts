@@ -1,6 +1,6 @@
 /* tslint:disable:no-expression-statement */
 import * as assert from "assert";
-import { pathExistsSync, readdirSync } from "fs-extra";
+import { pathExistsSync } from "fs-extra";
 import { BAD_PATH, createFile, removeFile, TEST_DIR } from "../src/test-common";
 import {
   comparePathHashLists,
