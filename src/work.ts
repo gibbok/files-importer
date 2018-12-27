@@ -85,10 +85,10 @@ export const copyFiles = (
       copySync(path, output);
       return { processed: output, error: false, message: "" };
     } catch (err) {
-      return { processed: output, error: true, message: err };
+      return { processed: output, error: true, message: err.message };
     }
   });
   const errors = result.filter(x => x.error).map(y => y.message);
   const processed = result.filter(x => !x.error).map(y => y.processed);
-  return errors.length > 1 ? left(errors) : right(processed);
+  return errors.length >= 1 ? left(errors.concat(processed)) : right(processed);
 };

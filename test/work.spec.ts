@@ -146,6 +146,7 @@ describe("comparePathHashLists", () => {
 describe("copyFiles", () => {
   const fileName1 = `${TEST_DIR}/source/sub1/sub2/file1.txt`;
   const fileName2 = `${TEST_DIR}/source/sub1/sub2/file2.txt`;
+  const fileName3 = `${TEST_DIR}/source/sub1/sub2/no-existing-file.txt`;
   const pathHash1 = {
     hash: "595f44fec1e92a71d3e9e77456ba80d1",
     path: fileName1
@@ -153,6 +154,10 @@ describe("copyFiles", () => {
   const pathHash2 = {
     hash: "71f920fa275127a7b60fa4d4d41432a3",
     path: fileName2
+  };
+  const pathHash3 = {
+    hash: "71f920fa275127a7b60fa4d4d41432a3",
+    path: fileName3
   };
   const output = `${TEST_DIR}/target`;
 
@@ -163,7 +168,19 @@ describe("copyFiles", () => {
   it("should copy files and return left with a list of processed files", () => {
     const r = copyFiles([pathHash1, pathHash2], output);
     assert.equal(pathExistsSync(output), true);
+    assert.equal(r.isRight(), true);
+    assert.equal(r.isLeft(), false);
     assert.equal(r.value[0], `${TEST_DIR}/target/source/sub1/sub2/file1.txt`);
     assert.equal(r.value[1], `${TEST_DIR}/target/source/sub1/sub2/file2.txt`);
+  });
+
+  it("should not copy files and return right with a list of processed files and errors", () => {
+    const r = copyFiles([pathHash1, pathHash2, pathHash3], output);
+    assert.equal(pathExistsSync(output), true);
+    assert.equal(r.isRight(), false);
+    assert.equal(r.isLeft(), true);
+    assert.equal(r.value[0].includes("ENOENT"), true);
+    assert.equal(r.value[1], `${TEST_DIR}/target/source/sub1/sub2/file1.txt`);
+    assert.equal(r.value[2], `${TEST_DIR}/target/source/sub1/sub2/file2.txt`);
   });
 });
