@@ -144,19 +144,26 @@ describe("comparePathHashLists", () => {
 });
 
 describe("copyFiles", () => {
-  const fileName = `${TEST_DIR}/source/sub1/sub2/file1.txt`;
+  const fileName1 = `${TEST_DIR}/source/sub1/sub2/file1.txt`;
+  const fileName2 = `${TEST_DIR}/source/sub1/sub2/file2.txt`;
   const pathHash1 = {
     hash: "595f44fec1e92a71d3e9e77456ba80d1",
-    path: fileName
+    path: fileName1
+  };
+  const pathHash2 = {
+    hash: "71f920fa275127a7b60fa4d4d41432a3",
+    path: fileName2
   };
   const output = `${TEST_DIR}/target`;
 
-  beforeAll(() => createFile(fileName));
+  beforeAll(() => [fileName1, fileName2].map(createFile));
 
   afterAll(() => removeFile(TEST_DIR));
 
-  it("should copy files", () => {
-    copyFiles([pathHash1], output);
+  it("should copy files and return left with a list of processed files", () => {
+    const r = copyFiles([pathHash1, pathHash2], output);
     assert.equal(pathExistsSync(output), true);
+    assert.equal(r.value[0], `${TEST_DIR}/target/source/sub1/sub2/file1.txt`);
+    assert.equal(r.value[1], `${TEST_DIR}/target/source/sub1/sub2/file2.txt`);
   });
 });

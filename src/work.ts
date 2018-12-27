@@ -68,8 +68,11 @@ export const comparePathHashLists = (
   exclude: intersection(pathHashListSource, pathHashListTarget)
 });
 
-export const copyFiles = (include: PathHashList, target: string) => {
-  include.forEach(({ path }) => {
+export const copyFiles = (
+  include: PathHashList,
+  target: string
+): Either<ReadonlyArray<string>, ReadonlyArray<string>> => {
+  const result = include.map(({ path }) => {
     let destination = "";
     for (let i = 0; i < path.length; i++) {
       if (path[i] !== target[i]) {
@@ -77,11 +80,15 @@ export const copyFiles = (include: PathHashList, target: string) => {
         break;
       }
     }
+    const output = `${target}/${destination}`;
     try {
-      const output = `${target}/${destination}`;
       copySync(path, output);
+      return { processed: output, error: false, message: "" };
     } catch (err) {
-      console.log(err);
+      return { processed: output, error: true, message: err };
     }
   });
+  const errors = result.filter(x => x.error).map(y => y.message);
+  const processed = result.filter(x => !x.error).map(y => y.processed);
+  return errors.length > 1 ? left(errors) : right(processed);
 };
