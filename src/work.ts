@@ -72,7 +72,7 @@ export const copyFiles = (
   include: PathHashList,
   target: string
 ): Either<ReadonlyArray<string>, ReadonlyArray<string>> => {
-  const result = include.map(({ path }) => {
+  const processed = include.map(({ path }) => {
     let destination = "";
     for (let i = 0; i < path.length; i++) {
       if (path[i] !== target[i]) {
@@ -80,15 +80,15 @@ export const copyFiles = (
         break;
       }
     }
-    const output = `${target}/${destination}`;
+    const outputPath = `${target}/${destination}`;
     try {
-      copySync(path, output);
-      return { processed: output, error: false, message: "" };
-    } catch (err) {
-      return { processed: output, error: true, message: err.message };
+      copySync(path, outputPath);
+      return { path: outputPath, error: false, errorMessage: "" };
+    } catch (error) {
+      return { path: outputPath, error: true, errorMessage: error.message };
     }
   });
-  const errors = result.filter(x => x.error).map(y => y.message);
-  const processed = result.filter(x => !x.error).map(y => y.processed);
-  return errors.length >= 1 ? left(errors.concat(processed)) : right(processed);
+  const errors = processed.filter(x => x.error).map(y => y.errorMessage);
+  const successes = processed.filter(x => !x.error).map(y => y.path);
+  return errors.length >= 1 ? left(errors.concat(successes)) : right(successes);
 };
