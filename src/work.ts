@@ -77,16 +77,15 @@ export const comparePathHashLists = (
 /* tslint:disable:no-expression-statement no-let no-if-statement no-expression-statement */
 export const copyFiles = (include: PathHashList, target: string) => {
   include.forEach(({ path }) => {
-    let newPath = "";
+    let destination = "";
     for (let i = 0; i < path.length; i++) {
-      const isDifferent = path[i] !== target[i];
-      if (isDifferent) {
-        newPath = path.substring(i);
+      if (path[i] !== target[i]) {
+        destination = path.substring(i);
         break;
       }
     }
     try {
-      const output = `${target}/${newPath}`;
+      const output = `${target}/${destination}`;
       copySync(path, output);
     } catch (err) {
       console.error(err);
