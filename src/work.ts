@@ -6,29 +6,24 @@ import { identity } from "fp-ts/lib/function";
 import { closeSync, copySync, openSync, readSync } from "fs-extra";
 import klawSync from "klaw-sync";
 import { difference, intersection } from "ramda";
+import { Errors, PathHashList } from "./types";
 
-export type PathHash = { path: string; hash: string };
-
-export type PathHashList = ReadonlyArray<PathHash>;
-
-export const walkSync = (
-  p: string
-): Either<Error["message"], ReadonlyArray<string>> => {
+export const walkSync = (p: string): Either<Errors, ReadonlyArray<string>> => {
   try {
     return right(klawSync(p, { nodir: true }).map(({ path }) => path));
   } catch (e) {
-    return left(`cannot walk the file system ${e.message}`);
+    return left([`cannot walk the file system ${e.message}`]);
   }
 };
 
 export const mkPathHashList = (
   walkedPaths: ReadonlyArray<string>
-): Either<Error["message"], PathHashList> => {
+): Either<Errors, PathHashList> => {
   const paths = walkedPaths.map(identity);
   const hashes = paths.map(md5);
   const hasError = hashes.some(x => x.isLeft());
   return hasError
-    ? left(head(lefts(hashes)).getOrElse("error"))
+    ? left([head(lefts(hashes)).getOrElse("error")])
     : right(
         zipWith(
           paths,
@@ -74,7 +69,7 @@ export const comparePathHashLists = (
 export const copyFiles = (
   include: PathHashList,
   target: string
-): Either<ReadonlyArray<Error["message"]>, ReadonlyArray<string>> => {
+): Either<Errors, ReadonlyArray<string>> => {
   const processed = include.map(({ path }) => {
     let destination = "";
     for (let i = 0; i < path.length; i++) {

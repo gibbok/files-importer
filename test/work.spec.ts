@@ -2,12 +2,12 @@
 import * as assert from "assert";
 import { pathExistsSync } from "fs-extra";
 import { BAD_PATH, createFile, removeFile, TEST_DIR } from "../src/test-common";
+import { PathHashList } from "../src/types";
 import {
   comparePathHashLists,
   copyFiles,
   md5,
   mkPathHashList,
-  PathHashList,
   walkSync
 } from "../src/work";
 
@@ -25,11 +25,11 @@ describe("walkSynch", () => {
 
   afterAll(() => removeFile(TEST_DIR));
 
-  it("should return left and return a message if it does not walk", () => {
+  it("should return left and return a list of messages if it does not walk", () => {
     const ws = walkSync(BAD_PATH);
     assert.strictEqual(ws.isLeft(), true);
     assert.strictEqual(ws.isRight(), false);
-    assert.deepStrictEqual(typeof ws.value, "string");
+    assert.equal(ws.value[0].includes("cannot"), true);
   });
 
   it("should return right creating a path list", () => {
@@ -49,8 +49,7 @@ describe("mkPathHashList", () => {
     const r = mkPathHashList([BAD_PATH]);
     assert.strictEqual(r.isLeft(), true);
     assert.strictEqual(r.isRight(), false);
-    assert.strictEqual(r.isLeft() && r.value.includes("ENOENT"), true);
-    assert.deepStrictEqual(typeof r.value, "string");
+    assert.equal(r.isLeft() && r.value[0].includes("ENOENT"), true);
   });
 
   it("should return right with a list of file paths and their hash values", () => {
