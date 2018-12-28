@@ -8,21 +8,15 @@ describe("checkArgs", () => {
     const ca = checkArgs(args);
     assert.strictEqual(ca.isLeft(), true);
     assert.strictEqual(ca.isRight(), false);
-    assert.equal(ca.value[0].includes("only"), true);
+    assert.strictEqual(ca.value[0].includes("only"), true);
   });
 
   it("should return left with list of error messages when more arguments than necessary are passed", () => {
-    const args: ReadonlyArray<string> = [
-      "npm",
-      "start",
-      "target",
-      "source",
-      "other"
-    ];
+    const args: ReadonlyArray<string> = ["npm", "start", "target", "source", "other"];
     const ca = checkArgs(args);
     assert.strictEqual(ca.isLeft(), true);
     assert.strictEqual(ca.isRight(), false);
-    assert.equal(ca.value[0].includes("invalid"), true);
+    assert.strictEqual(ca.value[0].includes("invalid"), true);
   });
 
   it("should return right with an array with source and destination as passed via arguments", () => {
@@ -62,7 +56,7 @@ describe("checkPath", () => {
     const fe = checkPath(BAD_PATH);
     assert.strictEqual(fe.isLeft(), true);
     assert.strictEqual(fe.isRight(), false);
-    assert.equal(fe.value[0].includes("invalid"), true);
+    assert.strictEqual(fe.value[0].includes("invalid"), true);
   });
 
   it("should return right with a string as path if path is valid and exists", () => {

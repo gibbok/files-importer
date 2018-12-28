@@ -8,9 +8,7 @@ const program = (args: ReadonlyArray<string>) =>
     .fold(
       (y: Errors) => y.map(j => logError(j).run()),
       (x: ReadonlyArray<string>) =>
-        x.map((j: any) =>
-          logSuccess(`${JSON.stringify(j, undefined, 4)} \n >>>>>>>> ok`).run()
-        )
+        x.map((j: any) => logSuccess(`${JSON.stringify(j, undefined, 4)} \n >>>>>>>> ok`).run())
     );
 
 // tslint:disable-next-line:no-expression-statement

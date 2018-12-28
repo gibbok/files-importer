@@ -1,13 +1,7 @@
 // tslint:disable: no-expression-statement
 import * as assert from "assert";
 import { IO } from "fp-ts/lib/IO";
-import {
-  logError,
-  logSuccess,
-  withPrefix,
-  withPrefixError,
-  withPrefixSuccess
-} from "../src/log";
+import { logError, logSuccess, withPrefix, withPrefixError, withPrefixSuccess } from "../src/log";
 
 describe("withPrefix", () => {
   it("should add app prefix", () => {

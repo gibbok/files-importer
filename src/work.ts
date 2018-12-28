@@ -25,14 +25,10 @@ export const mkPathHashList = (
   return hasError
     ? left([head(lefts(hashes)).getOrElse("error")])
     : right(
-        zipWith(
-          paths,
-          hashes,
-          (path: string, hash: Either<string, string>) => ({
-            path,
-            hash: hash.fold(identity, identity)
-          })
-        )
+        zipWith(paths, hashes, (path: string, hash: Either<string, string>) => ({
+          path,
+          hash: hash.fold(identity, identity)
+        }))
       );
 };
 
@@ -52,6 +48,7 @@ export const md5 = (path: string): Either<Error["message"], string> => {
   } catch (error) {
     return left(error.message);
   } finally {
+    // tslint:disable-next-line:strict-type-predicates
     if (fd !== undefined) {
       closeSync(fd);
     }

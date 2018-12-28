@@ -3,13 +3,7 @@ import * as assert from "assert";
 import { pathExistsSync } from "fs-extra";
 import { BAD_PATH, createFile, removeFile, TEST_DIR } from "../src/test-common";
 import { PathHashList } from "../src/types";
-import {
-  comparePathHashLists,
-  copyFiles,
-  md5,
-  mkPathHashList,
-  walkSync
-} from "../src/work";
+import { comparePathHashLists, copyFiles, md5, mkPathHashList, walkSync } from "../src/work";
 
 const fileNames: ReadonlyArray<string> = [
   `${TEST_DIR}/file1.txt`,
@@ -29,7 +23,7 @@ describe("walkSynch", () => {
     const ws = walkSync(BAD_PATH);
     assert.strictEqual(ws.isLeft(), true);
     assert.strictEqual(ws.isRight(), false);
-    assert.equal(ws.value[0].includes("cannot"), true);
+    assert.strictEqual(ws.value[0].includes("cannot"), true);
   });
 
   it("should return right creating a path list", () => {
@@ -49,7 +43,7 @@ describe("mkPathHashList", () => {
     const r = mkPathHashList([BAD_PATH]);
     assert.strictEqual(r.isLeft(), true);
     assert.strictEqual(r.isRight(), false);
-    assert.equal(r.isLeft() && r.value[0].includes("ENOENT"), true);
+    assert.strictEqual(r.isLeft() && r.value[0].includes("ENOENT"), true);
   });
 
   it("should return right with a list of file paths and their hash values", () => {
@@ -166,20 +160,20 @@ describe("copyFiles", () => {
 
   it("should copy files and return left with a list of processed files", () => {
     const r = copyFiles([pathHash1, pathHash2], output);
-    assert.equal(pathExistsSync(output), true);
-    assert.equal(r.isRight(), true);
-    assert.equal(r.isLeft(), false);
-    assert.equal(r.value[0], `${TEST_DIR}/target/source/sub1/sub2/file1.txt`);
-    assert.equal(r.value[1], `${TEST_DIR}/target/source/sub1/sub2/file2.txt`);
+    assert.strictEqual(pathExistsSync(output), true);
+    assert.strictEqual(r.isRight(), true);
+    assert.strictEqual(r.isLeft(), false);
+    assert.strictEqual(r.value[0], `${TEST_DIR}/target/source/sub1/sub2/file1.txt`);
+    assert.strictEqual(r.value[1], `${TEST_DIR}/target/source/sub1/sub2/file2.txt`);
   });
 
   it("should not copy files and return right with a list of processed files and errors", () => {
     const r = copyFiles([pathHash1, pathHash2, pathHash3], output);
-    assert.equal(pathExistsSync(output), true);
-    assert.equal(r.isRight(), false);
-    assert.equal(r.isLeft(), true);
-    assert.equal(r.value[0].includes("ENOENT"), true);
-    assert.equal(r.value[1], `${TEST_DIR}/target/source/sub1/sub2/file1.txt`);
-    assert.equal(r.value[2], `${TEST_DIR}/target/source/sub1/sub2/file2.txt`);
+    assert.strictEqual(pathExistsSync(output), true);
+    assert.strictEqual(r.isRight(), false);
+    assert.strictEqual(r.isLeft(), true);
+    assert.strictEqual(r.value[0].includes("ENOENT"), true);
+    assert.strictEqual(r.value[1], `${TEST_DIR}/target/source/sub1/sub2/file1.txt`);
+    assert.strictEqual(r.value[2], `${TEST_DIR}/target/source/sub1/sub2/file2.txt`);
   });
 });
