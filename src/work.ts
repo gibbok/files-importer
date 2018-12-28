@@ -3,6 +3,7 @@ import { createHash } from "crypto";
 import { head, lefts, zipWith } from "fp-ts/lib/Array";
 import { Either, left, right } from "fp-ts/lib/Either";
 import { identity } from "fp-ts/lib/function";
+import { fromNullable } from "fp-ts/lib/Option";
 import { closeSync, copySync, openSync, readSync } from "fs-extra";
 import klawSync from "klaw-sync";
 import { difference, intersection } from "ramda";
@@ -34,7 +35,7 @@ export const mkPathHashList = (
 
 export const md5 = (path: string): Either<Error["message"], string> => {
   const BUFFER_SIZE = 8192;
-  let fd;
+  let fd: number | undefined;
   try {
     fd = openSync(path, "r");
     const buffer = Buffer.alloc(BUFFER_SIZE);
@@ -48,10 +49,7 @@ export const md5 = (path: string): Either<Error["message"], string> => {
   } catch (error) {
     return left(error.message);
   } finally {
-    // tslint:disable-next-line:strict-type-predicates
-    if (fd !== undefined) {
-      closeSync(fd);
-    }
+    fromNullable(fd).mapNullable(closeSync);
   }
 };
 
