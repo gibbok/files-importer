@@ -1,15 +1,12 @@
+import { identity } from "fp-ts/lib/function";
 import { checkArgs, checkPathsUnequal } from "./check";
-import { logError, logSuccess } from "./log";
+import { logError } from "./log";
 import { Errors } from "./types";
 
+const printErrors = (errors: Errors) => errors.forEach(x => logError(x).run());
+
 const program = (args: ReadonlyArray<string>) =>
-  checkArgs(args)
-    .chain(checkPathsUnequal)
-    .fold(
-      (y: Errors) => y.map(j => logError(j).run()),
-      (x: ReadonlyArray<string>) =>
-        x.map((j: any) => logSuccess(`${JSON.stringify(j, undefined, 4)} \n >>>>>>>> ok`).run())
-    );
+  checkArgs(args).fold(printErrors, x => checkPathsUnequal(x).fold(printErrors, identity));
 
 // tslint:disable-next-line:no-expression-statement
 program(process.argv);

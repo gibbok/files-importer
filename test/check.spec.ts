@@ -8,40 +8,42 @@ describe("checkArgs", () => {
     const ca = checkArgs(args);
     assert.strictEqual(ca.isLeft(), true);
     assert.strictEqual(ca.isRight(), false);
-    assert.strictEqual(ca.value[0].includes("only"), true);
+    assert.strictEqual(ca.isLeft() && ca.value[0].includes("only"), true);
   });
 
   it("should return left with list of error messages when more arguments than necessary are passed", () => {
-    const args: ReadonlyArray<string> = ["npm", "start", "target", "source", "other"];
+    const args: ReadonlyArray<string> = ["npm", "start", "source", "target", "other"];
     const ca = checkArgs(args);
     assert.strictEqual(ca.isLeft(), true);
     assert.strictEqual(ca.isRight(), false);
-    assert.strictEqual(ca.value[0].includes("invalid"), true);
+    assert.strictEqual(ca.isLeft() && ca.value[0].includes("invalid"), true);
   });
 
   it("should return right with an array with source and destination as passed via arguments", () => {
-    const args: ReadonlyArray<string> = ["npm", "start", "target", "source"];
+    const args: ReadonlyArray<string> = ["npm", "start", "source", "target"];
     const ca = checkArgs(args);
     assert.strictEqual(ca.isLeft(), false);
     assert.strictEqual(ca.isRight(), true);
-    assert.strictEqual(ca.value, args);
+    assert.strictEqual(ca.isRight() && ca.value.source, args[2]);
+    assert.strictEqual(ca.isRight() && ca.value.target, args[3]);
   });
 });
 
 describe("checkPathsUnequal", () => {
+  const source = TEST_DIR;
+  const target = "target";
   it("should return left with a list of error messages if source and target paths are identical", () => {
-    const ts = checkPathsUnequal(["npm", "start", TEST_DIR, TEST_DIR]);
+    const ts = checkPathsUnequal({ source, target: source });
     assert.strictEqual(ts.isLeft(), true);
     assert.strictEqual(ts.isRight(), false);
-    assert.strictEqual(ts.value[0].includes("invalid"), true);
+    assert.strictEqual(ts.isLeft() && ts.value[0].includes("invalid"), true);
   });
 
   it("should return right with an array if source and target paths are different", () => {
-    const args: ReadonlyArray<string> = ["npm", "start", TEST_DIR, "target"];
-    const ts = checkPathsUnequal(args);
+    const ts = checkPathsUnequal({ source, target });
     assert.strictEqual(ts.isLeft(), false);
     assert.strictEqual(ts.isRight(), true);
-    assert.deepStrictEqual(ts.value, [TEST_DIR, "target"]);
+    assert.deepStrictEqual(ts.value, { source, target });
   });
 });
 
