@@ -9,7 +9,8 @@ npm start ~/Documents/Repositories/files-importer/test-app/source ~/Documents/Re
 - [ ] Write test for `index.ts`
 
 # Bugs:
-- [ ] if relative paths are passed for source and target arguments folder are created by user (convert always to absolute pathsFor testing use)
+- [ ] If relative paths are passed for source and target arguments folder are created by user (convert always to absolute pathsFor testing use)
 
 # Improvements:
-- [ ] error `path is invalid could showup if was source or target`
+- [ ] Error `path is invalid could show up if was source or target`
+- [ ] Spice up  `printErrors`, `printSuccess`, `printMessages`
