@@ -69,16 +69,17 @@ export const copyFiles = (
   include: PathHashList,
   target: string
 ): Either<Errors, ReadonlyArray<string>> => {
+  const newTarget = nodePath.resolve(target);
   const processed = include.map(({ path }) => {
     let destination = "";
     for (let i = 0; i < path.length; i++) {
-      if (path[i] !== target[i]) {
+      if (path[i] !== newTarget[i]) {
         destination = path.substring(i);
         break;
       }
     }
-    const outputPath = nodePath.resolve(`${target}/${destination}`);
-    console.log("original", target);
+    const outputPath = nodePath.resolve(`${newTarget}/${destination}`);
+    console.log("original", newTarget);
     console.log("final---", outputPath);
     try {
       copySync(path, outputPath);

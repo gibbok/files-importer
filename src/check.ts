@@ -22,6 +22,6 @@ export const checkPathsUnequal = (
 };
 
 export const checkPath = (path: string): Either<Errors, string> => {
-  const pathNew = nodePath.resolve(nodePath.normalize(path));
+  const pathNew = nodePath.resolve(path);
   return not(pathExistsSync)(pathNew) ? left(["path is invalid"]) : right(pathNew);
 };
