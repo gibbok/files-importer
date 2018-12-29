@@ -16,6 +16,8 @@ const program = (args: ReadonlyArray<string>) =>
     checkPathsUnequal(ts).fold(printErrors, ({ source, target }) => {
       checkPath(source).fold(printErrors, sourceOk =>
         checkPath(target).fold(printErrors, targetOk => {
+          console.log("sourceOK is:", sourceOk);
+          console.log("targetOK is:", targetOk);
           walkSync(sourceOk).fold(printErrors, sourceWalked =>
             walkSync(targetOk).fold(printErrors, targetWalked => {
               mkPathHashList(sourceWalked).fold(printErrors, sourcePathHashList => {
