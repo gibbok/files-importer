@@ -47,22 +47,36 @@ describe("checkPathsUnequal", () => {
   });
 });
 
-describe("checkPath", () => {
+describe("checkPathCurry", () => {
   const goodPath = `${TEST_DIR}/file.txt`;
 
   beforeAll(() => createFile(goodPath));
 
   afterAll(() => removeFile(TEST_DIR));
 
-  it("should return left with an error message if path is invalid", () => {
-    const fe = checkPath(BAD_PATH);
+  it("should return left with an error message for `source` if path is invalid", () => {
+    const fe = checkPath("source")(BAD_PATH);
     assert.strictEqual(fe.isLeft(), true);
     assert.strictEqual(fe.isRight(), false);
-    assert.strictEqual(fe.value[0].includes("invalid"), true);
+    assert.strictEqual(fe.value[0].includes("source path is invalid"), true);
   });
 
-  it("should return right with a string as path if path is valid and exists", () => {
-    const fe = checkPath(goodPath);
+  it("should return left with an error message for `target` if path is invalid", () => {
+    const fe = checkPath("target")(BAD_PATH);
+    assert.strictEqual(fe.isLeft(), true);
+    assert.strictEqual(fe.isRight(), false);
+    assert.strictEqual(fe.value[0].includes("target path is invalid"), true);
+  });
+
+  it("should return right with a string as path if `source` path is valid and exists", () => {
+    const fe = checkPath("source")(goodPath);
+    assert.strictEqual(fe.isLeft(), false);
+    assert.strictEqual(fe.isRight(), true);
+    assert.strictEqual(fe.value, goodPath);
+  });
+
+  it("should return right with a string as path if `target` path is valid and exists", () => {
+    const fe = checkPath("target")(goodPath);
     assert.strictEqual(fe.isLeft(), false);
     assert.strictEqual(fe.isRight(), true);
     assert.strictEqual(fe.value, goodPath);

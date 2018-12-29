@@ -18,7 +18,7 @@ npm start ./app/source ./app/target
 
 # Improvements:
 - [ ] Error `path is invalid could show up if was source or target`
-- [ ] Spice up  `printErrors`, `printSuccess`, `printMessages`
+- [x] Spice up  `printErrors`, `printSuccess`, `printMessages`
 - [ ] Add some progress indicator
 - [ ] Ask user confirmation before merge
 - [ ] Understand why resolve is necessary in copy file

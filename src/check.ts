@@ -1,5 +1,5 @@
 import { Either, left, right } from "fp-ts/lib/Either";
-import { not } from "fp-ts/lib/function";
+import { curry, not } from "fp-ts/lib/function";
 import { pathExistsSync } from "fs-extra";
 import * as nodePath from "path";
 import { Errors, PathSourceTarget } from "./types";
@@ -21,7 +21,11 @@ export const checkPathsUnequal = (
     : right(pathSourceTarget);
 };
 
-export const checkPath = (path: string): Either<Errors, string> => {
-  const pathResolved = nodePath.resolve(path);
-  return not(pathExistsSync)(pathResolved) ? left(["path is invalid"]) : right(pathResolved);
-};
+export const checkPath = curry(
+  (type: "source" | "target", path: string): Either<Errors, string> => {
+    const pathResolved = nodePath.resolve(path);
+    return not(pathExistsSync)(pathResolved)
+      ? left([`${type} path is invalid, make sure the provided path exists`])
+      : right(pathResolved);
+  }
+);
