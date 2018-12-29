@@ -26,7 +26,7 @@ const program = (args: ReadonlyArray<string>) =>
                     sourcePathHashList,
                     targetPathHashList
                   );
-                  copyFiles(include, target).fold(printErrors, printSuccess);
+                  copyFiles(include, targetOk).fold(printErrors, printSuccess);
                   printMessages(exclude.map(x => x.path));
                 });
               });
