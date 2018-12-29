@@ -1,7 +1,15 @@
 // tslint:disable: no-expression-statement
 import * as assert from "assert";
 import { IO } from "fp-ts/lib/IO";
-import { logError, logSuccess, withPrefix, withPrefixError, withPrefixSuccess } from "../src/log";
+import {
+  logError,
+  logInfo,
+  logSuccess,
+  withPrefix,
+  withPrefixError,
+  withPrefixInfo,
+  withPrefixSuccess
+} from "../src/log";
 
 describe("withPrefix", () => {
   it("should add app prefix", () => {
@@ -17,10 +25,17 @@ describe("withPrefixSuccess", () => {
   });
 });
 
-describe("withPrefixSuccess", () => {
+describe("withPrefixError", () => {
   it("should add error prefix", () => {
     const str = withPrefixError("m");
     assert.strictEqual(str, "file-importer: error: m");
+  });
+});
+
+describe("withPrefixInfo", () => {
+  it("should add info prefix", () => {
+    const str = withPrefixInfo("m");
+    assert.strictEqual(str, "file-importer: info: m");
   });
 });
 
@@ -39,7 +54,13 @@ describe("logSuccess", () => {
 });
 
 describe("logError", () => {
-  it("should log in console with prefix", () => {
+  it("should log in console with error prefix", () => {
     testConsoleLog(logError, "file-importer: error: message");
+  });
+});
+
+describe("logInfo", () => {
+  it("should log in console with info prefix", () => {
+    testConsoleLog(logInfo, "file-importer: info: message");
   });
 });

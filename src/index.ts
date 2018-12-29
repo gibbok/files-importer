@@ -1,39 +1,35 @@
 /* tslint:disable:no-expression-statement */
 import { checkArgs, checkPath, checkPathsUnequal } from "./check";
-import { logError, logSuccess } from "./log";
-import { Errors } from "./types";
+import { logError, logInfo, logMessages, logSuccess } from "./log";
 import { comparePathHashLists, copyFiles, mkPathHashList, walkSync } from "./work";
 
-const printErrors = (errors: Errors) => errors.forEach(x => logError(x).run());
+const logErrors = logMessages(logError);
 
-const printSuccess = (successes: ReadonlyArray<string>) =>
-  successes.forEach(x => logSuccess(x).run());
+const logSuccesses = logMessages(logSuccess);
 
-const printMessages = (messages: ReadonlyArray<string>) => messages.forEach(console.log);
+const logInfos = logMessages(logInfo);
 
 const program = (args: ReadonlyArray<string>) =>
-  checkArgs(args).fold(printErrors, ts =>
-    checkPathsUnequal(ts).fold(printErrors, ({ source, target }) => {
-      checkPath(source).fold(printErrors, sourceOk =>
-        checkPath(target).fold(printErrors, targetOk => {
-          console.log("sourceOK is:", sourceOk);
-          console.log("targetOK is:", targetOk);
-          walkSync(sourceOk).fold(printErrors, sourceWalked =>
-            walkSync(targetOk).fold(printErrors, targetWalked => {
-              mkPathHashList(sourceWalked).fold(printErrors, sourcePathHashList => {
-                mkPathHashList(targetWalked).fold(printErrors, targetPathHashList => {
+  checkArgs(args).fold(logErrors, ts =>
+    checkPathsUnequal(ts).fold(logErrors, ({ source, target }) => {
+      checkPath(source).fold(logErrors, sourceOk => {
+        checkPath(target).fold(logErrors, targetOk => {
+          walkSync(sourceOk).fold(logErrors, sourceWalked => {
+            walkSync(targetOk).fold(logErrors, targetWalked => {
+              mkPathHashList(sourceWalked).fold(logErrors, sourcePathHashList => {
+                mkPathHashList(targetWalked).fold(logErrors, targetPathHashList => {
                   const { include, exclude } = comparePathHashLists(
                     sourcePathHashList,
                     targetPathHashList
                   );
-                  copyFiles(include, targetOk).fold(printErrors, printSuccess);
-                  printMessages(exclude.map(x => x.path));
+                  copyFiles(include, targetOk).fold(logErrors, logSuccesses);
+                  logInfos(exclude.map(x => x.path));
                 });
               });
-            })
-          );
-        })
-      );
+            });
+          });
+        });
+      });
     })
   );
 
