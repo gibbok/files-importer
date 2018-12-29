@@ -82,7 +82,6 @@ describe("md5", () => {
 });
 
 describe("comparePathHashLists", () => {
-  // source
   const pathHash1 = {
     hash: "c4ca4238a0b923820dcc509a6f75849b",
     path: "./source/file1.txt"
@@ -95,7 +94,6 @@ describe("comparePathHashLists", () => {
     hash: "eccbc87e4b5ce2fe28308fd9f2a7baf3",
     path: "./souce/file3.txt"
   };
-  // target
   const pathHash4 = {
     hash: "eccbc87e4b5ce2fe28308fd9f2a7baf3",
     path: "./target/file3.txt"
@@ -139,6 +137,14 @@ describe("comparePathHashLists", () => {
     const { exclude, include } = comparePathHashLists(source, target);
     assert.deepStrictEqual(include, [pathHash1, pathHash2]);
     assert.deepStrictEqual(exclude, [pathHash4]);
+  });
+
+  it("should not include nor exclude file paths", () => {
+    const source: PathHashList = [];
+    const target: PathHashList = [pathHash4];
+    const { exclude, include } = comparePathHashLists(source, target);
+    assert.deepStrictEqual(include, []);
+    assert.deepStrictEqual(exclude, []);
   });
 });
 
