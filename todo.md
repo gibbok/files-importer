@@ -10,6 +10,7 @@ npm start ~/Documents/Repositories/files-importer/test-app/source ~/Documents/Re
 
 # Bugs:
 - [ ] If relative paths are passed for source and target arguments folder are created by user (convert always to absolute pathsFor testing use)
+- [x] Diff algo does not exclude file paths
 
 # Improvements:
 - [ ] Error `path is invalid could show up if was source or target`
