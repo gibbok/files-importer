@@ -29,3 +29,7 @@ export const checkPath = curry(
       : right(pathResolved);
   }
 );
+
+export const checkPathSource = checkPath("source");
+
+export const checkPathTarget = checkPath("target");
