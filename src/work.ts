@@ -6,6 +6,7 @@ import { identity } from "fp-ts/lib/function";
 import { fromNullable } from "fp-ts/lib/Option";
 import { closeSync, copySync, openSync, readSync } from "fs-extra";
 import klawSync from "klaw-sync";
+import * as nodePath from "path";
 import { Errors, PathHashList } from "./types";
 
 export const walkSync = (p: string): Either<Errors, ReadonlyArray<string>> => {
@@ -76,7 +77,9 @@ export const copyFiles = (
         break;
       }
     }
-    const outputPath = `${target}/${destination}`;
+    const outputPath = nodePath.resolve(`${target}/${destination}`);
+    console.log("original", target);
+    console.log("final---", outputPath);
     try {
       copySync(path, outputPath);
       return { path: outputPath, error: false, errorMessage: "" };
