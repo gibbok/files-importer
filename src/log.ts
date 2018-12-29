@@ -32,3 +32,9 @@ export const logInfo = compose(
 export const logMessages = curry((fn: (a: string) => IO<void>, messages: ReadonlyArray<string>) =>
   messages.forEach(x => fn(x).run())
 );
+
+export const logErrors = logMessages(logError);
+
+export const logSuccesses = logMessages(logSuccess);
+
+export const logInfos = logMessages(logInfo);

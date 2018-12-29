@@ -1,13 +1,7 @@
 /* tslint:disable:no-expression-statement */
 import { checkArgs, checkPathSource, checkPathsUnequal, checkPathTarget } from "./check";
-import { logError, logInfo, logMessages, logSuccess } from "./log";
+import { logErrors, logInfos, logSuccesses } from "./log";
 import { comparePathHashLists, copyFiles, mkPathHashList, walkSync } from "./work";
-
-const logErrors = logMessages(logError);
-
-const logSuccesses = logMessages(logSuccess);
-
-const logInfos = logMessages(logInfo);
 
 const program = (args: ReadonlyArray<string>) =>
   checkArgs(args).fold(logErrors, ts =>
