@@ -6,6 +6,6 @@ export const TEST_DIR = path.join(tmpdir(), "files-importer");
 
 export const BAD_PATH = "./invalid-path";
 
-export const createFile = (p: string) => outputFileSync(p, "hello!");
+export const createFile = (p: string) => outputFileSync(p, path.basename(p));
 
 export const removeFile = (p: string) => removeSync(p);

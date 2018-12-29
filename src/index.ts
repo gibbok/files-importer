@@ -3,7 +3,7 @@ import { checkArgs, checkPathSource, checkPathsUnequal, checkPathTarget } from "
 import { logErrors, logInfos, logSuccesses } from "./log";
 import { comparePathHashLists, copyFiles, mkPathHashList, walkSync } from "./work";
 
-const program = (args: ReadonlyArray<string>) =>
+export const main = (args: ReadonlyArray<string>) =>
   checkArgs(args).fold(logErrors, ts =>
     checkPathsUnequal(ts).fold(logErrors, ({ source, target }) => {
       checkPathSource(source).fold(logErrors, sourceResolved => {
@@ -27,4 +27,4 @@ const program = (args: ReadonlyArray<string>) =>
     })
   );
 
-program(process.argv);
+main(process.argv);

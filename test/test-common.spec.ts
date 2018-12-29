@@ -14,7 +14,7 @@ describe("createFile", () => {
     assert(!fs.existsSync(file));
     createFile(file);
     assert(fs.existsSync(file));
-    assert.strictEqual(fs.readFileSync(file, "utf8"), "hello!");
+    assert.strictEqual(fs.readFileSync(file, "utf8"), "file.txt");
   });
 });
 

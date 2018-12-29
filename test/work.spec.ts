@@ -70,7 +70,7 @@ describe("md5", () => {
     const mk = md5(fileName);
     assert.strictEqual(mk.isLeft(), false);
     assert.strictEqual(mk.isRight(), true);
-    assert.strictEqual(mk.value, "5a8dd3ad0756a93ded72b823b19dd877");
+    assert.strictEqual(mk.value, "bd01856bfd2065d0d1ee20c03bd3a9af");
   });
 
   it("should return left return an error message", () => {
