@@ -58,7 +58,7 @@ export const comparePathHashLists = (
   pathHashListTarget: PathHashList
 ) => {
   const include = pathHashListSource.filter(x => !pathHashListTarget.find(y => y.hash === x.hash));
-  const exclude = pathHashListTarget.filter(x => pathHashListSource.find(y => y.hash === x.hash));
+  const exclude = pathHashListSource.filter(x => pathHashListTarget.find(y => y.hash === x.hash));
   return {
     include,
     exclude

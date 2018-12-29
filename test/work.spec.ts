@@ -136,7 +136,7 @@ describe("comparePathHashLists", () => {
     const target: PathHashList = [pathHash4];
     const { exclude, include } = comparePathHashLists(source, target);
     assert.deepStrictEqual(include, [pathHash1, pathHash2]);
-    assert.deepStrictEqual(exclude, [pathHash4]);
+    assert.deepStrictEqual(exclude, [pathHash3]);
   });
 
   it("should not include nor exclude file paths", () => {
