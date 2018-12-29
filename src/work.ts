@@ -6,7 +6,6 @@ import { identity } from "fp-ts/lib/function";
 import { fromNullable } from "fp-ts/lib/Option";
 import { closeSync, copySync, openSync, readSync } from "fs-extra";
 import klawSync from "klaw-sync";
-import { difference, intersection } from "ramda";
 import { Errors, PathHashList } from "./types";
 
 export const walkSync = (p: string): Either<Errors, ReadonlyArray<string>> => {
@@ -56,10 +55,14 @@ export const md5 = (path: string): Either<Error["message"], string> => {
 export const comparePathHashLists = (
   pathHashListSource: PathHashList,
   pathHashListTarget: PathHashList
-) => ({
-  include: difference(pathHashListSource, pathHashListTarget),
-  exclude: intersection(pathHashListSource, pathHashListTarget)
-});
+) => {
+  const include = pathHashListSource.filter(x => !pathHashListTarget.find(y => y.hash === x.hash));
+  const exclude = pathHashListTarget.filter(x => pathHashListSource.find(y => y.hash === x.hash));
+  return {
+    include,
+    exclude
+  };
+};
 
 export const copyFiles = (
   include: PathHashList,

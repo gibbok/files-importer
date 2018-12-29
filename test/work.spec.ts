@@ -82,17 +82,23 @@ describe("md5", () => {
 });
 
 describe("comparePathHashLists", () => {
+  // source
   const pathHash1 = {
-    hash: "595f44fec1e92a71d3e9e77456ba80d1",
-    path: "file1.txt"
+    hash: "c4ca4238a0b923820dcc509a6f75849b",
+    path: "./source/file1.txt"
   };
   const pathHash2 = {
-    hash: "71f920fa275127a7b60fa4d4d41432a3",
-    path: "file2.txt"
+    hash: "c81e728d9d4c2f636f067f89cc14862c",
+    path: "./source/file2.txt"
   };
   const pathHash3 = {
-    hash: "43c191bf6d6c3f263a8cd0efd4a058ab",
-    path: "file3.txt"
+    hash: "eccbc87e4b5ce2fe28308fd9f2a7baf3",
+    path: "./souce/file3.txt"
+  };
+  // target
+  const pathHash4 = {
+    hash: "eccbc87e4b5ce2fe28308fd9f2a7baf3",
+    path: "./target/file3.txt"
   };
 
   it("should exclude file path", () => {
@@ -129,10 +135,10 @@ describe("comparePathHashLists", () => {
 
   it("should include and exclude file paths", () => {
     const source: PathHashList = [pathHash1, pathHash2, pathHash3];
-    const target: PathHashList = [pathHash1, pathHash3];
-    const { include, exclude } = comparePathHashLists(source, target);
-    assert.deepStrictEqual(include, [pathHash2]);
-    assert.deepStrictEqual(exclude, [pathHash1, pathHash3]);
+    const target: PathHashList = [pathHash4];
+    const { exclude, include } = comparePathHashLists(source, target);
+    assert.deepStrictEqual(include, [pathHash1, pathHash2]);
+    assert.deepStrictEqual(exclude, [pathHash4]);
   });
 });
 
