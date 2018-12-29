@@ -13,13 +13,13 @@ const printMessages = (messages: ReadonlyArray<string>) => messages.forEach(cons
 
 const program = (args: ReadonlyArray<string>) =>
   checkArgs(args).fold(printErrors, ts =>
-    checkPathsUnequal(ts).fold(printErrors, ({ target, source }) => {
-      checkPath(target).fold(printErrors, targetOk =>
-        checkPath(source).fold(printErrors, sourceOk => {
-          walkSync(targetOk).fold(printErrors, targetWalked =>
-            walkSync(sourceOk).fold(printErrors, sourceWalked => {
-              mkPathHashList(targetWalked).fold(printErrors, targetPathHashList => {
-                mkPathHashList(sourceWalked).fold(printErrors, sourcePathHashList => {
+    checkPathsUnequal(ts).fold(printErrors, ({ source, target }) => {
+      checkPath(source).fold(printErrors, sourceOk =>
+        checkPath(target).fold(printErrors, targetOk => {
+          walkSync(sourceOk).fold(printErrors, sourceWalked =>
+            walkSync(targetOk).fold(printErrors, targetWalked => {
+              mkPathHashList(sourceWalked).fold(printErrors, sourcePathHashList => {
+                mkPathHashList(targetWalked).fold(printErrors, targetPathHashList => {
                   const { include, exclude } = comparePathHashLists(
                     sourcePathHashList,
                     targetPathHashList
