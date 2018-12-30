@@ -4,7 +4,7 @@ import { logErrors, logInfos, logSuccesses } from "./log";
 import { comparePathHashLists, copyFiles, mkPathHashList, walkSync } from "./work";
 
 export const main = (args: ReadonlyArray<string>) =>
-  checkArgs(args).fold(logErrors, ts =>
+  checkArgs(args).fold(logErrors, ts => {
     checkPathsUnequal(ts).fold(logErrors, ({ source, target }) => {
       checkPathSource(source).fold(logErrors, sourceResolved => {
         checkPathTarget(target).fold(logErrors, targetResolved => {
@@ -24,7 +24,7 @@ export const main = (args: ReadonlyArray<string>) =>
           });
         });
       });
-    })
-  );
+    });
+  });
 
 main(process.argv);

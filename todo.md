@@ -17,8 +17,7 @@ npm start ./app/source ./app/target
 - [x] Diff algo does not exclude file paths
 
 # Improvements:
-- [ ] Error `path is invalid could show up if was source or target`
+- [x] Error `path is invalid could show up if was source or target`
 - [x] Spice up  `printErrors`, `printSuccess`, `printMessages`
 - [ ] Add some progress indicator
 - [ ] Ask user confirmation before merge
-- [ ] Understand why resolve is necessary in copy file
