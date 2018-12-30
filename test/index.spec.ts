@@ -17,7 +17,7 @@ describe("program", () => {
 
   beforeAll(() => fileNames.map(createFile));
 
-  it("should run the program adding one file into the os, source has one more file than target", () => {
+  it("should run the program adding one file into the os (`source` has one more file than `target`)", () => {
     main(["npm", "start", `${TEST_DIR}/source`, `${TEST_DIR}/target`]);
     assert.deepEqual(pathExistsSync(`${TEST_DIR}/target/source/sub/file2.txt`), true);
   });
@@ -33,7 +33,7 @@ describe("program", () => {
 
   beforeAll(() => fileNames.map(createFile));
 
-  it("should run the program without adding any files into the os, source and target have same files", () => {
+  it("should run the program without adding any files into the os (`source` and `target` have same files)", () => {
     main(["npm", "start", `${TEST_DIR}/source`, `${TEST_DIR}/target`]);
     assert.deepEqual(readdirSync(`${TEST_DIR}/target`), ["file1.txt", "sub"]);
     assert.deepEqual(readdirSync(`${TEST_DIR}/target/sub`), ["file2.txt"]);
@@ -52,7 +52,7 @@ describe("program", () => {
     mkdirSync(`${TEST_DIR}/target`);
   });
 
-  it("should run the program adding three files into the os, source has files and target has none", () => {
+  it("should run the program adding three files into the os (`source` has files and `target` has none)", () => {
     main(["npm", "start", `${TEST_DIR}/source`, `${TEST_DIR}/target`]);
     assert.deepEqual(readdirSync(`${TEST_DIR}/target/source`), ["file1.txt", "sub"]);
     assert.deepEqual(readdirSync(`${TEST_DIR}/target/source/sub`), ["file2.txt", "sub"]);
