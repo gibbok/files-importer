@@ -1,11 +1,11 @@
 /* tslint:disable:no-expression-statement */
-import { checkArgs, checkPathSource, checkPathsUnequal, checkPathTarget } from "./check";
+import { checkArgs, checkPathSource, checkPathsInequality, checkPathTarget } from "./check";
 import { logErrors, logInfos, logSuccesses } from "./log";
 import { comparePathHashLists, copyFiles, mkPathHashList, walkSync } from "./work";
 
 export const main = (args: ReadonlyArray<string>) =>
   checkArgs(args).fold(logErrors, ts => {
-    checkPathsUnequal(ts).fold(logErrors, ({ source, target }) => {
+    checkPathsInequality(ts).fold(logErrors, ({ source, target }) => {
       checkPathSource(source).fold(logErrors, sourceResolved => {
         checkPathTarget(target).fold(logErrors, targetResolved => {
           walkSync(sourceResolved).fold(logErrors, sourceWalked => {

@@ -12,7 +12,7 @@ export const checkArgs = (args: ReadonlyArray<string>): Either<Errors, PathSourc
         target: args[3]
       });
 
-export const checkPathsUnequal = (
+export const checkPathsInequality = (
   pathSourceTarget: PathSourceTarget
 ): Either<Errors, PathSourceTarget> => {
   const { source, target } = pathSourceTarget;
