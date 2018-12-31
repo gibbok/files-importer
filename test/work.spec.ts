@@ -19,14 +19,14 @@ describe("walkSynch", () => {
 
   afterAll(() => removeFile(TEST_DIR));
 
-  it("should return left and return a list of messages if it does not walk", () => {
+  it("should walk the os and return left and return a list of messages if it does not walk", () => {
     const ws = walkSync(BAD_PATH);
     assert.strictEqual(ws.isLeft(), true);
     assert.strictEqual(ws.isRight(), false);
     assert.strictEqual(ws.value[0].includes("cannot"), true);
   });
 
-  it("should return right creating a path list", () => {
+  it("should walk the os and return right creating a path list", () => {
     const ws = walkSync(TEST_DIR);
     assert.strictEqual(ws.isLeft(), false);
     assert.strictEqual(ws.isRight(), true);

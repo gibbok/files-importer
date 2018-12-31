@@ -10,7 +10,7 @@ const file = path.join(TEST_DIR, "file.txt");
 describe("createFile", () => {
   afterAll(() => removeFile(TEST_DIR));
 
-  it("should create a file", () => {
+  it("should create a file into the os", () => {
     assert(!fs.existsSync(file));
     createFile(file);
     assert(fs.existsSync(file));
@@ -21,7 +21,7 @@ describe("createFile", () => {
 describe("removeFile", () => {
   afterAll(() => removeFile(TEST_DIR));
 
-  it("should remove a file", () => {
+  it("should remove a file into the os", () => {
     createFile(file);
     assert(fs.existsSync(file));
     removeFile(file);
