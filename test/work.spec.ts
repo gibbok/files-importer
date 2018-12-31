@@ -99,7 +99,7 @@ describe("comparePathHashLists", () => {
     path: "./target/file3.txt"
   };
 
-  it("should compare and return an array of `PathHash` which exclude only a path without including any", () => {
+  it("should compare a hash for `source` and `target`, if both are identical return an array containing the hash/path excluded", () => {
     const source: PathHashList = [pathHash1];
     const target: PathHashList = [pathHash1];
     const { include, exclude } = comparePathHashLists(source, target);
@@ -107,7 +107,7 @@ describe("comparePathHashLists", () => {
     assert.deepStrictEqual(exclude, [pathHash1]);
   });
 
-  it("should compare and return an array of `PathHash` which exclude all paths without including any", () => {
+  it("should compare hashes for `source` and `target`, if both are identical return an array containing the hashes/paths excluded", () => {
     const source: PathHashList = [pathHash1, pathHash2];
     const target: PathHashList = [pathHash1, pathHash2];
     const { include, exclude } = comparePathHashLists(source, target);
@@ -115,7 +115,7 @@ describe("comparePathHashLists", () => {
     assert.deepStrictEqual(exclude, [pathHash1, pathHash2]);
   });
 
-  it("should compare and return an array of `PathHash` which include a path without excluding any", () => {
+  it("should compare hash for `source` and `target`, if hash in `source` is not included in `target` return an array containing the hash/path", () => {
     const source: PathHashList = [pathHash1];
     const target: PathHashList = [];
     const { include, exclude } = comparePathHashLists(source, target);
@@ -123,7 +123,7 @@ describe("comparePathHashLists", () => {
     assert.deepStrictEqual(exclude, []);
   });
 
-  it("should compare and return an array of `PathHash` which include all paths and without excluding any", () => {
+  it("should compare hashes for `source` and `target`, if hashes in `source` are not included in `target` return an array containing the hashes/paths", () => {
     const source: PathHashList = [pathHash1, pathHash2];
     const target: PathHashList = [];
     const { include, exclude } = comparePathHashLists(source, target);
@@ -131,7 +131,7 @@ describe("comparePathHashLists", () => {
     assert.deepStrictEqual(exclude, []);
   });
 
-  it("should compare and return an array of `PathHash` which include some paths and exclude some", () => {
+  it("should compare hashes for `source` and `target`, return and array containing the hashes/paths which are not present in `target` in `include` and the remaining in `exclude`", () => {
     const source: PathHashList = [pathHash1, pathHash2, pathHash3];
     const target: PathHashList = [pathHash4];
     const { exclude, include } = comparePathHashLists(source, target);
@@ -139,7 +139,7 @@ describe("comparePathHashLists", () => {
     assert.deepStrictEqual(exclude, [pathHash3]);
   });
 
-  it("should compare and return an array of `PathHash` not including or excluding any paths", () => {
+  it("should compare hashes for `source` and `target`, if only `target` has a hash, do not `include` or `exclude`", () => {
     const source: PathHashList = [];
     const target: PathHashList = [pathHash4];
     const { exclude, include } = comparePathHashLists(source, target);
