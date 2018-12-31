@@ -9,27 +9,24 @@ import {
 import { BAD_PATH, createFile, removeFile, TEST_DIR } from "../src/test-common";
 
 describe("checkArgs", () => {
-  it("should return left with list of error messages when not all arguments are passed", () => {
+  it("should return left with a list of error messages when not all arguments are passed", () => {
     const args: ReadonlyArray<string> = ["npm", "start"];
     const ca = checkArgs(args);
-    assert.strictEqual(ca.isLeft(), true);
-    assert.strictEqual(ca.isRight(), false);
     assert.strictEqual(ca.isLeft() && ca.value[0].includes("only"), true);
+    assert.strictEqual(ca.isRight(), false);
   });
 
-  it("should return left with list of error messages when more arguments than necessary are passed", () => {
+  it("should return left with a list of error messages when more arguments than necessary are passed", () => {
     const args: ReadonlyArray<string> = ["npm", "start", "source", "target", "other"];
     const ca = checkArgs(args);
-    assert.strictEqual(ca.isLeft(), true);
-    assert.strictEqual(ca.isRight(), false);
     assert.strictEqual(ca.isLeft() && ca.value[0].includes("invalid"), true);
+    assert.strictEqual(ca.isRight(), false);
   });
 
-  it("should return right with an array with source and destination as passed via arguments", () => {
+  it("should return right with an object with `source` and `target` as passed via arguments", () => {
     const args: ReadonlyArray<string> = ["npm", "start", "source", "target"];
     const ca = checkArgs(args);
     assert.strictEqual(ca.isLeft(), false);
-    assert.strictEqual(ca.isRight(), true);
     assert.strictEqual(ca.isRight() && ca.value.source, args[2]);
     assert.strictEqual(ca.isRight() && ca.value.target, args[3]);
   });
@@ -38,18 +35,16 @@ describe("checkArgs", () => {
 describe("checkPathsUnequal", () => {
   const source = TEST_DIR;
   const target = "target";
-  it("should return left with a list of error messages if source and target paths are identical", () => {
+  it("should return left with a list of error messages if `source` and `target` paths are identical", () => {
     const ts = checkPathsUnequal({ source, target: source });
-    assert.strictEqual(ts.isLeft(), true);
-    assert.strictEqual(ts.isRight(), false);
     assert.strictEqual(ts.isLeft() && ts.value[0].includes("invalid"), true);
+    assert.strictEqual(ts.isRight(), false);
   });
 
-  it("should return right with an array if source and target paths are different", () => {
+  it("should return right with an object with `source` and `target` as passed via arguments if both paths are different", () => {
     const ts = checkPathsUnequal({ source, target });
     assert.strictEqual(ts.isLeft(), false);
-    assert.strictEqual(ts.isRight(), true);
-    assert.deepStrictEqual(ts.value, { source, target });
+    assert.deepStrictEqual(ts.isRight() && ts.value, { source, target });
   });
 });
 
@@ -61,16 +56,14 @@ describe("checkPath", () => {
 
   it("should return left with an error message for `source` if path is invalid", () => {
     const fe = checkPath("source")(BAD_PATH);
-    assert.strictEqual(fe.isLeft(), true);
+    assert.strictEqual(fe.isLeft() && fe.value[0].includes("source path is invalid"), true);
     assert.strictEqual(fe.isRight(), false);
-    assert.strictEqual(fe.value[0].includes("source path is invalid"), true);
   });
 
-  it("should return right with a string as path if `source` path is valid and exists", () => {
+  it("should return right with a string for `source` if path is valid and exists", () => {
     const fe = checkPath("source")(goodPath);
     assert.strictEqual(fe.isLeft(), false);
-    assert.strictEqual(fe.isRight(), true);
-    assert.strictEqual(fe.value, goodPath);
+    assert.strictEqual(fe.isRight() && fe.value, goodPath);
   });
 });
 
@@ -83,16 +76,14 @@ describe("checkPathSource", () => {
 
   it("should return left with an error message for `source` if path is invalid", () => {
     const fe = checkPathSource(BAD_PATH);
-    assert.strictEqual(fe.isLeft(), true);
+    assert.strictEqual(fe.isLeft() && fe.value[0].includes("source path is invalid"), true);
     assert.strictEqual(fe.isRight(), false);
-    assert.strictEqual(fe.value[0].includes("source path is invalid"), true);
   });
 
-  it("should return right with a string as path if `source` path is valid and exists", () => {
+  it("should return right with a string for `source` if path is valid and exists", () => {
     const fe = checkPathSource(goodPath);
     assert.strictEqual(fe.isLeft(), false);
-    assert.strictEqual(fe.isRight(), true);
-    assert.strictEqual(fe.value, goodPath);
+    assert.strictEqual(fe.isRight() && fe.value, goodPath);
   });
 });
 
@@ -105,15 +96,13 @@ describe("checkPathTarget", () => {
 
   it("should return left with an error message for `target` if path is invalid", () => {
     const fe = checkPathTarget(BAD_PATH);
-    assert.strictEqual(fe.isLeft(), true);
+    assert.strictEqual(fe.isLeft() && fe.value[0].includes("target path is invalid"), true);
     assert.strictEqual(fe.isRight(), false);
-    assert.strictEqual(fe.value[0].includes("target path is invalid"), true);
   });
 
-  it("should return right with a string as path if `target` path is valid and exists", () => {
+  it("should return right with a string for `target` if path is valid and exists", () => {
     const fe = checkPathTarget(goodPath);
     assert.strictEqual(fe.isLeft(), false);
-    assert.strictEqual(fe.isRight(), true);
-    assert.strictEqual(fe.value, goodPath);
+    assert.strictEqual(fe.isRight() && fe.value, goodPath);
   });
 });
