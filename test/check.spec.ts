@@ -9,21 +9,21 @@ import {
 import { BAD_PATH, createFile, removeFile, TEST_DIR } from "../src/test-common";
 
 describe("checkArgs", () => {
-  it("should return left with a list of error messages when not all arguments are passed", () => {
+  it("should check the arguments passed and return left with a list of error messages when not all arguments are provided", () => {
     const args: ReadonlyArray<string> = ["npm", "start"];
     const ca = checkArgs(args);
     assert.strictEqual(ca.isLeft() && ca.value[0].includes("only"), true);
     assert.strictEqual(ca.isRight(), false);
   });
 
-  it("should return left with a list of error messages when more arguments than necessary are passed", () => {
+  it("should check the arguments passed and return left with a list of error messages when more arguments than necessary are provided", () => {
     const args: ReadonlyArray<string> = ["npm", "start", "source", "target", "other"];
     const ca = checkArgs(args);
     assert.strictEqual(ca.isLeft() && ca.value[0].includes("invalid"), true);
     assert.strictEqual(ca.isRight(), false);
   });
 
-  it("should return right with an object with `source` and `target` as passed via arguments", () => {
+  it("should check the arguments passed and return right with an object with resolved paths for `source` and `target`", () => {
     const args: ReadonlyArray<string> = ["npm", "start", "source", "target"];
     const ca = checkArgs(args);
     assert.strictEqual(ca.isLeft(), false);
