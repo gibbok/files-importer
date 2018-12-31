@@ -39,14 +39,14 @@ describe("mkPathHashList", () => {
 
   afterAll(() => removeFile(TEST_DIR));
 
-  it("should return left", () => {
+  it("should create md5 hashes for paths and return left with an error message if an error was incurred", () => {
     const r = mkPathHashList([BAD_PATH]);
     assert.strictEqual(r.isLeft(), true);
     assert.strictEqual(r.isRight(), false);
     assert.strictEqual(r.isLeft() && r.value[0].includes("ENOENT"), true);
   });
 
-  it("should return right with a list of file paths and their hash values", () => {
+  it("should create md5 hashes for paths and return right with a list of file paths and their hash values", () => {
     const result = fileNames.map((path: string) => ({
       path,
       hash: md5(path).fold(() => "error", (hash: string) => hash)
@@ -66,14 +66,14 @@ describe("md5", () => {
 
   afterAll(() => removeFile(TEST_DIR));
 
-  it("should return right with an md5 hash for a specified file", () => {
+  it("should create md5 hash for a valid file path and return right with the hash of the specified file", () => {
     const mk = md5(fileName);
     assert.strictEqual(mk.isLeft(), false);
     assert.strictEqual(mk.isRight(), true);
     assert.strictEqual(mk.value, "bd01856bfd2065d0d1ee20c03bd3a9af");
   });
 
-  it("should return left with an error message", () => {
+  it("should create md5 hash for a valid file path and return left with an error message if an error was incurred", () => {
     const mk = md5(BAD_PATH);
     assert.strictEqual(mk.isLeft(), true);
     assert.strictEqual(mk.isRight(), false);
