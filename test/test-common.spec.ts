@@ -30,13 +30,13 @@ describe("removeFile", () => {
 });
 
 describe("TEST_DIR", () => {
-  it("should return the temporary directory", () => {
+  it("should return the current temporary directory as string", () => {
     assert.strictEqual(TEST_DIR, `${path.join(tmpdir())}/files-importer`);
   });
 });
 
 describe("BAD_PATH", () => {
-  it("should return an invalid path", () => {
+  it("should return an invalid path as string", () => {
     assert.strictEqual(BAD_PATH, "./invalid-path");
   });
 });

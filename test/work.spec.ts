@@ -19,14 +19,14 @@ describe("walkSynch", () => {
 
   afterAll(() => removeFile(TEST_DIR));
 
-  it("should walk the os and return left and return a list of messages if it does not walk", () => {
+  it("should walk a folder and return left with an error message if it could not walk", () => {
     const ws = walkSync(BAD_PATH);
     assert.strictEqual(ws.isLeft(), true);
     assert.strictEqual(ws.isRight(), false);
     assert.strictEqual(ws.value[0].includes("cannot"), true);
   });
 
-  it("should walk the os and return right creating a path list", () => {
+  it("should walk a folder and return right with list of paths", () => {
     const ws = walkSync(TEST_DIR);
     assert.strictEqual(ws.isLeft(), false);
     assert.strictEqual(ws.isRight(), true);
@@ -39,14 +39,14 @@ describe("mkPathHashList", () => {
 
   afterAll(() => removeFile(TEST_DIR));
 
-  it("should create md5 hashes for paths and return left with an error message if an error was incurred", () => {
+  it("should create hashes for paths and return left with an error message if an error was incurred", () => {
     const r = mkPathHashList([BAD_PATH]);
     assert.strictEqual(r.isLeft(), true);
     assert.strictEqual(r.isRight(), false);
     assert.strictEqual(r.isLeft() && r.value[0].includes("ENOENT"), true);
   });
 
-  it("should create md5 hashes for paths and return right with a list of file paths and their hash values", () => {
+  it("should create hashes for paths and return right with a list of paths/hashes", () => {
     const result = fileNames.map((path: string) => ({
       path,
       hash: md5(path).fold(() => "error", (hash: string) => hash)
@@ -61,23 +61,22 @@ describe("mkPathHashList", () => {
 
 describe("md5", () => {
   const fileName = `${TEST_DIR}/file1.txt`;
-
   beforeAll(() => createFile(fileName));
 
   afterAll(() => removeFile(TEST_DIR));
 
-  it("should create md5 hash for a valid file path and return right with the hash of the specified file", () => {
-    const mk = md5(fileName);
-    assert.strictEqual(mk.isLeft(), false);
-    assert.strictEqual(mk.isRight(), true);
-    assert.strictEqual(mk.value, "bd01856bfd2065d0d1ee20c03bd3a9af");
-  });
-
-  it("should create md5 hash for a valid file path and return left with an error message if an error was incurred", () => {
+  it("should create hash for a valid path and return left with an error message if an error was incurred", () => {
     const mk = md5(BAD_PATH);
     assert.strictEqual(mk.isLeft(), true);
     assert.strictEqual(mk.isRight(), false);
     assert.strictEqual(mk.value.includes("ENOENT"), true);
+  });
+
+  it("should create hash for a valid path and return right it", () => {
+    const mk = md5(fileName);
+    assert.strictEqual(mk.isLeft(), false);
+    assert.strictEqual(mk.isRight(), true);
+    assert.strictEqual(mk.value, "bd01856bfd2065d0d1ee20c03bd3a9af");
   });
 });
 
