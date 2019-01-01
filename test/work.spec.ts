@@ -15,9 +15,9 @@ const fileNames: ReadonlyArray<string> = [
 ];
 
 describe("walkSynch", () => {
-  beforeAll(() => fileNames.map(createFile));
+  beforeEach(() => fileNames.map(createFile));
 
-  afterAll(() => removeFile(TEST_DIR));
+  afterEach(() => removeFile(TEST_DIR));
 
   it("should walk a folder and return left with an error message if it could not walk", () => {
     const ws = walkSync(BAD_PATH);
@@ -35,9 +35,9 @@ describe("walkSynch", () => {
 });
 
 describe("mkPathHashList", () => {
-  beforeAll(() => fileNames.map(createFile));
+  beforeEach(() => fileNames.map(createFile));
 
-  afterAll(() => removeFile(TEST_DIR));
+  afterEach(() => removeFile(TEST_DIR));
 
   it("should create hashes for paths and return left with an error message if an error was incurred", () => {
     const r = mkPathHashList([BAD_PATH]);
@@ -61,9 +61,9 @@ describe("mkPathHashList", () => {
 
 describe("md5", () => {
   const fileName = `${TEST_DIR}/file1.txt`;
-  beforeAll(() => createFile(fileName));
+  beforeEach(() => createFile(fileName));
 
-  afterAll(() => removeFile(TEST_DIR));
+  afterEach(() => removeFile(TEST_DIR));
 
   it("should create hash for a valid path and return left with an error message if an error was incurred", () => {
     const mk = md5(BAD_PATH);
@@ -165,9 +165,9 @@ describe("copyFiles", () => {
   };
   const output = `${TEST_DIR}/target`;
 
-  beforeAll(() => [fileName1, fileName2].map(createFile));
+  beforeEach(() => [fileName1, fileName2].map(createFile));
 
-  afterAll(() => removeFile(TEST_DIR));
+  afterEach(() => removeFile(TEST_DIR));
 
   it("should copy files and return left with error messages where errors occurred", () => {
     const r = copyFiles([pathHash1, pathHash2, pathHash3], output);
