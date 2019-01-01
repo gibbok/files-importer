@@ -16,7 +16,6 @@ const fileNames: ReadonlyArray<string> = [
 
 describe("walkSynch", () => {
   beforeEach(() => fileNames.map(createFile));
-
   afterEach(() => removeFile(TEST_DIR));
 
   it("should walk a folder and return left with an error message if it could not walk", () => {
@@ -36,7 +35,6 @@ describe("walkSynch", () => {
 
 describe("mkPathHashList", () => {
   beforeEach(() => fileNames.map(createFile));
-
   afterEach(() => removeFile(TEST_DIR));
 
   it("should create hashes for paths and return left with an error message if an error was incurred", () => {
@@ -62,7 +60,6 @@ describe("mkPathHashList", () => {
 describe("md5", () => {
   const fileName = `${TEST_DIR}/file1.txt`;
   beforeEach(() => createFile(fileName));
-
   afterEach(() => removeFile(TEST_DIR));
 
   it("should create hash for a valid path and return left with an error message if an error was incurred", () => {
@@ -164,9 +161,7 @@ describe("copyFiles", () => {
     path: fileName3
   };
   const output = `${TEST_DIR}/target`;
-
   beforeEach(() => [fileName1, fileName2].map(createFile));
-
   afterEach(() => removeFile(TEST_DIR));
 
   it("should copy files and return left with error messages where errors occurred", () => {

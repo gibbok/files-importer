@@ -4,8 +4,6 @@ import { mkdirSync, pathExistsSync, readdirSync } from "fs-extra";
 import { main } from "../src";
 import { createFile, removeFile, TEST_DIR } from "../src/test-common";
 
-afterEach(() => removeFile(TEST_DIR));
-
 describe("program", () => {
   const fileNames: ReadonlyArray<string> = [
     `${TEST_DIR}/source/file1.txt`,
@@ -14,8 +12,8 @@ describe("program", () => {
     `${TEST_DIR}/target/file1.txt`,
     `${TEST_DIR}/target/file3.txt`
   ];
-
-  beforeAll(() => fileNames.map(createFile));
+  beforeEach(() => fileNames.map(createFile));
+  afterEach(() => removeFile(TEST_DIR));
 
   it("should perform files comparison between `source` and `target` folders, if `source` has one more file than `target` add that one file to `target`", () => {
     main(["npm", "start", `${TEST_DIR}/source`, `${TEST_DIR}/target`]);
@@ -30,8 +28,8 @@ describe("program", () => {
     `${TEST_DIR}/target/file1.txt`,
     `${TEST_DIR}/target/sub/file2.txt`
   ];
-
   beforeAll(() => fileNames.map(createFile));
+  afterEach(() => removeFile(TEST_DIR));
 
   it("should perform files comparison between `source` and `target` folders, if `source` and `target` have the same files, no files should be added to `target`", () => {
     main(["npm", "start", `${TEST_DIR}/source`, `${TEST_DIR}/target`]);
@@ -46,11 +44,11 @@ describe("program", () => {
     `${TEST_DIR}/source/sub/file2.txt`,
     `${TEST_DIR}/source/sub/sub/file3.txt`
   ];
-
   beforeAll(() => {
     fileNames.map(createFile);
     mkdirSync(`${TEST_DIR}/target`);
   });
+  afterEach(() => removeFile(TEST_DIR));
 
   it("should perform files comparison between `source` and `target` folders, if `source` has tree new files and `target` has none, the tree files should be added to `target`", () => {
     main(["npm", "start", `${TEST_DIR}/source`, `${TEST_DIR}/target`]);
