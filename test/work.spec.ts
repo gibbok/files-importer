@@ -98,7 +98,7 @@ describe("comparePathHashLists", () => {
     path: "./target/file3.txt"
   };
 
-  it("should compare a hash for `source` and `target`, if both are identical return an array containing the hash/path excluded", () => {
+  it("should compare a hash, if both are identical exclude them", () => {
     const source: PathHashList = [pathHash1];
     const target: PathHashList = [pathHash1];
     const { include, exclude } = comparePathHashLists(source, target);
@@ -106,7 +106,7 @@ describe("comparePathHashLists", () => {
     assert.deepStrictEqual(exclude, [pathHash1]);
   });
 
-  it("should compare hashes for `source` and `target`, if both are identical return an array containing the hashes/paths excluded", () => {
+  it("should compare hashes, if both are identical exclude them", () => {
     const source: PathHashList = [pathHash1, pathHash2];
     const target: PathHashList = [pathHash1, pathHash2];
     const { include, exclude } = comparePathHashLists(source, target);
@@ -114,7 +114,7 @@ describe("comparePathHashLists", () => {
     assert.deepStrictEqual(exclude, [pathHash1, pathHash2]);
   });
 
-  it("should compare hash for `source` and `target`, if hash in `source` is not included in `target` return an array containing the hash/path", () => {
+  it("should compare a hash, if hash in `source` is not in `target` include hash", () => {
     const source: PathHashList = [pathHash1];
     const target: PathHashList = [];
     const { include, exclude } = comparePathHashLists(source, target);
@@ -122,7 +122,7 @@ describe("comparePathHashLists", () => {
     assert.deepStrictEqual(exclude, []);
   });
 
-  it("should compare hashes for `source` and `target`, if hashes in `source` are not included in `target` return an array containing the hashes/paths", () => {
+  it("should compare hashes, if hashes in `source` are not in `target` include hashes", () => {
     const source: PathHashList = [pathHash1, pathHash2];
     const target: PathHashList = [];
     const { include, exclude } = comparePathHashLists(source, target);
@@ -130,7 +130,7 @@ describe("comparePathHashLists", () => {
     assert.deepStrictEqual(exclude, []);
   });
 
-  it("should compare hashes for `source` and `target`, return and array containing the hashes/paths which are not present in `target` in `include` and the remaining in `exclude`", () => {
+  it("should compare hashes, if some hashes in `source` are not in `target` include them, otherwise exclude", () => {
     const source: PathHashList = [pathHash1, pathHash2, pathHash3];
     const target: PathHashList = [pathHash4];
     const { exclude, include } = comparePathHashLists(source, target);
@@ -138,7 +138,7 @@ describe("comparePathHashLists", () => {
     assert.deepStrictEqual(exclude, [pathHash3]);
   });
 
-  it("should compare hashes for `source` and `target`, if only `target` has a hash, do not `include` or `exclude`", () => {
+  it("should compare hashes, if no hash in `source`, do not include or exclude", () => {
     const source: PathHashList = [];
     const target: PathHashList = [pathHash4];
     const { exclude, include } = comparePathHashLists(source, target);
@@ -169,16 +169,7 @@ describe("copyFiles", () => {
 
   afterAll(() => removeFile(TEST_DIR));
 
-  it("should copy files and return left with a list of processed files", () => {
-    const r = copyFiles([pathHash1, pathHash2], output);
-    assert.strictEqual(pathExistsSync(output), true);
-    assert.strictEqual(r.isRight(), true);
-    assert.strictEqual(r.isLeft(), false);
-    assert.strictEqual(r.value[0], `${TEST_DIR}/target/source/sub1/sub2/file1.txt`);
-    assert.strictEqual(r.value[1], `${TEST_DIR}/target/source/sub1/sub2/file2.txt`);
-  });
-
-  it("should not copy files and return right with a list of processed files and errors", () => {
+  it("should copy files and return left with error messages where errors occurred", () => {
     const r = copyFiles([pathHash1, pathHash2, pathHash3], output);
     assert.strictEqual(pathExistsSync(output), true);
     assert.strictEqual(r.isRight(), false);
@@ -186,5 +177,14 @@ describe("copyFiles", () => {
     assert.strictEqual(r.value[0].includes("ENOENT"), true);
     assert.strictEqual(r.value[1], `${TEST_DIR}/target/source/sub1/sub2/file1.txt`);
     assert.strictEqual(r.value[2], `${TEST_DIR}/target/source/sub1/sub2/file2.txt`);
+  });
+
+  it("should copy files and return right with processed files", () => {
+    const r = copyFiles([pathHash1, pathHash2], output);
+    assert.strictEqual(pathExistsSync(output), true);
+    assert.strictEqual(r.isRight(), true);
+    assert.strictEqual(r.isLeft(), false);
+    assert.strictEqual(r.value[0], `${TEST_DIR}/target/source/sub1/sub2/file1.txt`);
+    assert.strictEqual(r.value[1], `${TEST_DIR}/target/source/sub1/sub2/file2.txt`);
   });
 });
