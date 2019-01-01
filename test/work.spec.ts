@@ -20,16 +20,14 @@ describe("walkSynch", () => {
 
   it("should walk a folder and return left with an error message if it could not walk", () => {
     const ws = walkSync(BAD_PATH);
-    assert.strictEqual(ws.isLeft(), true);
+    assert.strictEqual(ws.isLeft() && ws.value[0].includes("cannot"), true);
     assert.strictEqual(ws.isRight(), false);
-    assert.strictEqual(ws.value[0].includes("cannot"), true);
   });
 
   it("should walk a folder and return right with list of paths", () => {
     const ws = walkSync(TEST_DIR);
     assert.strictEqual(ws.isLeft(), false);
-    assert.strictEqual(ws.isRight(), true);
-    assert.deepStrictEqual(ws.value, fileNames);
+    assert.deepStrictEqual(ws.isRight() && ws.value, fileNames);
   });
 });
 
@@ -39,9 +37,8 @@ describe("mkPathHashList", () => {
 
   it("should create hashes for paths and return left with an error message if an error was incurred", () => {
     const r = mkPathHashList([BAD_PATH]);
-    assert.strictEqual(r.isLeft(), true);
-    assert.strictEqual(r.isRight(), false);
     assert.strictEqual(r.isLeft() && r.value[0].includes("ENOENT"), true);
+    assert.strictEqual(r.isRight(), false);
   });
 
   it("should create hashes for paths and return right with a list of paths/hashes", () => {
@@ -52,8 +49,7 @@ describe("mkPathHashList", () => {
     const ws = walkSync(TEST_DIR);
     const r = ws.chain(mkPathHashList);
     assert.strictEqual(r.isLeft(), false);
-    assert.strictEqual(r.isRight(), true);
-    assert.deepStrictEqual(r.value, result);
+    assert.deepStrictEqual(r.isRight() && r.value, result);
   });
 });
 
@@ -64,16 +60,14 @@ describe("md5", () => {
 
   it("should create hash for a valid path and return left with an error message if an error was incurred", () => {
     const mk = md5(BAD_PATH);
-    assert.strictEqual(mk.isLeft(), true);
+    assert.strictEqual(mk.isLeft() && mk.value.includes("ENOENT"), true);
     assert.strictEqual(mk.isRight(), false);
-    assert.strictEqual(mk.value.includes("ENOENT"), true);
   });
 
   it("should create hash for a valid path and return right it", () => {
     const mk = md5(fileName);
     assert.strictEqual(mk.isLeft(), false);
-    assert.strictEqual(mk.isRight(), true);
-    assert.strictEqual(mk.value, "bd01856bfd2065d0d1ee20c03bd3a9af");
+    assert.strictEqual(mk.isRight() && mk.value, "bd01856bfd2065d0d1ee20c03bd3a9af");
   });
 });
 
@@ -167,19 +161,17 @@ describe("copyFiles", () => {
   it("should copy files and return left with error messages where errors occurred", () => {
     const r = copyFiles([pathHash1, pathHash2, pathHash3], output);
     assert.strictEqual(pathExistsSync(output), true);
+    assert.strictEqual(r.isLeft() && r.value[0].includes("ENOENT"), true);
+    assert.strictEqual(r.isLeft() && r.value[1], `${TEST_DIR}/target/source/sub1/sub2/file1.txt`);
+    assert.strictEqual(r.isLeft() && r.value[2], `${TEST_DIR}/target/source/sub1/sub2/file2.txt`);
     assert.strictEqual(r.isRight(), false);
-    assert.strictEqual(r.isLeft(), true);
-    assert.strictEqual(r.value[0].includes("ENOENT"), true);
-    assert.strictEqual(r.value[1], `${TEST_DIR}/target/source/sub1/sub2/file1.txt`);
-    assert.strictEqual(r.value[2], `${TEST_DIR}/target/source/sub1/sub2/file2.txt`);
   });
 
   it("should copy files and return right with processed files", () => {
     const r = copyFiles([pathHash1, pathHash2], output);
     assert.strictEqual(pathExistsSync(output), true);
-    assert.strictEqual(r.isRight(), true);
     assert.strictEqual(r.isLeft(), false);
-    assert.strictEqual(r.value[0], `${TEST_DIR}/target/source/sub1/sub2/file1.txt`);
-    assert.strictEqual(r.value[1], `${TEST_DIR}/target/source/sub1/sub2/file2.txt`);
+    assert.strictEqual(r.isRight() && r.value[0], `${TEST_DIR}/target/source/sub1/sub2/file1.txt`);
+    assert.strictEqual(r.isRight() && r.value[1], `${TEST_DIR}/target/source/sub1/sub2/file2.txt`);
   });
 });

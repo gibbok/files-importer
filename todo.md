@@ -10,7 +10,7 @@ npm start ./app/source ./app/target
 ```
 - [x] Manual tested `check.ts`
 - [x] Manual test `work.ts`
-- [ ] Write test for `index.ts`
+- [x] Write test for `index.ts`
 
 # Bugs:
 - [x] If relative paths are passed for source and target arguments folder are created by user (convert always to absolute pathsFor testing use)
@@ -19,5 +19,7 @@ npm start ./app/source ./app/target
 # Improvements:
 - [x] Error `path is invalid could show up if was source or target`
 - [x] Spice up  `printErrors`, `printSuccess`, `printMessages`
-- [ ] Add some progress indicator
+- [ ] Review main code
 - [ ] Ask user confirmation before merge
+- [ ] Add some progress indicator
+- [ ] Add code documentation
