@@ -6,9 +6,6 @@ import { Errors, PathSourceTarget } from "./types";
 
 /**
  * Check for the presence of two required arguments `source` and `target`.
- *
- * @param args - The arguments passed from the terminal
- * @returns An object which properties `source` and `target`
  */
 export const checkArgs = (args: ReadonlyArray<string>): Either<Errors, PathSourceTarget> =>
   args.length !== 4
@@ -20,9 +17,6 @@ export const checkArgs = (args: ReadonlyArray<string>): Either<Errors, PathSourc
 
 /**
  * Compare for inequality properties `source` and `target`.
- *
- * @param pathSourceTarget - An object which properties `source` and `target`
- * @returns if `right` returns `pathSourceTarget` otherwise an error message
  */
 export const checkPathsInequality = (
   pathSourceTarget: PathSourceTarget
@@ -35,10 +29,6 @@ export const checkPathsInequality = (
 
 /**
  * Check if the `path` provided is valid.
- *
- * @param type - The `path` type to check which can be `source` or `target`
- * @param path - The `path` to validate
- * @returns if `right` returns the `path` resolved otherwise an error message
  */
 export const checkPath = curry(
   (type: "source" | "target", path: string): Either<Errors, string> => {
@@ -50,17 +40,11 @@ export const checkPath = curry(
 );
 
 /**
- * Check `source` path is valid.
- *
- * @param type - The `path` type to check which can be `source` or `target`
- * @returns if `right` returns the `path` resolved otherwise an error message
+ * Check if the path `source` provided is valid.
  */
 export const checkPathSource = checkPath("source");
 
 /**
- * Check `target` path is valid.
- *
- * @param type - The `path` type to check which can be `source` or `target`
- * @returns if `right` returns the `path` resolved otherwise an error message
+ * Check if the path `target` provided is valid.
  */
 export const checkPathTarget = checkPath("target");
