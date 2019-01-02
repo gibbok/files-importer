@@ -1,5 +1,5 @@
 /* tslint:disable:no-expression-statement */
-import { checkArgs, checkPathSource, checkPathsInequality, checkPathTarget } from "./check";
+import { checkArgs, checkPathsInequality, checkPathSource, checkPathTarget } from "./check";
 import { logErrors, logInfos, logSuccesses } from "./log";
 import { comparePathHashLists, copyFiles, mkPathHashList, walkSync } from "./work";
 
