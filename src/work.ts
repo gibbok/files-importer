@@ -56,14 +56,10 @@ export const md5 = (path: string): Either<Error["message"], string> => {
 export const comparePathHashLists = (
   pathHashListSource: PathHashList,
   pathHashListTarget: PathHashList
-) => {
-  const include = pathHashListSource.filter(x => !pathHashListTarget.find(y => y.hash === x.hash));
-  const exclude = pathHashListSource.filter(x => pathHashListTarget.find(y => y.hash === x.hash));
-  return {
-    include,
-    exclude
-  };
-};
+) => ({
+  include: pathHashListSource.filter(x => !pathHashListTarget.find(y => y.hash === x.hash)),
+  exclude: pathHashListSource.filter(x => pathHashListTarget.find(y => y.hash === x.hash))
+});
 
 export const copyFiles = (
   include: PathHashList,
