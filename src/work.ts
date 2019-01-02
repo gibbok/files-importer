@@ -2,12 +2,12 @@
 import { createHash } from "crypto";
 import { lefts, zipWith } from "fp-ts/lib/Array";
 import { Either, left, right } from "fp-ts/lib/Either";
-import { identity } from "fp-ts/lib/function";
+import { curry, identity } from "fp-ts/lib/function";
 import { fromNullable } from "fp-ts/lib/Option";
 import { closeSync, copySync, openSync, readSync } from "fs-extra";
 import klawSync from "klaw-sync";
 import * as nodePath from "path";
-import { Errors, PathHashList } from "./types";
+import { Errors, PathHash, PathHashList } from "./types";
 
 export const walkSync = (p: string): Either<Errors, ReadonlyArray<string>> => {
   try {
@@ -56,10 +56,14 @@ export const md5 = (path: string): Either<Error["message"], string> => {
 export const comparePathHashLists = (
   pathHashListSource: PathHashList,
   pathHashListTarget: PathHashList
-) => ({
-  include: pathHashListSource.filter(x => !pathHashListTarget.find(y => y.hash === x.hash)),
-  exclude: pathHashListSource.filter(x => pathHashListTarget.find(y => y.hash === x.hash))
-});
+) => {
+  const matchHash = curry((list: PathHashList, x: PathHash) => list.find(y => y.hash === x.hash));
+  const matchHashTarget = matchHash(pathHashListTarget);
+  return {
+    include: pathHashListSource.filter(x => !matchHashTarget(x)),
+    exclude: pathHashListSource.filter(matchHashTarget)
+  };
+};
 
 export const copyFiles = (
   include: PathHashList,
