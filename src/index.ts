@@ -5,8 +5,7 @@ import { comparePathHashLists, copyFiles, mkPathHashList, walkSync } from "./wor
 
 /**
  * Main program.
- *
- * @param args - The arguments passed from the terminal, example `npm start ~/Documents/source ~/Documents/target`
+ * Use in terminal example: `npm start ~/Documents/source ~/Documents/target`
  */
 export const main = (args: ReadonlyArray<string>) =>
   checkArgs(args).fold(logErrors, ts => {
