@@ -20,7 +20,7 @@ describe("walkSynch", () => {
 
   it("should walk a folder and return left with an error message if it could not walk", () => {
     const ws = walkSync(BAD_PATH);
-    assert.strictEqual(ws.isLeft() && ws.value[0].includes("cannot"), true);
+    assert.strictEqual(ws.isLeft() && ws.value[0].includes("ENOENT"), true);
     assert.strictEqual(ws.isRight(), false);
   });
 

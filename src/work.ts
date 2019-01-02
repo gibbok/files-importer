@@ -1,6 +1,6 @@
 /* tslint:disable:no-let no-expression-statement no-if-statement */
 import { createHash } from "crypto";
-import { head, lefts, zipWith } from "fp-ts/lib/Array";
+import { lefts, zipWith } from "fp-ts/lib/Array";
 import { Either, left, right } from "fp-ts/lib/Either";
 import { identity } from "fp-ts/lib/function";
 import { fromNullable } from "fp-ts/lib/Option";
@@ -24,7 +24,7 @@ export const mkPathHashList = (
   const hashes = paths.map(md5);
   const hasError = hashes.some(x => x.isLeft());
   return hasError
-    ? left([head(lefts(hashes)).getOrElse("error")])
+    ? left(lefts(hashes))
     : right(
         zipWith(paths, hashes, (path: string, hash: Either<string, string>) => ({
           path,
