@@ -9,6 +9,9 @@ import klawSync from "klaw-sync";
 import * as nodePath from "path";
 import { Errors, PathHash, PathHashList } from "./types";
 
+/**
+ * Walk the file system starting from one folder.
+ */
 export const walkSync = (p: string): Either<Errors, ReadonlyArray<string>> => {
   try {
     return right(klawSync(p, { nodir: true }).map(({ path }) => path));
@@ -17,6 +20,9 @@ export const walkSync = (p: string): Either<Errors, ReadonlyArray<string>> => {
   }
 };
 
+/**
+ * Create a list of file paths and md5 hashes pair.
+ */
 export const mkPathHashList = (
   walkedPaths: ReadonlyArray<string>
 ): Either<Errors, PathHashList> => {
@@ -33,6 +39,9 @@ export const mkPathHashList = (
       );
 };
 
+/**
+ * Create an md5 hash for a file path.
+ */
 export const md5 = (path: string): Either<Error["message"], string> => {
   const BUFFER_SIZE = 8192;
   let fd: number | undefined;
@@ -53,6 +62,9 @@ export const md5 = (path: string): Either<Error["message"], string> => {
   }
 };
 
+/**
+ * Compare two lists of file paths and md5 hashes pair.
+ */
 export const comparePathHashLists = (
   pathHashListSource: PathHashList,
   pathHashListTarget: PathHashList
@@ -65,6 +77,9 @@ export const comparePathHashLists = (
   };
 };
 
+/**
+ * Copy files to a `target` directory.
+ */
 export const copyFiles = (
   include: PathHashList,
   target: string

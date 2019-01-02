@@ -13,11 +13,11 @@ export const TEST_DIR = path.join(tmpdir(), "files-importer");
 export const BAD_PATH = "./invalid-path";
 
 /**
- * Create a file which has content is file name for testing porpoise.
+ * Create a file which has content its file name for testing purposes.
  */
 export const createFile = (p: string) => outputFileSync(p, path.basename(p));
 
 /**
- * Remove a test file.
+ * Remove a file.
  */
 export const removeFile = (p: string) => removeSync(p);

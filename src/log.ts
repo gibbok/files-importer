@@ -24,7 +24,7 @@ export const withPrefixError = withPrefix("error");
 export const withPrefixInfo = withPrefix("info");
 
 /**
- * Log to console with prefix `success` an using a green color.
+ * Log to console with prefix `success` using a green color.
  */
 export const logSuccess = compose(
   log,
@@ -33,7 +33,7 @@ export const logSuccess = compose(
 );
 
 /**
- * Log to console with prefix `error` an using a red color.
+ * Log to console with prefix `error` using a red color.
  */
 export const logError = compose(
   log,
