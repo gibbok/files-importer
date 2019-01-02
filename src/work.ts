@@ -77,9 +77,17 @@ export const copyFiles = (
     const outputPath = nodePath.join(targetResolved, destination);
     try {
       copySync(path, outputPath);
-      return { path: outputPath, error: false, errorMessage: "" };
+      return {
+        path: outputPath,
+        error: false,
+        errorMessage: ""
+      };
     } catch (error) {
-      return { path: outputPath, error: true, errorMessage: error.message };
+      return {
+        path: outputPath,
+        error: true,
+        errorMessage: error.message
+      };
     }
   });
   const errors = processed.filter(x => x.error).map(y => y.errorMessage);
