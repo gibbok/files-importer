@@ -3,6 +3,11 @@ import { checkArgs, checkPathsInequality, checkPathSource, checkPathTarget } fro
 import { logErrors, logInfos, logSuccesses } from "./log";
 import { comparePathHashLists, copyFiles, mkPathHashList, walkSync } from "./work";
 
+/**
+ * Main program.
+ *
+ * @param args - The arguments passed from the terminal, example `npm start ~/Documents/source ~/Documents/target`
+ */
 export const main = (args: ReadonlyArray<string>) =>
   checkArgs(args).fold(logErrors, ts => {
     checkPathsInequality(ts).fold(logErrors, ({ source, target }) => {
