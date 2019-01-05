@@ -46,7 +46,7 @@ export const logError = compose(
  */
 export const logInfo = compose(
   log,
-  x => chalk.bold.blue(x),
+  x => chalk.bold.grey(x),
   withPrefixInfo
 );
 
