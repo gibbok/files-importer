@@ -1,7 +1,9 @@
+/* tslint:disable:no-expression-statement */
 import chalk from "chalk";
 import { log } from "fp-ts/lib/Console";
 import { compose, curry } from "fp-ts/lib/function";
 import { IO } from "fp-ts/lib/IO";
+import { PathHashList } from "../src/types";
 
 /**
  * Prefix a string.
@@ -71,3 +73,18 @@ export const logSuccesses = logMessages(logSuccess);
  * Log to console a list of `info` messages.
  */
 export const logInfos = logMessages(logInfo);
+
+/**
+ * Show how many new files were found between `source` and `target` directories.
+ */
+export const logReport = (include: PathHashList) => {
+  const totFiles = include.length;
+  log(
+    withPrefixInfo(
+      totFiles > 0
+        ? `${totFiles} new files found. Do you want to copy them to \`target\`?`
+        : "No new files found."
+    )
+  ).run();
+  logInfos(include.map(x => x.path));
+};

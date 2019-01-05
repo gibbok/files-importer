@@ -1,16 +1,22 @@
 /* tslint:disable:no-expression-statement */
-import { log } from "fp-ts/lib/Console";
 import { fromNullable } from "fp-ts/lib/Option";
-import { prompt } from "prompts";
+import { prompt, PromptObject } from "prompts";
 import { checkArgs, checkPathsInequality, checkPathSource, checkPathTarget } from "./check";
-import { logErrors, logInfos, logSuccesses, withPrefixInfo } from "./log";
+import { logErrors, logInfos, logReport, logSuccesses, withPrefixInfo } from "./log";
 import { comparePathHashLists, copyFiles, mkPathHashList, walkSync } from "./work";
+
+export const PROMPT_CONFIG: PromptObject = {
+  type: "confirm",
+  name: "value",
+  message: withPrefixInfo("Can you confirm?"),
+  initial: false
+};
 
 /**
  * Main program.
  * Terminal usage example: `npm start ~/Documents/source ~/Documents/target`
  */
-export const main = (args: ReadonlyArray<string>) =>
+export const main = (args: ReadonlyArray<string>, promptConfig: PromptObject) =>
   checkArgs(args).fold(logErrors, ts => {
     checkPathsInequality(ts).fold(logErrors, ({ source, target }) => {
       checkPathSource(source).fold(logErrors, sourceResolved => {
@@ -23,21 +29,9 @@ export const main = (args: ReadonlyArray<string>) =>
                     sourcePathHashList,
                     targetPathHashList
                   );
-                  log(
-                    withPrefixInfo(
-                      `${include.length} new files found. Do you want to copy them to \`target\`?`
-                    )
-                  ).run();
-                  logInfos(include.map(x => x.path));
+                  logReport(include);
                   const response: { value: boolean } =
-                    process.env.NODE_ENV === "test"
-                      ? { value: true }
-                      : await prompt({
-                          type: "confirm",
-                          name: "value",
-                          message: withPrefixInfo("Can you confirm?"),
-                          initial: true
-                        });
+                    process.env.NODE_ENV === "test" ? { value: true } : await prompt(promptConfig);
                   fromNullable(response.value).mapNullable(_x => {
                     copyFiles(include, targetResolved).fold(logErrors, logSuccesses);
                     logInfos(exclude.map(x => x.path));
@@ -51,4 +45,4 @@ export const main = (args: ReadonlyArray<string>) =>
     });
   });
 
-main(process.argv);
+main(process.argv, PROMPT_CONFIG);
