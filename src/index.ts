@@ -16,7 +16,11 @@ export const PROMPT_CONFIG: PromptObject = {
  * Main program.
  * Terminal usage example: `npm start ~/Documents/source ~/Documents/target`
  */
-export const main = (args: ReadonlyArray<string>, promptConfig: PromptObject) =>
+export const main = (
+  args: ReadonlyArray<string>,
+  promptConfig: PromptObject,
+  nodeEnv: string | undefined
+) =>
   checkArgs(args).fold(logErrors, ts => {
     checkPathsInequality(ts).fold(logErrors, ({ source, target }) => {
       checkPathSource(source).fold(logErrors, sourceResolved => {
@@ -31,7 +35,7 @@ export const main = (args: ReadonlyArray<string>, promptConfig: PromptObject) =>
                   );
                   logReport(include);
                   const response: { value: boolean } =
-                    process.env.NODE_ENV === "test" ? { value: true } : await prompt(promptConfig);
+                    nodeEnv === "test" ? { value: true } : await prompt(promptConfig);
                   fromNullable(response.value).mapNullable(_x => {
                     copyFiles(include, targetResolved).fold(logErrors, logSuccesses);
                     logInfos(exclude.map(x => x.path));
@@ -45,4 +49,4 @@ export const main = (args: ReadonlyArray<string>, promptConfig: PromptObject) =>
     });
   });
 
-main(process.argv, PROMPT_CONFIG);
+main(process.argv, PROMPT_CONFIG, process.env.NODE_ENV);
