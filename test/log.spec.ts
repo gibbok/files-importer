@@ -44,7 +44,7 @@ describe("withPrefixInfo", () => {
   });
 });
 
-const testConsoleLog = (fn: (a: string) => IO<void>, message: string) => {
+const testConsoleLogRun = (fn: (a: string) => IO<void>, message: string) => {
   const spy = jest.spyOn(global.console, "log").mockImplementation(() => ({}));
   fn("message").run();
   expect(spy).toHaveBeenCalled();
@@ -71,19 +71,19 @@ const testConsoleLogSimple = (fn: any, times: number) => {
 
 describe("logSuccess", () => {
   it("should log to console with `success` prefix", () => {
-    testConsoleLog(logSuccess, "file-importer: success: message");
+    testConsoleLogRun(logSuccess, "file-importer: success: message");
   });
 });
 
 describe("logError", () => {
   it("should log to console with `error` prefix", () => {
-    testConsoleLog(logError, "file-importer: error: message");
+    testConsoleLogRun(logError, "file-importer: error: message");
   });
 });
 
 describe("logInfo", () => {
   it("should log to console with `info` prefix", () => {
-    testConsoleLog(logInfo, "file-importer: info: message");
+    testConsoleLogRun(logInfo, "file-importer: info: message");
   });
 });
 
