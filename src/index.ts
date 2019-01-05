@@ -3,7 +3,7 @@ import { log } from "fp-ts/lib/Console";
 import { fromNullable } from "fp-ts/lib/Option";
 import { prompt } from "prompts";
 import { checkArgs, checkPathsInequality, checkPathSource, checkPathTarget } from "./check";
-import { logErrors, logInfos, logSuccesses } from "./log";
+import { logErrors, logInfos, logSuccesses, withPrefixInfo } from "./log";
 import { comparePathHashLists, copyFiles, mkPathHashList, walkSync } from "./work";
 
 /**
@@ -24,19 +24,18 @@ export const main = (args: ReadonlyArray<string>) =>
                     targetPathHashList
                   );
                   log(
-                    `file-importer: info: ${
-                      include.length
-                    } new files has been found. Do you want to copy them to \`target\` directory?`
+                    withPrefixInfo(
+                      `${include.length} new files found. Do you want to copy them to \`target\`?`
+                    )
                   ).run();
                   logInfos(include.map(x => x.path));
-
-                  const response =
+                  const response: { value: boolean } =
                     process.env.NODE_ENV === "test"
                       ? { value: true }
                       : await prompt({
                           type: "confirm",
                           name: "value",
-                          message: "file-importer: info: Can you confirm?",
+                          message: withPrefixInfo("Can you confirm?"),
                           initial: true
                         });
                   fromNullable(response.value).mapNullable(_x => {
