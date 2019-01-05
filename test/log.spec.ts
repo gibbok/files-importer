@@ -7,6 +7,7 @@ import {
   logInfo,
   logInfos,
   logMessages,
+  logReport,
   logSuccess,
   logSuccesses,
   withPrefix,
@@ -61,6 +62,13 @@ const testConsoleLogs = (
   spy.mockReset();
 };
 
+const testConsoleLogSimple = (fn: any, times: number) => {
+  const spy = jest.spyOn(global.console, "log").mockImplementation(() => ({}));
+  fn();
+  expect(spy).toHaveBeenCalledTimes(times);
+  spy.mockReset();
+};
+
 describe("logSuccess", () => {
   it("should log to console with `success` prefix", () => {
     testConsoleLog(logSuccess, "file-importer: success: message");
@@ -100,5 +108,19 @@ describe("logInfos", () => {
 describe("logMessages", () => {
   it("should log to console messages with prefixes", () => {
     testConsoleLogs(logMessages(logError), ["error 1", " error 2"]);
+  });
+});
+
+describe("logReport", () => {
+  it("should log to console no files found", () => {
+    testConsoleLogSimple(() => logReport([]), 1);
+  });
+
+  it("should log to console files found", () => {
+    const pathHash = {
+      hash: "c4ca4238a0b923820dcc509a6f75849b",
+      path: "./source/file1.txt"
+    };
+    testConsoleLogSimple(() => logReport([pathHash]), 2);
   });
 });
