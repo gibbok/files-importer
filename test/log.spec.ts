@@ -46,7 +46,7 @@ describe("withPrefixInfo", () => {
 
 const testConsoleLogRun = (fn: (a: string) => IO<void>, message: string) => {
   const spy = jest.spyOn(global.console, "log").mockImplementation(() => ({}));
-  fn("message").run();
+  fn(message).run();
   expect(spy).toHaveBeenCalled();
   expect(spy.mock.calls[0][0]).toContain(message);
   spy.mockReset();
@@ -62,7 +62,7 @@ const testConsoleLogs = (
   spy.mockReset();
 };
 
-const testConsoleLogSimple = (fn: any, times: number) => {
+const testConsoleLog = (fn: any, times: number) => {
   const spy = jest.spyOn(global.console, "log").mockImplementation(() => ({}));
   fn();
   expect(spy).toHaveBeenCalledTimes(times);
@@ -113,7 +113,7 @@ describe("logMessages", () => {
 
 describe("logReport", () => {
   it("should log to console no files found", () => {
-    testConsoleLogSimple(() => logReport([]), 1);
+    testConsoleLog(() => logReport([]), 1);
   });
 
   it("should log to console files found", () => {
@@ -121,6 +121,6 @@ describe("logReport", () => {
       hash: "c4ca4238a0b923820dcc509a6f75849b",
       path: "./source/file1.txt"
     };
-    testConsoleLogSimple(() => logReport([pathHash]), 2);
+    testConsoleLog(() => logReport([pathHash]), 2);
   });
 });
