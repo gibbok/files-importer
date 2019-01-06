@@ -1,8 +1,9 @@
 /* tslint:disable:no-expression-statement */
-import { fromNullable } from "fp-ts/lib/Option";
-import { prompt, PromptObject } from "prompts";
+import { PromptObject } from "prompts";
+import * as readline from "readline";
 import { checkArgs, checkPathsInequality, checkPathSource, checkPathTarget } from "./check";
 import { logErrors, logInfos, logReport, logSuccesses, withPrefixInfo } from "./log";
+import { PathHash, PathHashList } from "./types";
 import { comparePathHashLists, copyFiles, mkPathHashList, walkSync } from "./work";
 
 export const PROMPT_CONFIG: PromptObject = {
@@ -12,15 +13,29 @@ export const PROMPT_CONFIG: PromptObject = {
   initial: false
 };
 
+export const getUserInput = (fn: () => void) => {
+  const { stdin, stdout } = process;
+  const rl = readline.createInterface({ input: stdin, output: stdout });
+  rl.question(withPrefixInfo("Can you confirm? Y/N"), (answer: string) => {
+    withPrefixInfo(answer);
+    // tslint:disable-next-line:no-if-statement
+    if (answer.toLowerCase() === "y") {
+      fn();
+    }
+    rl.close();
+  });
+};
+
+const copyAndReport = (include: PathHashList, exclude: PathHashList, target: string) => {
+  copyFiles(include, target).fold(logErrors, logSuccesses);
+  logInfos(exclude.map((x: PathHash) => x.path));
+};
+
 /**
  * Main program.
  * Terminal usage example: `npm start ~/Documents/source ~/Documents/target`
  */
-export const main = (
-  args: ReadonlyArray<string>,
-  promptConfig: PromptObject,
-  nodeEnv: string | undefined
-) =>
+export const main = (args: ReadonlyArray<string>, nodeEnv?: string) =>
   checkArgs(args).fold(logErrors, ts => {
     checkPathsInequality(ts).fold(logErrors, ({ source, target }) => {
       checkPathSource(source).fold(logErrors, sourceResolved => {
@@ -34,12 +49,8 @@ export const main = (
                     targetPathHashList
                   );
                   logReport(include);
-                  const response: { value: boolean } =
-                    nodeEnv === "test" ? { value: true } : await prompt(promptConfig);
-                  fromNullable(response.value).mapNullable(_x => {
-                    copyFiles(include, targetResolved).fold(logErrors, logSuccesses);
-                    logInfos(exclude.map(x => x.path));
-                  });
+                  const test = () => copyAndReport(include, exclude, targetResolved);
+                  nodeEnv === "test" ? test() : getUserInput(test);
                 });
               });
             });
@@ -49,4 +60,4 @@ export const main = (
     });
   });
 
-main(process.argv, PROMPT_CONFIG, process.env.NODE_ENV);
+main(process.argv, process.env.NODE_ENV);
