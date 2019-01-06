@@ -12,6 +12,7 @@ export const PROMPT_CONFIG: PromptObject = {
   message: withPrefixInfo("Can you confirm?"),
   initial: false
 };
+
 /**
  * Report files asking a confirmation, if positive copy new files to `target`.
  */
