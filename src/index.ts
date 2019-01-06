@@ -13,7 +13,7 @@ export const PROMPT_CONFIG: PromptObject = {
   initial: false
 };
 /**
- * Report and ask user confirmation, if positive copy files to `target`
+ * Report files asking a confirmation, if positive copy new files to `target`.
  */
 export const promptConfirmationCopy = async (
   sourcePathHashList: PathHashList,
@@ -26,9 +26,9 @@ export const promptConfirmationCopy = async (
   logReport(include);
   /* istanbul ignore next */
   const response = env === "test" ? { value: true } : await prompt(promptConfig);
-  fromNullable(response.value).mapNullable(_x => {
+  fromNullable(response.value).mapNullable(_r => {
     copyFiles(include, targetResolved).fold(logErrors, logSuccesses);
-    logInfos(exclude.map(x => x.path));
+    logInfos(exclude.map(({ path }) => path));
   });
 };
 
