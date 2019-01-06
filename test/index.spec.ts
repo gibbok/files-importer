@@ -1,9 +1,9 @@
 /* tslint:disable:no-expression-statement */
 import * as assert from "assert";
 import { mkdirSync, pathExistsSync, readdirSync } from "fs-extra";
-import { getUserInput, main } from "../src";
+import { main } from "../src";
 import { createFile, removeFile, TEST_DIR } from "../src/test-common";
-jest.mock("readline");
+// jest.mock("readline");
 
 describe("program", () => {
   const fileNames: ReadonlyArray<string> = [
@@ -74,16 +74,16 @@ describe("program", () => {
 //   });
 // });
 
-describe.only("program", () => {
-  it("should wait user prompt in cli", () => {
-    const mock = jest.fn();
-    getUserInput(mock);
-    expect(mock).not.toHaveBeenCalled();
-  });
+// describe.only("program", () => {
+//   it("should wait user prompt in cli", () => {
+//     const mock = jest.fn();
+//     getUserInput(mock);
+//     expect(mock).not.toHaveBeenCalled();
+//   });
 
-  it.only("should execute a cb when user prompt in cli y", () => {
-    const mock = jest.fn();
-    getUserInput(mock);
-    expect(mock).toHaveBeenCalled();
-  });
-});
+//   it.only("should execute a cb when user prompt in cli y", () => {
+//     const mock = jest.fn();
+//     getUserInput(mock);
+//     expect(mock).toHaveBeenCalled();
+//   });
+// });
