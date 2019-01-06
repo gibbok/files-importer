@@ -28,7 +28,7 @@ describe("program", () => {
     `${TEST_DIR}/target/file1.txt`,
     `${TEST_DIR}/target/sub/file2.txt`
   ];
-  beforeAll(() => fileNames.map(createFile));
+  beforeEach(() => fileNames.map(createFile));
   afterEach(() => removeFile(TEST_DIR));
 
   it("should perform files comparison between `source` and `target` folders, if `source` and `target` have the same files, no files should be added to `target`", () => {
@@ -44,7 +44,7 @@ describe("program", () => {
     `${TEST_DIR}/source/sub/file2.txt`,
     `${TEST_DIR}/source/sub/sub/file3.txt`
   ];
-  beforeAll(() => {
+  beforeEach(() => {
     fileNames.map(createFile);
     mkdirSync(`${TEST_DIR}/target`);
   });
@@ -57,3 +57,18 @@ describe("program", () => {
     assert.deepEqual(readdirSync(`${TEST_DIR}/target/source/sub/sub`), ["file3.txt"]);
   });
 });
+
+// describe("program", () => {
+//   const fileNames: ReadonlyArray<string> = [`${TEST_DIR}/source/file1.txt`];
+//   beforeEach(() => {
+//     fileNames.map(createFile);
+//     mkdirSync(`${TEST_DIR}/target`);
+//   });
+//   afterEach(() => removeFile(TEST_DIR));
+//   afterAll(() => process.exit);
+
+//   it("should not copy files to `target` if user has not confirmed operation in cli prompt", () => {
+//     main(["npm", "start", `${TEST_DIR}/source`, `${TEST_DIR}/target`], PROMPT_CONFIG, undefined);
+//     assert.deepEqual(existsSync(`${TEST_DIR}/target/source`), false);
+//   });
+// });
