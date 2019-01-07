@@ -7,6 +7,8 @@ import { fromNullable } from "fp-ts/lib/Option";
 import { closeSync, copySync, openSync, readSync } from "fs-extra";
 import klawSync from "klaw-sync";
 import * as nodePath from "path";
+import { prompt, PromptObject } from "prompts";
+import { logErrors, logInfos, logReport, logSuccesses } from "./log";
 import { Errors, PathHash, PathHashList } from "./types";
 
 /**
@@ -112,4 +114,24 @@ export const copyFiles = (
   const errors = processed.filter(x => x.error).map(y => y.errorMessage);
   const successes = processed.filter(x => !x.error).map(y => y.path);
   return errors.length >= 1 ? left(errors.concat(successes)) : right(successes);
+};
+
+/**
+ * Report files asking a confirmation, if positive copy new files to `target`.
+ */
+export const promptConfirmationCopy = async (
+  sourcePathHashList: PathHashList,
+  targetPathHashList: PathHashList,
+  targetResolved: string,
+  promptConfig: PromptObject,
+  env?: string
+) => {
+  const { include, exclude } = comparePathHashLists(sourcePathHashList, targetPathHashList);
+  logReport(include);
+  /* istanbul ignore next */
+  const response = env === "test" ? { value: true } : await prompt(promptConfig);
+  fromNullable(response.value).mapNullable(_r => {
+    copyFiles(include, targetResolved).fold(logErrors, logSuccesses);
+    logInfos(exclude.map(({ path }) => path));
+  });
 };
