@@ -3,7 +3,6 @@ import * as assert from "assert";
 import { mkdirSync, pathExistsSync, readdirSync } from "fs-extra";
 import { main, PROMPT_CONFIG } from "../src";
 import { createFile, removeFile, TEST_DIR } from "../src/test-common";
-// jest.mock("readline");
 
 describe("program", () => {
   const fileNames: ReadonlyArray<string> = [
