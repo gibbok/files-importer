@@ -4,7 +4,8 @@ import { lefts, zipWith } from "fp-ts/lib/Array";
 import { Either, left, right } from "fp-ts/lib/Either";
 import { curry, identity } from "fp-ts/lib/function";
 import { fromNullable } from "fp-ts/lib/Option";
-import { closeSync, copySync, openSync, readSync } from "fs-extra";
+import * as fs from "fs";
+import { copySync } from "fs-extra";
 import klawSync from "klaw-sync";
 import * as nodePath from "path";
 import { prompt, PromptObject } from "prompts";
@@ -46,21 +47,20 @@ export const mkPathHashList = (
  */
 export const md5 = (path: string): Either<Error["message"], string> => {
   const BUFFER_SIZE = 8192;
-  let fd: number | undefined;
+  const fd = fs.openSync(path, "r");
+  const hash = createHash("md5");
+  const buffer = Buffer.alloc(BUFFER_SIZE);
   try {
-    fd = openSync(path, "r");
-    const buffer = Buffer.alloc(BUFFER_SIZE);
-    const hash = createHash("md5");
     let bytesRead;
     do {
-      bytesRead = readSync(fd, buffer, 0, BUFFER_SIZE, 0);
+      bytesRead = fs.readSync(fd, buffer, 0, BUFFER_SIZE, null);
       hash.update(buffer.slice(0, bytesRead));
     } while (bytesRead === BUFFER_SIZE);
     return right(hash.digest("hex"));
   } catch (error) {
     return left(error.message);
   } finally {
-    fromNullable(fd).mapNullable(closeSync);
+    fs.closeSync(fd);
   }
 };
 
