@@ -1,6 +1,7 @@
 /* tslint:disable:no-expression-statement */
 import * as assert from "assert";
 import { mkdirSync, pathExistsSync, readdirSync } from "fs-extra";
+import * as path from "path";
 import { main, PROMPT_CONFIG } from "../src";
 import { createFile, removeFile, TEST_DIR } from "../src/test-common";
 
@@ -17,7 +18,10 @@ describe("program", () => {
 
   it("should perform files comparison between `source` and `target` folders, if `source` has one more file than `target` add that one file to `target`", () => {
     main(["npm", "start", `${TEST_DIR}/source`, `${TEST_DIR}/target`], PROMPT_CONFIG, "test");
-    assert.deepStrictEqual(pathExistsSync(`${TEST_DIR}/target/source/sub/file2.txt`), true);
+    assert.deepStrictEqual(
+      pathExistsSync(path.resolve(`${TEST_DIR}/target/source/sub/file2.txt`)),
+      true
+    );
   });
 });
 
