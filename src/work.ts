@@ -3,7 +3,6 @@ import { createHash } from "crypto";
 import { lefts, zipWith } from "fp-ts/lib/Array";
 import { Either, left, right } from "fp-ts/lib/Either";
 import { curry, identity } from "fp-ts/lib/function";
-import { fromNullable } from "fp-ts/lib/Option";
 import { closeSync, copySync, openSync, readSync } from "fs-extra";
 import klawSync from "klaw-sync";
 import * as nodePath from "path";
@@ -129,8 +128,8 @@ export const promptConfirmationCopy = async (
   logReport(include);
   /* istanbul ignore next */
   const response = env === "test" ? { value: true } : await prompt(promptConfig);
-  fromNullable(response.value).mapNullable(_r => {
+  if (response.value) {
     copyFiles(include, targetResolved).fold(logErrors, logSuccesses);
     logInfos(exclude.map(({ path }) => path));
-  });
+  }
 };
