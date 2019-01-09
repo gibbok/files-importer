@@ -1,4 +1,5 @@
 import * as assert from "assert";
+import * as path from "path";
 import {
   checkArgs,
   checkPath,
@@ -63,7 +64,7 @@ describe("checkPath", () => {
   it("should check path and return right with the path passed if it is valid", () => {
     const fe = checkPath("source")(goodPath);
     assert.strictEqual(fe.isLeft(), false);
-    assert.strictEqual(fe.isRight() && fe.value, goodPath);
+    assert.strictEqual(fe.isRight() && fe.value, path.resolve(goodPath));
   });
 });
 
@@ -83,7 +84,7 @@ describe("checkPathSource", () => {
   it("should check path `source` and return right with the path if it is valid", () => {
     const fe = checkPathSource(goodPath);
     assert.strictEqual(fe.isLeft(), false);
-    assert.strictEqual(fe.isRight() && fe.value, goodPath);
+    assert.strictEqual(fe.isRight() && fe.value, path.resolve(goodPath));
   });
 });
 
@@ -103,6 +104,6 @@ describe("checkPathTarget", () => {
   it("should check path `target` and return right with the path if it is valid", () => {
     const fe = checkPathTarget(goodPath);
     assert.strictEqual(fe.isLeft(), false);
-    assert.strictEqual(fe.isRight() && fe.value, goodPath);
+    assert.strictEqual(fe.isRight() && fe.value, path.resolve(goodPath));
   });
 });

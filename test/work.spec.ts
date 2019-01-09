@@ -1,6 +1,7 @@
 /* tslint:disable:no-expression-statement */
 import * as assert from "assert";
 import { pathExistsSync } from "fs-extra";
+import * as path from "path";
 import { BAD_PATH, createFile, removeFile, TEST_DIR } from "../src/test-common";
 import { PathHashList } from "../src/types";
 import { comparePathHashLists, copyFiles, md5, mkPathHashList, walkSync } from "../src/work";
@@ -27,7 +28,7 @@ describe("walkSynch", () => {
   it("should walk a folder and return right with list of paths", () => {
     const ws = walkSync(TEST_DIR);
     assert.strictEqual(ws.isLeft(), false);
-    assert.deepStrictEqual(ws.isRight() && ws.value, fileNames);
+    assert.deepStrictEqual(ws.isRight() && ws.value, fileNames.map(x => path.resolve(x)));
   });
 });
 
@@ -42,10 +43,13 @@ describe("mkPathHashList", () => {
   });
 
   it("should create hashes for paths and return right with a list of paths/hashes", () => {
-    const result = fileNames.map((path: string) => ({
-      path,
-      hash: md5(path).fold(() => "error", (hash: string) => hash)
-    }));
+    const result = fileNames.map((pathArg: string) => {
+      const pathResolved = path.resolve(pathArg);
+      return {
+        path: pathResolved,
+        hash: md5(pathResolved).fold(() => "error", (hash: string) => hash)
+      };
+    });
     const ws = walkSync(TEST_DIR);
     const r = ws.chain(mkPathHashList);
     assert.strictEqual(r.isLeft(), false);
@@ -162,8 +166,14 @@ describe("copyFiles", () => {
     const r = copyFiles([pathHash1, pathHash2, pathHash3], output);
     assert.strictEqual(pathExistsSync(output), true);
     assert.strictEqual(r.isLeft() && r.value[0].includes("ENOENT"), true);
-    assert.strictEqual(r.isLeft() && r.value[1], `${TEST_DIR}/target/source/sub1/sub2/file1.txt`);
-    assert.strictEqual(r.isLeft() && r.value[2], `${TEST_DIR}/target/source/sub1/sub2/file2.txt`);
+    assert.strictEqual(
+      r.isLeft() && r.value[1],
+      path.resolve(`${TEST_DIR}/target/source/sub1/sub2/file1.txt`)
+    );
+    assert.strictEqual(
+      r.isLeft() && r.value[2],
+      path.resolve(`${TEST_DIR}/target/source/sub1/sub2/file2.txt`)
+    );
     assert.strictEqual(r.isRight(), false);
   });
 
@@ -171,7 +181,13 @@ describe("copyFiles", () => {
     const r = copyFiles([pathHash1, pathHash2], output);
     assert.strictEqual(pathExistsSync(output), true);
     assert.strictEqual(r.isLeft(), false);
-    assert.strictEqual(r.isRight() && r.value[0], `${TEST_DIR}/target/source/sub1/sub2/file1.txt`);
-    assert.strictEqual(r.isRight() && r.value[1], `${TEST_DIR}/target/source/sub1/sub2/file2.txt`);
+    assert.strictEqual(
+      r.isRight() && r.value[0],
+      path.resolve(`${TEST_DIR}/target/source/sub1/sub2/file1.txt`)
+    );
+    assert.strictEqual(
+      r.isRight() && r.value[1],
+      path.resolve(`${TEST_DIR}/target/source/sub1/sub2/file2.txt`)
+    );
   });
 });
