@@ -46,20 +46,20 @@ export const mkPathHashList = (
  */
 export const md5 = (path: string): Either<Error["message"], string> => {
   const BUFFER_SIZE = 8192;
-  const fd = openSync(path, "r");
+  const fileDescriptor = openSync(path, "r");
   const hash = createHash("md5");
   const buffer = Buffer.alloc(BUFFER_SIZE);
   try {
     let bytesRead;
     do {
-      bytesRead = readSync(fd, buffer, 0, BUFFER_SIZE, null);
+      bytesRead = readSync(fileDescriptor, buffer, 0, BUFFER_SIZE, null);
       hash.update(buffer.slice(0, bytesRead));
     } while (bytesRead === BUFFER_SIZE);
     return right(hash.digest("hex"));
   } catch (error) {
     return left(error.message);
   } finally {
-    closeSync(fd);
+    closeSync(fileDescriptor);
   }
 };
 
