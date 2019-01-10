@@ -131,6 +131,7 @@ export const promptConfirmationCopy = async (
   logReport(include);
   /* istanbul ignore next */
   const response = env === "test" ? { value: true } : await prompt(promptConfig);
+  /* istanbul ignore next */
   if (response.value) {
     copyFiles(include, targetResolved).fold(logErrors, logSuccesses);
     logInfos(exclude.map(({ path }) => path));

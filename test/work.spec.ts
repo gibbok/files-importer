@@ -1,7 +1,7 @@
 /* tslint:disable:no-expression-statement */
 import * as assert from "assert";
 import { pathExistsSync } from "fs-extra";
-import * as path from "path";
+import * as nodePath from "path";
 import { BAD_PATH, createFile, removeFile, TEST_DIR } from "../src/test-common";
 import { PathHashList } from "../src/types";
 import { comparePathHashLists, copyFiles, md5, mkPathHashList, walkSync } from "../src/work";
@@ -28,7 +28,7 @@ describe("walkSynch", () => {
   it("should walk a folder and return right with list of paths", () => {
     const ws = walkSync(TEST_DIR);
     assert.strictEqual(ws.isLeft(), false);
-    assert.deepStrictEqual(ws.isRight() && ws.value, fileNames.map(x => path.resolve(x)));
+    assert.deepStrictEqual(ws.isRight() && ws.value, fileNames.map(x => nodePath.resolve(x)));
   });
 });
 
@@ -43,8 +43,8 @@ describe("mkPathHashList", () => {
   });
 
   it("should create hashes for paths and return right with a list of paths/hashes", () => {
-    const result = fileNames.map((pathArg: string) => {
-      const pathResolved = path.resolve(pathArg);
+    const result = fileNames.map((p: string) => {
+      const pathResolved = nodePath.resolve(p);
       return {
         path: pathResolved,
         hash: md5(pathResolved).fold(() => "error", (hash: string) => hash)
@@ -168,11 +168,11 @@ describe("copyFiles", () => {
     assert.strictEqual(r.isLeft() && r.value[0].includes("ENOENT"), true);
     assert.strictEqual(
       r.isLeft() && r.value[1],
-      path.resolve(`${TEST_DIR}/target/source/sub1/sub2/file1.txt`)
+      nodePath.resolve(`${TEST_DIR}/target/source/sub1/sub2/file1.txt`)
     );
     assert.strictEqual(
       r.isLeft() && r.value[2],
-      path.resolve(`${TEST_DIR}/target/source/sub1/sub2/file2.txt`)
+      nodePath.resolve(`${TEST_DIR}/target/source/sub1/sub2/file2.txt`)
     );
     assert.strictEqual(r.isRight(), false);
   });
@@ -183,11 +183,11 @@ describe("copyFiles", () => {
     assert.strictEqual(r.isLeft(), false);
     assert.strictEqual(
       r.isRight() && r.value[0],
-      path.resolve(`${TEST_DIR}/target/source/sub1/sub2/file1.txt`)
+      nodePath.resolve(`${TEST_DIR}/target/source/sub1/sub2/file1.txt`)
     );
     assert.strictEqual(
       r.isRight() && r.value[1],
-      path.resolve(`${TEST_DIR}/target/source/sub1/sub2/file2.txt`)
+      nodePath.resolve(`${TEST_DIR}/target/source/sub1/sub2/file2.txt`)
     );
   });
 });
