@@ -3,6 +3,7 @@ import { createHash } from "crypto";
 import { lefts, zipWith } from "fp-ts/lib/Array";
 import { Either, left, right } from "fp-ts/lib/Either";
 import { curry, identity } from "fp-ts/lib/function";
+import { fromNullable } from "fp-ts/lib/Option";
 import { closeSync, copySync, openSync, readSync } from "fs-extra";
 import klawSync from "klaw-sync";
 import * as nodePath from "path";
@@ -45,10 +46,11 @@ export const mkPathHashList = (
  */
 export const md5 = (path: string): Either<Error["message"], string> => {
   const BUFFER_SIZE = 8192;
-  const fileDescriptor = openSync(path, "r");
-  const hash = createHash("md5");
-  const buffer = Buffer.alloc(BUFFER_SIZE);
+  let fileDescriptor: number | undefined;
   try {
+    fileDescriptor = openSync(path, "r");
+    const hash = createHash("md5");
+    const buffer = Buffer.alloc(BUFFER_SIZE);
     let bytesRead;
     do {
       bytesRead = readSync(fileDescriptor, buffer, 0, BUFFER_SIZE, null);
@@ -58,12 +60,13 @@ export const md5 = (path: string): Either<Error["message"], string> => {
   } catch (error) {
     return left(error.message);
   } finally {
-    closeSync(fileDescriptor);
+    fromNullable(fileDescriptor).mapNullable(closeSync);
   }
 };
 
 /**
- * Compare two lists of file paths and md5 hashes pair.
+ * C
+ * ompare two lists of file paths and md5 hashes pair.
  */
 export const comparePathHashLists = (
   pathHashListSource: PathHashList,
