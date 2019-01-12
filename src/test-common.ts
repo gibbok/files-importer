@@ -1,10 +1,23 @@
 import { outputFileSync, removeSync } from "fs-extra";
 import { tmpdir } from "os";
-import * as path from "path";
+import * as nodePath from "path";
 
-export const TEST_DIR = path.join(tmpdir(), "files-importer");
+/**
+ * Create a temporary directory where tests will be executed.
+ */
+export const TEST_DIR = nodePath.join(tmpdir(), "files-importer");
+
+/**
+ * Create an invalid path.
+ */
 export const BAD_PATH = "./invalid-path";
 
-export const createFile = (p: string) => outputFileSync(p, "hello!");
+/**
+ * Create a file which has content its file name for testing purposes.
+ */
+export const createFile = (p: string) => outputFileSync(p, nodePath.basename(p));
 
+/**
+ * Remove a file.
+ */
 export const removeFile = (p: string) => removeSync(p);

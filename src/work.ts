@@ -1,93 +1,139 @@
+/* tslint:disable:no-let no-expression-statement no-if-statement */
 import { createHash } from "crypto";
-import { head, lefts, zipWith } from "fp-ts/lib/Array";
+import { lefts, zipWith } from "fp-ts/lib/Array";
 import { Either, left, right } from "fp-ts/lib/Either";
-import { identity } from "fp-ts/lib/function";
-import { closeSync, openSync, readSync } from "fs-extra";
+import { curry, identity } from "fp-ts/lib/function";
+import { fromNullable } from "fp-ts/lib/Option";
+import { closeSync, copySync, openSync, readSync } from "fs-extra";
 import klawSync from "klaw-sync";
+import * as nodePath from "path";
+import { prompt, PromptObject } from "prompts";
+import { logErrors, logInfos, logReport, logSuccesses } from "./log";
+import { Errors, PathHash, PathHashList } from "./types";
 
-export const walkSync = (p: string): Either<string, ReadonlyArray<string>> => {
+/**
+ * Walk the file system starting from one folder.
+ */
+export const walkSync = (p: string): Either<Errors, ReadonlyArray<string>> => {
   try {
     return right(klawSync(p, { nodir: true }).map(({ path }) => path));
   } catch (e) {
-    return left(`cannot walk the file system ${e.message}`);
+    return left([`cannot walk the file system ${e.message}`]);
   }
 };
 
+/**
+ * Create a list of file paths and md5 hashes pair.
+ */
 export const mkPathHashList = (
   walkedPaths: ReadonlyArray<string>
-): Either<string, ReadonlyArray<{ path: string; hash: string }>> => {
+): Either<Errors, PathHashList> => {
   const paths = walkedPaths.map(identity);
   const hashes = paths.map(md5);
   const hasError = hashes.some(x => x.isLeft());
   return hasError
-    ? left(head(lefts(hashes)).getOrElse("error"))
+    ? left(lefts(hashes))
     : right(
-        zipWith(
-          paths,
-          hashes,
-          (path: string, hash: Either<string, string>) => ({
-            path,
-            hash: hash.fold(identity, identity)
-          })
-        )
+        zipWith(paths, hashes, (path: string, hash: Either<string, string>) => ({
+          path,
+          hash: hash.fold(identity, identity)
+        }))
       );
 };
 
-export const md5 = (path: string): Either<string, string> => {
+/**
+ * Create an md5 hash for a file path.
+ */
+export const md5 = (path: string): Either<Error["message"], string> => {
   const BUFFER_SIZE = 8192;
-  // tslint:disable-next-line:no-let
-  let fd;
+  let fileDescriptor: number | undefined;
   try {
-    // tslint:disable-next-line:no-expression-statement
-    fd = openSync(path, "r");
-    const buffer = Buffer.alloc(BUFFER_SIZE);
+    fileDescriptor = openSync(path, "r");
     const hash = createHash("md5");
-    // tslint:disable-next-line:no-let
+    const buffer = Buffer.alloc(BUFFER_SIZE);
     let bytesRead;
     do {
-      // tslint:disable-next-line:no-expression-statement
-      bytesRead = readSync(fd, buffer, 0, BUFFER_SIZE, 0);
-      // tslint:disable-next-line:no-expression-statement
+      bytesRead = readSync(fileDescriptor, buffer, 0, BUFFER_SIZE, null);
       hash.update(buffer.slice(0, bytesRead));
     } while (bytesRead === BUFFER_SIZE);
     return right(hash.digest("hex"));
   } catch (error) {
     return left(error.message);
   } finally {
-    // tslint:disable-next-line:no-if-statement
-    if (fd !== undefined) {
-      // tslint:disable-next-line:no-expression-statement
-      closeSync(fd);
-    }
+    fromNullable(fileDescriptor).mapNullable(closeSync);
   }
 };
 
-// TODO: think if IO should actually handled using IOEither
-// export const md5 = (path: string): IOEither<string, string> => {
-//   const BUFFER_SIZE = 8192;
-//   // tslint:disable-next-line:no-let
-//   let fd;
-//   try {
-//     // tslint:disable-next-line:no-expression-statement
-//     fd = openSync(path, "r");
-//     const buffer = Buffer.alloc(BUFFER_SIZE);
-//     const hash = createHash("md5");
-//     // tslint:disable-next-line:no-let
-//     let bytesRead;
-//     do {
-//       // tslint:disable-next-line:no-expression-statement
-//       bytesRead = readSync(fd, buffer, 0, BUFFER_SIZE, 0);
-//       // tslint:disable-next-line:no-expression-statement
-//       hash.update(buffer.slice(0, bytesRead));
-//     } while (bytesRead === BUFFER_SIZE);
-//     return right(new IO(() => hash.digest("hex")));
-//   } catch (error) {
-//     return left(new IO(() => error.message));
-//   } finally {
-//     // tslint:disable-next-line:no-if-statement
-//     if (fd !== undefined) {
-//       // tslint:disable-next-line:no-expression-statement
-//       closeSync(fd);
-//     }
-//   }
-// };
+/**
+ * C
+ * ompare two lists of file paths and md5 hashes pair.
+ */
+export const comparePathHashLists = (
+  pathHashListSource: PathHashList,
+  pathHashListTarget: PathHashList
+) => {
+  const matchHash = curry((list: PathHashList, x: PathHash) => list.find(y => y.hash === x.hash));
+  const matchHashTarget = matchHash(pathHashListTarget);
+  return {
+    include: pathHashListSource.filter(x => !matchHashTarget(x)),
+    exclude: pathHashListSource.filter(matchHashTarget)
+  };
+};
+
+/**
+ * Copy files to a `target` directory.
+ */
+export const copyFiles = (
+  include: PathHashList,
+  target: string
+): Either<Errors, ReadonlyArray<string>> => {
+  const targetResolved = nodePath.resolve(target);
+  const processed = include.map(({ path }) => {
+    let destination = "";
+    for (let i = 0; i < path.length; i++) {
+      if (path[i] !== targetResolved[i]) {
+        destination = path.substring(i);
+        break;
+      }
+    }
+    const outputPath = nodePath.join(targetResolved, destination);
+    try {
+      copySync(path, outputPath);
+      return {
+        path: outputPath,
+        error: false,
+        errorMessage: ""
+      };
+    } catch (error) {
+      return {
+        path: outputPath,
+        error: true,
+        errorMessage: error.message
+      };
+    }
+  });
+  const errors = processed.filter(x => x.error).map(y => y.errorMessage);
+  const successes = processed.filter(x => !x.error).map(y => y.path);
+  return errors.length >= 1 ? left(errors.concat(successes)) : right(successes);
+};
+
+/**
+ * Report files asking a confirmation, if positive copy new files to `target`.
+ */
+export const promptConfirmationCopy = async (
+  sourcePathHashList: PathHashList,
+  targetPathHashList: PathHashList,
+  targetResolved: string,
+  promptConfig: PromptObject,
+  env?: string
+) => {
+  const { include, exclude } = comparePathHashLists(sourcePathHashList, targetPathHashList);
+  logReport(include);
+  /* istanbul ignore next */
+  const response = env === "test" ? { value: true } : await prompt(promptConfig);
+  /* istanbul ignore next */
+  if (response.value) {
+    copyFiles(include, targetResolved).fold(logErrors, logSuccesses);
+    logInfos(exclude.map(({ path }) => path));
+  }
+};
