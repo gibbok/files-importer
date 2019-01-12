@@ -1,20 +1,24 @@
 {
   "verbose": true,
   "moduleFileExtensions": [
-    "ts",
-    "js"
+    "js",
+    "ts"
   ],
   "transform": {
     "^.+\\.(ts|tsx)$": "ts-jest"
   },
   "globals": {
     "ts-jest": {
-      "tsConfigFile": "./tsconfig.json"
+      "tsConfig": "./tsconfig.json"
     }
   },
   "testMatch": [
     "**/test/*.+(ts)"
   ],
   "collectCoverage": true,
-  "coverageReporters": ["json", "html"]
+  "coverageReporters": [
+    "json",
+    "html"
+  ],
+  "preset": "ts-jest"
 }
