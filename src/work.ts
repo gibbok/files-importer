@@ -65,8 +65,7 @@ export const md5 = (path: string): Either<Error["message"], string> => {
 };
 
 /**
- * C
- * ompare two lists of file paths and md5 hashes pair.
+ * Compare two lists of file paths and md5 hashes pair.
  */
 export const comparePathHashLists = (
   pathHashListSource: PathHashList,
