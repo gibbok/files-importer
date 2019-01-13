@@ -68,7 +68,7 @@ describe("md5", () => {
     assert.strictEqual(mk.isRight(), false);
   });
 
-  it("should create hash for a valid path and return right it", () => {
+  it("should create hash for a valid path and return right with it", () => {
     const mk = md5(fileName);
     assert.strictEqual(mk.isLeft(), false);
     assert.strictEqual(mk.isRight() && mk.value, "bd01856bfd2065d0d1ee20c03bd3a9af");

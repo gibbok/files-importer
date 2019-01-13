@@ -1,8 +1,16 @@
 {
   "name": "files-importer",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "files-importer is a Node.js command line tool which synchronously copy the contents of a directory (include subdirectories recursively) to another location without creating duplicate files.",
+  "keywords":[
+    "files-importer",
+    "compare folders",
+    "compare directories",
+    "diff",
+    "diff folders",
+    "diff directories"
+  ],
+  "main": "index.ts",
   "scripts": {
     "start": "tsc && node ./dist/src",
     "test": "tsc && jest --config ./jest-config.json && jest --coverage true",
