@@ -17,7 +17,7 @@ export const PROMPT_CONFIG: PromptObject = {
  */
 export const main = (args: ReadonlyArray<string>, promptConfig: PromptObject, env?: string) =>
   checkArgs(args)
-    .chain(ts => checkPathsInequality(ts))
+    .chain(pathsSourceTarget => checkPathsInequality(pathsSourceTarget))
     .map(({ source, target }) => {
       checkPathSource(source)
         .chain(sourceResolved => walkSync(sourceResolved))
