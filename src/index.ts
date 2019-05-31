@@ -19,15 +19,14 @@ export const main = (args: ReadonlyArray<string>, promptConfig: PromptObject, en
   checkArgs(args)
     .chain(pathsSourceTarget => checkPathsInequality(pathsSourceTarget))
     .map(({ source, target }) => {
-      checkPathSource(source)
-        .chain(sourceResolved => walkSync(sourceResolved))
-        .chain(sourceWalked => mkPathHashList(sourceWalked))
-        .fold(logErrors, sourcePathHashList =>
-          checkPathTarget(target)
-            .chain(targetResolved => walkSync(targetResolved))
-            .chain(targetWalked => mkPathHashList(targetWalked))
-            .fold(logErrors, async targetPathHashList => {
-              checkPathTarget(target).map(async targetResolved => {
+      checkPathTarget(target).fold(logErrors, targetResolved => {
+        walkSync(targetResolved)
+          .chain(targetWalked => mkPathHashList(targetWalked))
+          .fold(logErrors, targetPathHashList => {
+            checkPathSource(source)
+              .chain(sourceResolved => walkSync(sourceResolved))
+              .chain(sourceWalked => mkPathHashList(sourceWalked))
+              .fold(logErrors, async sourcePathHashList => {
                 await promptConfirmationCopy(
                   sourcePathHashList,
                   targetPathHashList,
@@ -36,8 +35,8 @@ export const main = (args: ReadonlyArray<string>, promptConfig: PromptObject, en
                   env
                 );
               });
-            })
-        );
+          });
+      });
     });
 
 main(process.argv, PROMPT_CONFIG, process.env.NODE_ENV);
