@@ -1,5 +1,6 @@
 import { Either, left, right } from "fp-ts/lib/Either";
 import { curry, not } from "fp-ts/lib/function";
+import { setoidString } from "fp-ts/lib/Setoid";
 import { pathExistsSync } from "fs-extra";
 import * as nodePath from "path";
 import { Errors, PathSourceTarget } from "./types";
@@ -22,7 +23,7 @@ export const checkPathsInequality = (
   pathSourceTarget: PathSourceTarget
 ): Either<Errors, PathSourceTarget> => {
   const { source, target } = pathSourceTarget;
-  return source === target
+  return setoidString.equals(source, target)
     ? left(["arguments are invalid, arguments `source` and `target` paths must be different"])
     : right(pathSourceTarget);
 };
