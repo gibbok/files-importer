@@ -1,7 +1,7 @@
 /* tslint:disable:no-let no-expression-statement no-if-statement */
 import { createHash } from "crypto";
 import { lefts, zipWith } from "fp-ts/lib/Array";
-import { Either, left, right } from "fp-ts/lib/Either";
+import { Either, left, right, tryCatch2v } from "fp-ts/lib/Either";
 import { curry, identity } from "fp-ts/lib/function";
 import { fromNullable } from "fp-ts/lib/Option";
 import { closeSync, copySync, openSync, readSync } from "fs-extra";
@@ -9,18 +9,19 @@ import klawSync from "klaw-sync";
 import * as nodePath from "path";
 import { prompt, PromptObject } from "prompts";
 import { logErrors, logInfos, logReport, logSuccesses } from "./log";
-import { Errors, PathHash, PathHashList } from "./types";
+import { Errors, ErrorWithMessage, PathHash, PathHashList } from "./types";
+import { isErrorMessage } from "./utility";
 
 /**
  * Walk the file system starting from one folder.
  */
-export const walkSync = (p: string): Either<Errors, ReadonlyArray<string>> => {
-  try {
-    return right(klawSync(p, { nodir: true }).map(({ path }) => path));
-  } catch (e) {
-    return left([`cannot walk the file system ${e.message}`]);
-  }
-};
+export const walkSync = (p: string): Either<Errors, ReadonlyArray<string>> =>
+  tryCatch2v(
+    () => klawSync(p, { nodir: true }).map(({ path }) => path),
+    (e: unknown | ErrorWithMessage): ReadonlyArray<string> => [
+      `cannot walk the file system${isErrorMessage(e) ? ` ${e.message}` : ""}`
+    ]
+  );
 
 /**
  * Create a list of file paths and md5 hashes pair.

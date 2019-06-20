@@ -1,5 +1,7 @@
 export type Errors = ReadonlyArray<string>;
 
+export type ErrorWithMessage = Readonly<{ message: string }>;
+
 export type PathSourceTarget = {
   source: string;
   target: string;

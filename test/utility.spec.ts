@@ -3,7 +3,7 @@ import assert = require("assert");
 import * as fs from "fs";
 import { tmpdir } from "os";
 import * as nodePath from "path";
-import { BAD_PATH, createFile, removeFile, TEST_DIR } from "../src/test-common";
+import { BAD_PATH, createFile, isErrorMessage, removeFile, TEST_DIR } from "../src/utility";
 
 const file = nodePath.join(TEST_DIR, "file.txt");
 
@@ -38,5 +38,11 @@ describe("TEST_DIR", () => {
 describe("BAD_PATH", () => {
   it("should return an invalid path as string", () => {
     assert.strictEqual(BAD_PATH, "./invalid-path");
+  });
+});
+
+describe("isErrorMessage", () => {
+  it("should return true if error has a message", () => {
+    assert.strictEqual(isErrorMessage({ message: "m" }), true);
   });
 });

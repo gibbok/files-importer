@@ -2,8 +2,8 @@
 import * as assert from "assert";
 import { pathExistsSync } from "fs-extra";
 import * as nodePath from "path";
-import { BAD_PATH, createFile, removeFile, TEST_DIR } from "../src/test-common";
 import { PathHashList } from "../src/types";
+import { BAD_PATH, createFile, removeFile, TEST_DIR } from "../src/utility";
 import { comparePathHashLists, copyFiles, md5, mkPathHashList, walkSync } from "../src/work";
 
 const fileNames: ReadonlyArray<string> = [

@@ -7,7 +7,7 @@ import {
   checkPathSource,
   checkPathTarget
 } from "../src/check";
-import { BAD_PATH, createFile, removeFile, TEST_DIR } from "../src/test-common";
+import { BAD_PATH, createFile, removeFile, TEST_DIR } from "../src/utility";
 
 describe("checkArgs", () => {
   it("should check arguments and return left with an error message when not all arguments are provided", () => {
