@@ -3,7 +3,7 @@ import * as assert from "assert";
 import { mkdirSync, pathExistsSync, readdirSync } from "fs-extra";
 import * as nodePath from "path";
 import { main, PROMPT_CONFIG } from "../src";
-import { createFile, removeFile, TEST_DIR } from "../src/test-common";
+import { createFile, removeFile, TEST_DIR } from "../src/utility";
 
 describe("program", () => {
   const fileNames: ReadonlyArray<string> = [
