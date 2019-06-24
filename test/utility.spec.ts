@@ -45,4 +45,8 @@ describe("isErrorMessage", () => {
   it("should return true if error has a message", () => {
     assert.strictEqual(isErrorMessage({ message: "m" }), true);
   });
+
+  it("should return false if error has no message", () => {
+    assert.strictEqual(isErrorMessage({}), false);
+  });
 });
