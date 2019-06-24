@@ -42,11 +42,11 @@ describe("BAD_PATH", () => {
 });
 
 describe("isErrorMessage", () => {
-  it("should return true if error has a message", () => {
+  it("should return true if error has a message property", () => {
     assert.strictEqual(isErrorMessage({ message: "m" }), true);
   });
 
-  it("should return false if error has no message", () => {
+  it("should return false if error has no message property", () => {
     assert.strictEqual(isErrorMessage({}), false);
   });
 });
